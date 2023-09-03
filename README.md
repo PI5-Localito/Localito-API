@@ -1,5 +1,5 @@
 <h1 align="center">
-    <span>Localito API</span>
+    <div>Localito API</div>
     <img src="https://img.shields.io/badge/Symfony-000000?style=for-the-badge&logo=Symfony&logoColor=white" />
 </h1>
 
