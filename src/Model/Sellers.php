@@ -17,8 +17,7 @@ class Sellers{
      * @param bool $state
      * @return array
      */
-    public function
-     change_state($id, $state): array{
+    public function change_state($id, $state): array{
 		return ["UPDATE sellers SET state = ? WHERE id = ?"];
 	}
 }
