@@ -76,7 +76,7 @@ create table if not exists orders(
 create table if not exists products_in_orders(
 	order_id int not null,
     product_id int not null,
-    product_quantity int,
+    product_quantity int default '1' not null,
     constraint fk_PIO_order_id
 		foreign key (order_id) references orders(id),
 	constraint fk_PIO_product_id
