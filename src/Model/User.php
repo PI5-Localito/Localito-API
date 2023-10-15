@@ -8,11 +8,12 @@ class User {
      * @param string $last_name
      * @param string $phone
      * @param string $email
+     * @param string $password
      * @return array
      */
 
-    public function add_user($name, $last_name, $phone, $email): array{
-		return ["INSERT INTO users('name', 'last_name', 'phone', 'email') VALUES(?, ?, ?, ?)"];
+    public function add_user($name, $last_name, $phone, $email, $password): array{
+		return ["INSERT INTO users('name', 'last_name', 'phone', 'email', 'password') VALUES(?, ?, ?, ?)"];
 	}
 
     /**
@@ -42,4 +43,14 @@ class User {
     public function modify_user($id, $name, $last_name, $phone, $email): array{
     	return ["UPDATE users SET name = ?, last_name = ?, phone = ?, email = ? WHERE id = ?"];
 	}
+
+
+    /**
+     * @param int $id
+     * @param string $password
+     * @return void
+     */
+    public function change_password($id, $password): array{
+        return ["UPDATE users SET password = ? WHERE id = ?"];
+    }
 }
