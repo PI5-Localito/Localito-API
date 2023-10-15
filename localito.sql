@@ -7,12 +7,14 @@ create table if not exists users(
 	name VARCHAR(100) not null, 
 	last_name VARCHAR(100) not null, 
 	phone VARCHAR(15) not null unique, 
-	email VARCHAR(255) not null unique
+	email VARCHAR(255) not null unique,
+	password VARCHAR(50) not null
 )ENGINE=InnoDB;
                     
 create table if not exists buyers(
 	id INT auto_increment primary key,
 	user_id INT not null,
+	state INT not null default '1',
 	constraint fk_user_buyer_id
 		foreign key (user_id) references users(id)
 		on delete cascade
@@ -21,6 +23,7 @@ create table if not exists buyers(
 create table if not exists sellers(
 	id INT auto_increment primary key,
 	user_id INT not null,
+	state INT not null default '1',
 	constraint fk_user_seller_id
 		foreign key (user_id) references users(id)
 		on delete cascade
