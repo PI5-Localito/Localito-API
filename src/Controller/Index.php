@@ -22,4 +22,9 @@ class Index extends AbstractController {
 	public function users(): Response {
 		return $this->render('users.html.twig');
 	}
+
+	#[Route('/usuario', methods: 'GET')]
+	public function view_user(): Response {
+		return $this->render('view_user.html.twig');
+	}
 }
