@@ -1,0 +1,56 @@
+{% extends  'base.html.twig' %}
+
+{% block title %}Usuarios{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		.container{
+			margin-top: 20px;
+			max-width: 90%;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	{% include 'header.html.twig' %}
+
+	{% set usuarios = ["Carlos", "Mauricio", "Roberto", "Ximena", "Alejandro"] %}
+
+	<div class="container center">
+		<table class="border">
+		  <thead>
+		    <tr>
+		      <th>Id</th>
+		      <th>Nombre</th>
+		      <th>Apellido</th>
+		      <th>Telefono</th>
+		      <th></th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		  {% for usuario in usuarios %}
+		    <tr>
+		      <td>{{ loop.index }}</td>
+		      <td>{{ usuario }}</td>
+		      <td>Line 1</td>
+		      <td>Line 1</td>
+		      <td>
+		        <nav class="right-align">
+		          <a>
+		            <i>visibility</i>
+		          </a>
+		          <a>
+		            <i>edit</i>
+		          </a>
+		          <a>
+		            <i>delete</i>
+		          </a>
+		        </nav>
+		      </td>
+		    </tr>
+		{% endfor %}
+		  </tbody>
+		</table>
+	</div>
+	
+{% endblock %}

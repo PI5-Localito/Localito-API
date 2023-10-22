@@ -11,23 +11,16 @@
 {% endblock %} 
 
 {% block body %}
-	<header>
-	  <nav>
-	    <a href="/"><button class="circle transparent">
-	      <i>arrow_back</i>
-	    </button></a>
-	    <h5 class="max">Localito</h5>
-	  </nav>
-	</header>
+	{% include 'header.html.twig' %}
 	<article class="no-padding card center">
 	  <img class="responsive medium" src="https://img.asmedia.epimg.net/resizer/ojTsQ_p7XXgwErW0bKHCwmeg4qc=/1472x828/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/2HXFHU4K4NOW7JBF4KQ2LJRMTU.jpg"><!----><!---->
 	  <div class="absolute bottom left right padding bottom-shadow white-text">
 	    <nav>
 	      <h5>Usuarios</h5>
 	      <div class="max"></div>
-	      <button class="circle transparent">
+	      <a href="/usuarios" class="circle transparent">
 	        <i>arrow_forward</i>
-	      </button>
+	      </a>
 	    </nav>
 	  </div>
 	</article>
