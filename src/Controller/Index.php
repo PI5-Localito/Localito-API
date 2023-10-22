@@ -27,4 +27,9 @@ class Index extends AbstractController {
 	public function view_user(): Response {
 		return $this->render('view_user.html.twig');
 	}
+
+	#[Route('/editarusuario', methods: 'GET')]
+	public function edit_user(): Response {
+		return $this->render('edit_user.html.twig');
+	}
 }
