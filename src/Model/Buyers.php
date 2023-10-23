@@ -2,22 +2,30 @@
 
 namespace App\Model;
 
-class Buyers{
+use App\Entity\Buyer;
+use App\StorageModelInterface;
+use Traversable;
+
+class Buyers implements StorageModelInterface
+{
+    public const MODEL = 'sellers';
+
+    public function save(Traversable $data): array
+    {
+    }
+
+    public function delete(): string
+    {
+    }
 
     /**
-     * @param int $uid
+     * Change the state of a buyer in the database
      * @return array
      */
-    public function create_buyers($uid): array{
-		return ["INSERT INTO buyers('user_id') VALUES(?)"];
-	}
+    public function toggleState(Buyer $buyer): array
+    {
+        return [sprintf('UPDATE `%s` SET `state`=? WHERE `id`=?', static::MODEL), [
 
-    /**
-     * @param int $id
-     * @param bool $state
-     * @return array
-     */
-    public function change_state($id, $state): array{
-		return ["UPDATE sellers SET state = ? WHERE id = ?"];
-	}
+        ]];
+    }
 }
