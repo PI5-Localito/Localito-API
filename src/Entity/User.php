@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Storage\StorageResultParseableTrait;
+
 class User extends Base
 {
     use StorageResultParseableTrait;

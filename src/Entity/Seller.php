@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Storage\StorageResultParseableTrait;
+
 class Seller extends Base
 {
     use StorageResultParseableTrait;
