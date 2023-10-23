@@ -50,3 +50,4 @@ class Products_in_orders{
 		return ["DELETE FROM products_in_orders WHERE 'order_id' = ?"];
 	}
 }
+

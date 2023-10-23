@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-class User {
+class Users {
     /**
      * @param string $name
      * @param string $last_name
@@ -54,3 +54,4 @@ class User {
         return ["UPDATE users SET password = ? WHERE id = ?"];
     }
 }
+
