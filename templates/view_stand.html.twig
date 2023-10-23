@@ -1,0 +1,40 @@
+{% extends  'base.html.twig' %}
+
+{% block title %}Ver stand{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		.container{
+			max-width: 90%;
+		}
+		p{
+			font-size: 2em;
+		}
+	</style>
+{% endblock %} 
+
+{% block body %}
+	{% set stand = {"nombre": "Crustaceo Cascarudo", "owner": "Don Cangrejo", "info": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "ciudad": "Fondo de Bikini"} %}
+
+	{% include 'header.html.twig' %}
+	<div class="container center">
+		<article class="no-padding">
+		  <div class="grid no-space">
+		    <div class="s6">
+		      <img class="responsive" style="max-width: 30pc;" src="https://static.wikia.nocookie.net/universobobesponja/images/b/b2/Crustaceo_cascarudo.jpg/revision/latest?cb=20120224022026&path-prefix=es">
+		    </div>
+		    <div class="s6">
+		      <div class="padding">
+		        <h2>{{ stand.nombre }}</h5>
+		        <p>Dueño: {{ stand.owner }}</p>
+		        <p>Información: {{ stand.info }}</p>
+		        <p>Ciudad: {{ stand.ciudad }}</p>
+		        <nav>
+		          <a href="/stands"><button" class="border round">Volver</button></a>
+		        </nav>
+		      </div>
+		    </div>
+		  </div>
+		</article>
+	</div>
+{% endblock %}
