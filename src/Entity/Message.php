@@ -15,7 +15,7 @@ class Message extends Base{
 	protected string $message_timestamp;
 
 	public function setMessage(Message $message): static{
-		$this->id = $message->id;
+		$this->id = $message->id();
 		return $this;
 	}
 
