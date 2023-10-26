@@ -8,6 +8,7 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
+/*.cache
 *.cache
 .php-cs-fixer.cache
 
