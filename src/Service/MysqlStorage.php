@@ -12,7 +12,7 @@ class MysqlStorage implements Storage
 
     public function __construct()
     {
-        $this->db = new PDO($_ENV['MYSQL_URL']);
+        $this->db = new PDO($_ENV['MYSQL_URL'], $_ENV['MYSQL_USER'], $_ENV['MYSQL_PASS']);
     }
 
     public function getModel(string $model): Model
