@@ -1,0 +1,42 @@
+{% extends  'base.html.twig' %}
+
+{% block title %}Productos{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		.container{
+			margin-top: 20px;
+			max-width: 90%;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	{% include 'header.html.twig' %}
+
+	{% set products = [
+    	{nombre: "Cable inalambrico", precio: "10"},
+    	{nombre: "Gasolina en polvo", precio: "15"},
+    	{nombre: "Soplete de anillo", precio: "12"},
+    	{nombre: "Disco de calibre 50", precio: "50"},
+    	{nombre: "Manguera bluetooth", precio: "30"}
+	] %}
+
+	<div class="container center">
+	<nav>
+      <a href="/stand"><button class="border round">Volver</button></a>
+    </nav>
+	{% for product in products %}
+		<article class="border round">
+		  <div class="row">
+		    <img class="circle large" src="https://www.smogon.com/forums/media/data/avatars/o/573/573216.jpg?1638992835">
+		    <div class="max">
+		      <h5>{{ product.nombre }}</h5>
+		      <p style="font-size: 2em">${{ product.precio }}</p>
+		    </div>
+		  </div>
+		</article>
+	{% endfor %}
+	</div>
+	
+{% endblock %}

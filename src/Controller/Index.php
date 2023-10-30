@@ -47,4 +47,14 @@ class Index extends AbstractController {
 	public function edit_stand(): Response {
 		return $this->render('edit_stand.html.twig');
 	}
+
+	#[Route('/productos', methods: 'GET')]
+	public function products(): Response {
+		return $this->render('products.html.twig');
+	}
+
+	#[Route('/ordenes', methods: 'GET')]
+	public function orders(): Response {
+		return $this->render('orders.html.twig');
+	}
 }
