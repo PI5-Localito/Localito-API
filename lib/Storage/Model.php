@@ -33,5 +33,5 @@ interface Model
      *
      * @return void
      */
-    public function bindValues(PDOStatement $stmt): void;
+    public function bindValues(PDOStatement $stmt, Entity $entity): void;
 }

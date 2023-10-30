@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Entity\User;
+use Lib\Storage\Entity;
 use Lib\Storage\Model;
 use Lib\Storage\Storage;
 use PDO;
@@ -17,7 +18,13 @@ class Users implements Model
         $this->db = $storage->getDatabase();
     }
 
-    protected function bindValues(PDOStatement $stmt, User $entity): void
+    /**
+     * @param PDOStatement $stmt
+     * @param User $entity
+     *
+     * @return void
+     */
+    public function bindValues(PDOStatement $stmt, Entity $entity): void
     {
         $stmt->bindValue('bundle__name', $entity->getName(), PDO::PARAM_STR);
         $stmt->bindValue('bundle__last_name', $entity->getLastName(), PDO::PARAM_STR);
@@ -41,7 +48,12 @@ class Users implements Model
         return $entity;
     }
 
-    public function save(User $entity): bool
+    /**
+     * @param User $entity
+     *
+     * @return bool
+     */
+    public function save(Entity $entity): bool
     {
         $stmt = $this->db->prepare(
             "INSERT INTO `{$this->getTable()}` (" .
@@ -65,7 +77,12 @@ class Users implements Model
         return true;
     }
 
-    public function update(User $entity): bool
+    /**
+     * @param Entity $entity
+     *
+     * @return bool
+     */
+    public function update(Entity $entity): bool
     {
         $stmt = $this->db->prepare(
             "UPDATE `{$this->getTable()}` SET " .
@@ -82,7 +99,12 @@ class Users implements Model
         return true;
     }
 
-    public function delete(User $entity): bool
+    /**
+     * @param Entity $entity
+     *
+     * @return bool
+     */
+    public function delete(Entity $entity): bool
     {
         $stmt = $this->db->prepare("DELETE FROM `{$this->getTable()}` WHERE id=?");
         $stmt->bindValue(0, $entity->getId());
