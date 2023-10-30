@@ -33,6 +33,23 @@ class Users implements Model
         $stmt->bindValue('bundle__email', $entity->getEmail(), PDO::PARAM_STR);
     }
 
+    public function all(int $limit = 0, int $offset = 0, int $page = 0): array
+    {
+        $query = "SELECT * FROM `{$this->getTable()}`";
+        if ($limit !== 0) {
+            $offset += $page * $limit;
+            $query .= "LIMIT $limit OFFSET $offset";
+        }
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $entities = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $entity = new User();
+            $entities[] = $entity->hydrate($row);
+        }
+
+        return $entities;
+    }
 
     public function get(int $id): ?User
     {

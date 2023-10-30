@@ -20,6 +20,16 @@ interface Model
     public function delete(Entity $entity): bool;
 
     /**
+     * Get an entity with the corresponding ID
+     * @param int $limit
+     * @param int $offset
+     * @param int $page
+     *
+     * @return Entity[]
+     */
+    public function all(int $limit = 0, int $offset = 0, int $page = 0): array;
+
+    /**
      * Get the table of the entity
      *
      * @return string
