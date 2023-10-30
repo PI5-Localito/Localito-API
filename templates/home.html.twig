@@ -1,0 +1,51 @@
+{% extends  'base.html.twig' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		.card{
+			max-width: 70vh;
+		}
+	</style>
+{% endblock %} 
+
+{% block body %}
+	{% include 'header.html.twig' %}
+	<article class="no-padding card center">
+	  <img class="responsive medium" src="https://img.asmedia.epimg.net/resizer/ojTsQ_p7XXgwErW0bKHCwmeg4qc=/1472x828/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/2HXFHU4K4NOW7JBF4KQ2LJRMTU.jpg"><!----><!---->
+	  <div class="absolute bottom left right padding bottom-shadow white-text">
+	    <nav>
+	      <h5>Usuarios</h5>
+	      <div class="max"></div>
+	      <a href="/usuarios" class="circle transparent">
+	        <i>arrow_forward</i>
+	      </a>
+	    </nav>
+	  </div>
+	</article>
+	<article class="no-padding card center">
+	  <img class="responsive medium" src="https://images2.alphacoders.com/107/1079162.jpg"><!----><!---->
+	  <div class="absolute bottom left right padding bottom-shadow white-text">
+	    <nav>
+	      <h5>Stands</h5>
+	      <div class="max"></div>
+	      <a href="/stands" class="circle transparent">
+	        <i>arrow_forward</i>
+	      </a>
+	    </nav>
+	  </div>
+	</article>
+	<article class="no-padding card center">
+	  <img class="responsive medium" src="https://i.redd.it/morioh-city-from-jojo-v0-0fsr3gei4iy91.jpg?width=1920&format=pjpg&auto=webp&s=df5f0d3d0fe5ab0bbc329a08112584225c448206"><!----><!---->
+	  <div class="absolute bottom left right padding bottom-shadow white-text">
+	    <nav>
+	      <h5>Ciudades</h5>
+	      <div class="max"></div>
+	      <button class="circle transparent">
+	        <i>arrow_forward</i>
+	      </button>
+	    </nav>
+	  </div>
+	</article>
+{% endblock %}

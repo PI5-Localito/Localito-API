@@ -1,0 +1,32 @@
+{% extends  'base.html.twig' %}
+
+{% block title %}Iniciar Sesión{% endblock %}
+{% block stylesheets %}
+	<style>
+		body{
+			display: flex;
+			height: 100vh;
+			align-items: center;
+		}
+		.centered {
+			margin: auto;
+			max-width: 500px;		
+		}
+	</style>
+{% endblock %} 
+{% block body %}
+	<form action="/home" method="POST" class="center">
+		<article class="border" style="background-color: #FFF">
+		  <h5>Localito</h5>
+		  	<div class="field label border">
+			  <input type="text">
+			  <label>Correo</label>
+			</div>
+			<div class="field label border">
+			  <input type="text">
+			  <label>Contraseña</label>
+			</div>
+			<button class="center MT-3" style="margin-top: 10px;">Iniciar</button>
+		</article>
+	</form>
+{% endblock %}
