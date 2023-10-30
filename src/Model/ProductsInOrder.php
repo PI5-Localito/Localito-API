@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-class Products_in_orders{
+class ProductsInOrder{
     /**
      * @param int $oid
      * @param int $pid
