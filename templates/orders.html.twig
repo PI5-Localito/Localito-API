@@ -1,0 +1,54 @@
+{% extends  'base.html.twig' %}
+
+{% block title %}Ordenes{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		.container{
+			margin-top: 20px;
+			max-width: 90%;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	{% include 'header.html.twig' %}
+
+	{% set orders = [
+		{fecha: "XX/XX/XXXX", estado: "Pendiente"},
+		{fecha: "XX/XX/XXXX", estado: "Rechazado"},
+		{fecha: "XX/XX/XXXX", estado: "Aceptado"},
+		{fecha: "XX/XX/XXXX", estado: "Finalizado"},
+		{fecha: "XX/XX/XXXX", estado: "Pendiente"}
+	] %}
+
+	<div class="container center">
+		<table class="border">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Fecha</th>
+					<th>Estado</th>
+					<th></th>
+				</tr>
+			</thead>
+		  <tbody>
+		  {% for order in orders %}
+			<tr>
+			  <td>Orden #{{ loop.index }}</td>
+			  <td>{{ order.fecha }}</td>
+			  <td>{{ order.estado }}</td>
+			  <td>
+				<nav class="right-align">
+				  <a href="/orden">
+					<i>visibility</i>
+				  </a>
+				</nav>
+			  </td>
+			</tr>
+		{% endfor %}
+		  </tbody>
+		</table>
+	</div>
+	
+{% endblock %}

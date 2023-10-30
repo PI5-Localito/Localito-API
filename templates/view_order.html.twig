@@ -1,0 +1,63 @@
+{% extends  'base.html.twig' %}
+
+{% block title %}Ver orden{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		.container{
+			max-width: 90%;
+		}
+		p{
+			font-size: 2em;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	{% set order = {comprador: "Yo", stand: "La pizzeria", fecha: "XX/XX/XXXX", estado: "Acepdato"} %}
+	{% set pios = [
+    	{producto: "Cable inalambrico", precio: "10", cantidad: "X"},
+    	{producto: "Gasolina en polvo", precio: "15", cantidad: "X"},
+    	{producto: "Soplete de anillo", precio: "12", cantidad: "X"},
+    	{producto: "Disco de calibre 50", precio: "50", cantidad: "X"},
+    	{producto: "Manguera bluetooth", precio: "30", cantidad: "X"},
+	] %}
+
+	{% include 'header.html.twig' %}
+	<div class="container center">
+		<article class="no-padding">
+		  <div>
+		    <div>
+		      <div class="padding">
+		        <h2>Orden #X</h5>
+		        <p>Comprador: {{ order.comprador }}</p>
+		        <p>Stand: {{ order.stand }}</p>
+		        <p>fecha: {{ order.fecha }}</p>
+		        <nav>
+		          <a href="/ordenes"><button class="border round">Volver</button></a>
+		        </nav>
+		        <p>Productos en la orden:</p>
+		        <table class="border">
+		          <thead>
+		            <tr>
+		              <th>Producto</th>
+		              <th>Precio</th>
+		              <th>Cantidad</th>
+		            </tr>
+		          </thead>
+		          <tbody>
+		          {% for pio in pios %}
+		            <tr>
+		              <td>{{ pio.producto }}</td>
+		              <td>${{ pio.precio }}</td>
+		              <td>{{ pio.cantidad }}</td>
+		            </tr>
+		          {% endfor %}
+		          </tbody>
+		        </table>
+		      </div>
+		    </div>
+		  </div>
+		</article>
+	</div>
+{% endblock %}

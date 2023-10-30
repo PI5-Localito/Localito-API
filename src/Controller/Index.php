@@ -57,4 +57,9 @@ class Index extends AbstractController {
 	public function orders(): Response {
 		return $this->render('orders.html.twig');
 	}
+
+	#[Route('/orden', methods: 'GET')]
+	public function view_order(): Response {
+		return $this->render('view_order.html.twig');
+	}
 }
