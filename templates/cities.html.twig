@@ -1,0 +1,110 @@
+{% extends  'base.html.twig' %}
+
+{% block title %}Ciudades{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		.container{
+			margin-top: 20px;
+			max-width: 90%;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	{% include 'header.html.twig' %}
+
+	{% set cities = [
+    	{nombre: "Manzanillo", codigo: "XYZ", lat: "12345", long: "67890"},
+    	{nombre: "Colima", codigo: "XYZ", lat: "12345", long: "67890"},
+    	{nombre: "Tecoman", codigo: "XYZ", lat: "12345", long: "67890"},
+	] %}
+
+	<div class="container center">
+		<details>
+		  <summary class="none">
+		    <article class="round primary no-elevate">
+		      <nav>
+		        <div class="max">Agregar</div>
+		        <i>add_circle</i>
+		      </nav>
+		    </article>
+		  </summary>
+		  <div class="field border">
+		    <input type="text">
+		    <span class="helper">Nombre</span>
+		  </div>
+		  <div class="field border">
+		    <input type="text">
+		    <span class="helper">Codigo</span>
+		  </div>
+		  <div class="field border">
+		    <input type="text">
+		    <span class="helper">Latitud</span>
+		  </div>
+		  <div class="field border">
+		    <input type="text">
+		    <span class="helper">Longitud</span>
+		  </div>
+		  <button>Confirmar</button>
+		</details>
+		<br>
+		<table class="border">
+		  <thead>
+		    <tr>
+		      <th>Id</th>
+		      <th>Nombre</th>
+		      <th>Codigo</th>
+		      <th>Latitud</th>
+		      <th>longitud</th>
+		      <th></th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		  {% for city in cities %}
+		    <tr>
+		      <td>{{ loop.index }}</td>
+		      <td>{{ city.nombre }}</td>
+		      <td>{{ city.codigo }}</td>
+		      <td>{{ city.lat }}</td>
+		      <td>{{ city.long }}</td>
+		      <td>
+		        <nav class="right-align">
+		          <a data-ui="#dialog">
+		            <i>edit</i>
+		          </a>
+		          <a>
+		            <i>delete</i>
+		          </a>
+		        </nav>
+		      </td>
+		    </tr>
+		    <dialog class="modal" id="dialog">
+		      <h5>Editar #{{ loop.index }}</h5>
+		      <div class="field border">
+		        <input type="text" value="{{ city.nombre }}">
+		        <span class="helper">Nombre</span>
+		      </div>
+		      <div class="field border">
+		        <input type="text" value="{{ city.codigo }}">
+		        <span class="helper">Codigo</span>
+		      </div>
+		      <div class="field border">
+		        <input type="text" value="{{ city.lat }}">
+		        <span class="helper">Latitud</span>
+		      </div>
+		      <div class="field border">
+		        <input type="text" value="{{ city.long }}">
+		        <span class="helper">Longitud</span>
+		      </div>
+		      <nav class="right-align">
+		        <button data-ui="#dialog" class="border">Cancel</button>
+		        <button data-ui="#dialog" >Confirm</button>
+		      </nav>
+		    </dialog>
+		{% endfor %}
+		  </tbody>
+		</table>
+	</div>
+	
+{% endblock %}

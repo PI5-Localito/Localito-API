@@ -62,4 +62,9 @@ class Index extends AbstractController {
 	public function view_order(): Response {
 		return $this->render('view_order.html.twig');
 	}
+
+	#[Route('/ciudades', methods: 'GET')]
+	public function cities(): Response {
+		return $this->render('cities.html.twig');
+	}
 }
