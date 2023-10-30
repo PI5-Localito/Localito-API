@@ -2,26 +2,50 @@
 
 namespace App\Entity;
 
-use App\Storage\StorageResultParseableTrait;
+use Lib\Storage\Entity;
+use Lib\Storage\Traits\MethodHydrator;
 
-class Product extends Base
+class Product implements Entity
 {
-    use StorageResultParseableTrait;
+    use MethodHydrator;
 
-    protected int $id;
-    protected int $stand_id;
+    protected ?int $id;
+    protected int $standId;
     protected string $name;
     protected float $price;
+    
+    /**
+     * @return array<string,array>
+     */
+    public function mappings(): array{
+        return [
+            'id' => [$this->getId, $this->setId],
+            'stand_id' => [$this->getStand, $this->setStand],
+            'name' => [$this->getName, $this->setName],
+            'price' => [$this->getPrice, $this->setPrice],
+        ];
+    }
 
-    public function setProduct(Product $product): static
+    public function setId(int $id): static
     {
-        $this->id = $product->id();
+        $this->id = $id;
         return $this;
     }
 
-    public function getProduct(bool $raw = false): int|Product
+    public function getId(): int
     {
-        return $raw ? $this->id : new Product($this->stand_id);
+        return $this->id;
+    }
+
+    public function setStand(int $sid): static
+    {
+        $this->standId = $sid;
+        return $this;
+    }
+
+    public function getStand(): string
+    {
+        return $this->standId;
     }
 
     public function setName(string $name): static

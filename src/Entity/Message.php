@@ -2,83 +2,97 @@
 
 namespace App\Entity;
 
-use App\Storage\StorageResultParseableTrait;
+use Lib\Storage\Entity;
+use Lib\Storage\Traits\MethodHydrator;
 
-class Message extends Base
+
+class Message implements Entity
 {
-    use StorageResultParseableTrait;
+    use MethodHydrator;
 
-    protected int $id;
-    protected ?int $user_from;
-    protected ?int $user_to;
-    protected ?int $order_id;
-    protected ?string $message;
-    protected string $message_timestamp;
+    protected ?int $id;
+    protected ?int $userFrom;
+    protected ?int $userTo;
+    protected ?int $orderId;
+    protected ?string $body;
+    protected string $messageTimestamp;
+    /**
+     * @return array<string,array>
+     */
+    public function mappings(): array{
+        return [
+            'id' => [$this->getId, $this->setId],
+            'user_from' => [$this->getFrom, $this->setFrom],
+            'user_to' => [$this->getTo, $this->setTo],
+            'order_id' => [$this->getOrder, $this->setOrder],
+            'body' => [$this->getBody, $this->setBody],
+            'message_timestamp' => [$this->getTimestamp, $this->setTimestamp]
+        ];
+    }
 
-    public function setMessage(Message $message): static
+    public function setId(?int $id = null): static
     {
-        $this->id = $message->id();
+        $this->id = $id;
+        return $this;
+    }
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function setFrom(int $uid): static
+    {
+        $this->userFrom = $uid;
         return $this;
     }
 
-    public function getMessage(bool $raw = false): int|Message
+    public function getFrom(): int
     {
-        return $raw ? $this->id : new Message($this->id);
+        return $this->userFrom;
     }
 
-    public function setFrom(User $user): static
+    public function setTo(int $uid): static
     {
-        $this->user_from = $user->id();
+        $this->userTo = $uid;
         return $this;
     }
 
-    public function getFrom(bool $raw = false): int|User
+    public function getTo(): int
     {
-        return $raw ? $this->user_from : new User($this->user_from);
+        return $this->userTo;
     }
 
-    public function setTo(User $user): static
+    public function setOrder(int $oid): static
     {
-        $this->user_to = $user->id();
+        $this->orderId = $oid;
         return $this;
     }
 
-    public function getTo(bool $raw = false): int|User
+    public function getOrder(): int
     {
-        return $raw ? $this->user_to : new User($this->user_to);
+        return $this->orderId;
     }
 
-    public function setOrder(Order $order): static
+    public function setBody(string $body): static
     {
-        $this->order_id = $order->id();
+        $this->body = $body;
         return $this;
     }
 
-    public function getOrder(bool $raw = false): int|Order
+    public function getBody(): ?string
     {
-        return $raw ? $this->order_id : new Order($this->order_id);
+        return $this->body;
     }
 
-    public function setMessageContent(string $message): static
+    public function setTimestamp(string $messageTimestamp): static
     {
-        $this->message = $message;
-        return $this;
-    }
-
-    public function getMessageContent(): ?string
-    {
-        return $this->message;
-    }
-
-    public function setTimestamp(string $message_timestamp): static
-    {
-        $this->message_timestamp = $message_timestamp;
+        $this->messageTimestamp = $messageTimestamp;
         return $this;
     }
 
     public function getTimestamp(): string
     {
-        return $this->message_timestamp;
+        return $this->messageTimestamp;
     }
 }
 
