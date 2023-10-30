@@ -6,11 +6,9 @@ create table if not exists stands(
 	info text default null,
 	city int not null,
 	constraint fk_stand_seller_id
-		foreign key (seller_id) references users(id)
-		on delete cascade,
+		foreign key (seller_id) references users(id) on delete cascade,
 	constraint fk_stand_city_id
-		foreign key (city) references (id)
-        on delete cascade
+		foreign key (city) references cities(id) on delete cascade
 ) engine=innodb;
 
 create table if not exists products(

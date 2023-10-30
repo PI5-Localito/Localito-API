@@ -4,8 +4,9 @@ create table if not exists users(
 	last_name varchar(100) not null,
 	phone varchar(15) unique,
 	email varchar(255) unique,
-    password varchar(60) not null
-    constraint chk_user check (`phone` is not null or `email` is not null)
+    password varchar(60) not null,
+    constraint chk_user 
+        check(`phone` is not null or `email` is not null)
 ) engine=innodb;
 
 create table if not exists buyers(

@@ -4,7 +4,7 @@ create table if not exists orders(
     seller_id int not null,
     stand_id int not null,
     date datetime default current_timestamp,
-    state enum('PENDING', 'REJECTED', 'ACCEPTED', 'FINISHED') default 1 not null
+    state enum('PENDING', 'REJECTED', 'ACCEPTED', 'FINISHED') default 'PENDING' not null
 ) engine=innodb;
 
 create table if not exists products_in_orders(
