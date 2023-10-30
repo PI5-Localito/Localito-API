@@ -12,6 +12,8 @@ class Product implements Entity
     protected ?int $id;
     protected int $standId;
     protected string $name;
+    protected string $info;
+    protected string $image;
     protected float $price;
     
     /**
@@ -22,6 +24,8 @@ class Product implements Entity
             'id' => [$this->getId, $this->setId],
             'stand_id' => [$this->getStand, $this->setStand],
             'name' => [$this->getName, $this->setName],
+            'info' => [$this->getInfo, $this->setInfo],
+            'image' => [$this->getImage, $this->setImage],
             'price' => [$this->getPrice, $this->setPrice],
         ];
     }
@@ -57,6 +61,28 @@ class Product implements Entity
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setInfo(string $info): static
+    {
+        $this->info = $info;
+        return $this;
+    }
+
+    public function getInfo(): string
+    {
+        return $this->info;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    public function getImage(): string
+    {
+        return $this->image;
     }
 
     public function setPrice(float $price): static
