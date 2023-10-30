@@ -3,7 +3,7 @@ create table if not exists messages(
     user_from int,
     user_to int,
     order_id int,
-    message text,
+    body varchar(255),
     message_timestamp timestamp default current_timestamp
 ) engine=innodb;
 
