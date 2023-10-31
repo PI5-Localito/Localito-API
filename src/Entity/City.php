@@ -23,7 +23,7 @@ class City implements Entity
         return [
             'id' => [$this->getId, $this->setId],
             'country_code' => [$this->getCode, $this->setCode],
-            'city_name' => [$this->getCity, $this->setCity],
+            'city_name' => [$this->getName, $this->setName],
             'longitude' => [$this->getLong, $this->setLong],
             'latitude' => [$this->getLat, $this->setLat]
         ];
@@ -37,17 +37,6 @@ class City implements Entity
         return $this;
     }
     public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function setCity(int $id): static
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    public function getCity(): int
     {
         return $this->id;
     }
