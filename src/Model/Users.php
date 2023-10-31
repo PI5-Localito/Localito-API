@@ -104,10 +104,10 @@ class Users implements Model
         $stmt = $this->db->prepare(
             "UPDATE `{$this->getTable()}` SET " .
                 'name=:bundle__name, ' .
-                'last_name=:bundle__last_name, ' .
-                'phone=:bundle__phone, ' .
-                'password=:bundle__password, ' .
-                'email=:bundle__email ' .
+                'last_name = :bundle__last_name, ' .
+                'phone = :bundle__phone, ' .
+                'password = :bundle__password, ' .
+                'email = :bundle__email ' .
             'WHERE id=?'
         );
         $this->bindValues($stmt, $entity);

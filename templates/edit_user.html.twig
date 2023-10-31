@@ -1,6 +1,6 @@
-{% extends  'base.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block title %}Editar usuario{% endblock %}
+{% block title %}Usuario{% endblock %}
 
 {% block stylesheets %}
 	<style>
@@ -15,38 +15,15 @@
 {% endblock %} 
 
 {% block body %}
-	{% set usuario = {"nombre": "Chris Pratt", "telefono": "0123456789", "correo": "mario.bros@ucol.mx", "localitos": "si"} %}
-
 	{% include 'header.html.twig' %}
 	<div class="container center">
 		<article class="no-padding">
 			<div class="grid no-space">
 				<div class="s6">
 					<img class="responsive" style="max-width: 30pc;" src="https://images.mubicdn.net/images/cast_member/52568/cache-101647-1600241366/image-w856.jpg?size=800x">
-				    <button class="circle">
-						  <i>attach_file</i>
-						  <input type="file">
-						</button>
 				</div>
 				<div class="s6">
-					<div class="padding">
-						<div class="field border input">
-						  <input type="text" value="{{ usuario.nombre }}">
-						  <span class="helper">Nombre</span>
-						</div>
-						<div class="field border input">
-						  <input type="text" value="{{ usuario.telefono }}">
-						  <span class="helper">Telefono</span>
-						</div>
-						<div class="field border input">
-						  <input type="text" value="{{ usuario.correo }}">
-						  <span class="helper">Correo</span>
-						</div>
-						<nav>
-							<a href="/usuarios"><button class="border round">Volver</button></a>
-							<button class="border round" data-ui="#snackbar">Editar</button>
-						</nav>
-					</div>
+                    {% include 'form/user_form.html.twig' %}
 				</div>
 			</div>
 		</article>
