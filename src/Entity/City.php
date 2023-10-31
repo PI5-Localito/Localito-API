@@ -79,5 +79,10 @@ class City implements Entity
         $this->latitude = $latitude;
         return $this;
     }
+
+    public function getLat(): float
+    {
+        return $this->latitude;
+    }
 }
 
