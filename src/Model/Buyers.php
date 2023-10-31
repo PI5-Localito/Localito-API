@@ -92,7 +92,7 @@ class Buyers implements Model
     }
 
     /**
-     * @param Entity $entity
+     * @param Buyer $entity
      *
      * @return bool
      */
