@@ -16,6 +16,6 @@ class CityForm extends AbstractType
             ->add('countryCode', TextType::class)
             ->add('cityName', TextType::class)
             ->add('longitude', NumberType::class)
-            ->add('latitude', NumberType::class)
+            ->add('latitude', NumberType::class);
     }
 }
