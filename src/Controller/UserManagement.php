@@ -11,9 +11,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class UserAPI extends AbstractController
+class UserManagement extends AbstractController
 {
-    #[Route('/users', methods: 'GET')]
+    #[Route('/api/users', methods: 'GET')]
     public function get(MysqlStorage $storage): Response
     {
         $model = $storage->getModel(Users::class);

@@ -16,8 +16,8 @@ class UserForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('submit', SubmitType::class)
-            ->add('name', TextType::class, [ 'required' => true ])
-            ->add('last_name', TextType::class)
+            ->add('name', TextType::class)
+            ->add('lastName', TextType::class)
             ->add('phone', TelType::class)
             ->add('password', PasswordType::class)
             ->add('email', EmailType::class);
