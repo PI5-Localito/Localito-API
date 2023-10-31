@@ -10,7 +10,7 @@ trait DefaultModel
 {
     private PDO $db;
 
-    abstract function getTable(): string;
+    abstract static public function getTable(): string;
 
 	public function __construct(Storage $storage)
     {
