@@ -2,26 +2,47 @@
 
 namespace App\Entity;
 
-use App\Storage\StorageResultParseableTrait;
+use Lib\Storage\Entity;
+use Lib\Storage\Traits\MethodHydrator;
 
-class Buyer extends Base
+
+class Buyer implements Entity
 {
-    use StorageResultParseableTrait;
+    use MethodHydrator;
 
-    protected int $user_id;
+    protected ?int $id;
+    protected int $userId;
     protected bool $state;
+    
+    /**
+     * @return array<string,array>
+     */
+    public function mappings(): array{
+        return [
+            'id' => [$this->getId, $this->setId],
+            'user_id' => [$this->getUser, $this->setUser],
+            'state' => [$this->getState, $this->setState],
+        ];
+    }
 
-    /** User */
-
-    public function setUser(User $user): static
-    {
-        $this->user_id = $user->id();
+    public function setId(int $id): static{
+        $this->id = $id;
         return $this;
     }
 
-    public function getUser(bool $raw = false): int|User
+    public function getId(): int{
+        return $this->id;
+    }
+
+    public function setUser(int $uid): static
     {
-        return $raw ? $this->user_id : new User($this->user_id);
+        $this->userId = $uid;
+        return $this;
+    }
+
+    public function getUser(): int
+    {
+        return $this->userId;
     }
 
     /** State */
@@ -30,6 +51,10 @@ class Buyer extends Base
     {
         $this->state = $state;
         return $this;
+    }
+
+    public function getState(): string{
+        return $this->state;
     }
 
     public function toggleState(): static

@@ -15,6 +15,8 @@ create table if not exists products(
 	id int auto_increment primary key,
     stand_id int not null,
     name varchar(127) not null,
+    info varchar(255),
+    image varchar(255),
     price decimal not null,
     constraint fk_products_stand_id
 		foreign key (stand_id) references stands(id)

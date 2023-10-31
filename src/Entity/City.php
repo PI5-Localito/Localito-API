@@ -2,43 +2,59 @@
 
 namespace App\Entity;
 
-use App\Storage\StorageResultParseableTrait;
+use Lib\Storage\Entity;
+use Lib\Storage\Traits\MethodHydrator;
 
-class City extends Base
+
+class City implements Entity
 {
-    use StorageResultParseableTrait;
+    use MethodHydrator;
 
-    protected int $id;
-    protected string $country_code;
-    protected string $city_name;
+    protected ?int $id;
+    protected string $countryCode;
+    protected string $cityName;
     protected float $longitude;
     protected float $latitude;
+    /**
+     * @return array<string,array>
+     */
+    public function  mappings(): array
+    {
+        return [
+            'id' => [$this->getId, $this->setId],
+            'country_code' => [$this->getCode, $this->setCode],
+            'city_name' => [$this->getName, $this->setName],
+            'longitude' => [$this->getLong, $this->setLong],
+            'latitude' => [$this->getLat, $this->setLat]
+        ];
 
-    public function setCity(int $id): static
+    }
+
+
+    public function setId(?int $id = null): static
     {
         $this->id = $id;
         return $this;
     }
-
-    public function getCity(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setCountry(string $country_code): static
+    public function setCountry(string $countryCode): static
     {
-        $this->country_code = mb_strcut($country_code, 0, 3);
+        $this->countryCode = mb_strcut($countryCode, 0, 3);
         return $this;
     }
 
     public function getCountry(): string
     {
-        return $this->country_code;
+        return $this->countryCode;
     }
 
-    public function setName(string $city_name): static
+    public function setName(string $cityName): static
     {
-        $this->city_name = mb_strcut($city_name, 0, 255);
+        $this->cityName = mb_strcut($cityName, 0, 255);
         return $this;
     }
 
@@ -62,6 +78,11 @@ class City extends Base
     {
         $this->latitude = $latitude;
         return $this;
+    }
+
+    public function getLat(): float
+    {
+        return $this->latitude;
     }
 }
 

@@ -2,61 +2,78 @@
 
 namespace App\Entity;
 
-use App\Storage\StorageResultParseableTrait;
+use Lib\Storage\Entity;
+use Lib\Storage\Traits\MethodHydrator;
 
-class Order extends Base
+class Order implements Entity
 {
-    use StorageResultParseableTrait;
+    use MethodHydrator;
 
-    protected int $id;
-    protected int $buyer_id;
-    protected int $seller_id;
-    protected int $stand_id;
+    protected ?int $id;
+    protected int $buyerId;
+    protected int $sellerId;
+    protected int $standId;
     protected string $date;
     protected string $state;
-
-    public function setOrder(Order $order): static
+    
+    /**
+     * @return array<string,array>
+     */
+    public function mappings(): array{
+        return [
+            'id' => [$this->getId, $this->setId],
+            'buyer_id' => [$this->getBuyer, $this->setBuyer],
+            'seller_id' => [$this->getSeller, $this->setSeller],
+            'stand_id' => [$this->getStand, $this->setStand],
+            'date' => [$this->getDate, $this->setDate],
+            'state' => [$this->getState, $this->setState]
+        ];
+    }
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): Order
     {
-        $this->id = $order->id();
+        $this->id = $id;
         return $this;
     }
 
-    public function getOrder(bool $raw = false): int|Order
+    public function getId(): int
     {
-        return $raw ? $this->id : new Order($this->id);
+        return $this->id;
     }
 
-    public function setBuyer(Buyer $buyer): static
+    public function setBuyer(int $uid): static
     {
-        $this->buyer_id = $buyer->id();
+        $this->buyerId = $uid;
         return $this;
     }
 
-    public function getBuyer(bool $raw = false): int|Buyer
+    public function getBuyer(): int
     {
-        return $raw ? $this->buyer_id : new Buyer($this->buyer_id);
+        return $this->buyerId;
     }
 
-    public function setSeller(Seller $seller): static
+    public function setSeller(int $uid): static
     {
-        $this->seller_id = $seller->id();
+        $this->sellerId = $uid;
         return $this;
     }
 
-    public function getSeller(bool $raw = false): int|Seller
+    public function getSeller(): int
     {
-        return $raw ? $this->seller_id : new Seller($this->seller_id);
+        return $this->sellerId;
     }
 
-    public function setStand(Stand $stand): static
+    public function setStand(int $sid): static
     {
-        $this->stand_id = $stand->id();
+        $this->standId = $sid;
         return $this;
     }
 
-    public function getStand(bool $raw = false): int|Stand
+    public function getStand(): int
     {
-        return $raw ? $this->stand_id : new Stand($this->stand_id);
+        return $this->standId;
     }
 
     public function setDate(string $date): static

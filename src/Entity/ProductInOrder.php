@@ -2,47 +2,63 @@
 
 namespace App\Entity;
 
-use App\Storage\StorageResultParseableTrait;
+use Lib\Storage\Entity;
+use Lib\Storage\Traits\MethodHydrator;
 
-class ProductInOrder extends Base
+class ProductInOrder implements Entity
 {
-    use StorageResultParseableTrait;
+    use MethodHydrator;
 
-    protected int $order_id;
-    protected int $product_id;
-    protected int $product_quantity;
+    protected int $orderId;
+    protected int $productId;
+    protected int $productQuantity;
+    
+    /**
+     * @return array<string,array>
+     */
+    public function mapping(): array{
+        return [
+        'order_id' => [$this->getOrder, $this->setOrder],
+        'product_id' => [$this->getProduct, $this->setgetProduct],
+        'product_quantity' => [$this->getProductQuantity, $this->getProductQuantity],
+        ];
+    }
 
-    public function setOrder(Order $order): static
+    public function getId(): ?int{
+        return null;
+    }
+
+    public function setOrder(int $oid): static
     {
-        $this->order_id = $order->id();
+        $this->orderId = $oid;
         return $this;
     }
 
-    public function getOrder(bool $raw = false): int|Order
+    public function getOrder(): int
     {
-        return $raw ? $this->order_id : new Order($this->order_id);
+        return $this->orderId;
     }
 
-    public function setProduct(Product $product): static
+    public function setProduct(int $pid): static
     {
-        $this->product_id = $product->id();
+        $this->productId = $pid;
         return $this;
     }
 
-    public function getProduct(bool $raw = false): int|Product
+    public function getProduct(): int
     {
-        return $raw ? $this->product_id : new Product($this->product_id);
+        return $this->productId;
     }
 
-    public function setProductQuantity(int $product_quantity): static
+    public function setProductQuantity(int $productQuantity): static
     {
-        $this->product_quantity = $product_quantity;
+        $this->productQuantity = $productQuantity;
         return $this;
     }
 
     public function getProductQuantity(): int
     {
-        return $this->product_quantity;
+        return $this->productQuantity;
     }
 }
 

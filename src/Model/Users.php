@@ -5,18 +5,13 @@ namespace App\Model;
 use App\Entity\User;
 use Lib\Storage\Entity;
 use Lib\Storage\Model;
-use Lib\Storage\Storage;
+use Lib\Storage\Traits\DefaultModel;
 use PDO;
 use PDOStatement;
 
 class Users implements Model
 {
-    protected PDO $db;
-
-    public function __construct(Storage $storage)
-    {
-        $this->db = $storage->getDatabase();
-    }
+    use DefaultModel;
 
     /**
      * @param PDOStatement $stmt
@@ -35,13 +30,7 @@ class Users implements Model
 
     public function all(int $limit = 0, int $offset = 0, int $page = 0): array
     {
-        $query = "SELECT * FROM `{$this->getTable()}`";
-        if ($limit !== 0) {
-            $offset += $page * $limit;
-            $query .= "LIMIT $limit OFFSET $offset";
-        }
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
+        $stmt = $this->getAll($limit, $offset, $page);
         $entities = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $entity = new User();
@@ -53,10 +42,7 @@ class Users implements Model
 
     public function get(int $id): ?User
     {
-        $stmt = $this->db->prepare("SELECT * FROM `{$this->getTable()}` WHERE id=?");
-        $stmt->bindValue(0, $id, PDO::PARAM_INT);
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $row = $this->getByID($id);
         if ($row === false) {
             return null;
         }
