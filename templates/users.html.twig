@@ -14,8 +14,6 @@
 {% block body %}
 	{% include 'header.html.twig' %}
 
-	{% set usuarios = ["Carlos", "Mauricio", "Roberto", "Ximena", "Alejandro"] %}
-
 	<div class="container center">
 		<table class="border">
 		  <thead>
@@ -28,12 +26,12 @@
 		    </tr>
 		  </thead>
 		  <tbody>
-		  {% for usuario in usuarios %}
+		  {% for u in users %}
 		    <tr>
-		      <td>{{ loop.index }}</td>
-		      <td>{{ usuario }}</td>
-		      <td>Line 1</td>
-		      <td>Line 1</td>
+		      <td>{{ u.getId() }}</td>
+		      <td>{{ u.getName() }}</td>
+		      <td>{{ u.getLastName() }}</td>
+		      <td>{{ u.getPhone() }}</td>
 		      <td>
 		        <nav class="right-align">
 		          <a href="/usuario">

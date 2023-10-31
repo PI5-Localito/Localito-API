@@ -23,12 +23,12 @@ class User implements Entity
     public function mappings(): array
     {
         return [
-            'id' => [$this->getId, $this->setId],
-            'name' => [$this->getName, $this->setName],
-            'last_name' => [$this->getLastName, $this->setLastName],
-            'phone' => [$this->getPhone, $this->setPhone],
-            'password' => [$this->getPassword, $this->setPassword],
-            'email' => [$this->getEmail, $this->setEmail],
+            'id' => ['getId', 'setId'],
+            'name' => ['getName', 'setName'],
+            'last_name' => ['getLastName', 'setLastName'],
+            'phone' => ['getPhone', 'setPhone'],
+            'password' => ['getPassword', 'setPassword'],
+            'email' => ['getEmail', 'setEmail'],
         ];
     }
 

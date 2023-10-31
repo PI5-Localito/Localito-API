@@ -27,7 +27,7 @@ trait MethodHydrator
     public function hydrate(array $values): void
     {
         foreach($this->mappings() as $key => $method) {
-            $method[1]($values[$key] ?? null);
+            $this->{$method[1]}($values[$key] ?? null);
         }
     }
 
@@ -40,7 +40,7 @@ trait MethodHydrator
     {
         $values = [];
         foreach($this->mappings() as $key => $methods) {
-            $values[$key] = $methods[0]();
+            $values[$key] = $this->{$methods[0]}();
         }
 
         return $values;

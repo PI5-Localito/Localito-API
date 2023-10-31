@@ -34,7 +34,8 @@ class Users implements Model
         $entities = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $entity = new User();
-            $entities[] = $entity->hydrate($row);
+            $entity->hydrate($row);
+            $entities[] = $entity;
         }
 
         return $entities;
@@ -94,10 +95,10 @@ class Users implements Model
                 'phone = :bundle__phone, ' .
                 'password = :bundle__password, ' .
                 'email = :bundle__email ' .
-            'WHERE id=?'
+            'WHERE id=:id'
         );
         $this->bindValues($stmt, $entity);
-        $this->bindValues(0, $entity->getId());
+        $stmt->bindValue(':id', $entity->getId());
         $stmt->execute();
         return true;
     }
