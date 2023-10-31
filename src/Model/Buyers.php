@@ -57,7 +57,7 @@ class Buyers implements Model
     {
         $stmt = $this->db->prepare(
             "INSERT INTO `{$this->getTable()}` (" .
-                'user_id' .
+                'user_id,' .
                 'state' .
             ') VALUES (' .
                 ':bundle__userId, ' .
