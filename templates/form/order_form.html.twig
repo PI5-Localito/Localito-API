@@ -1,0 +1,23 @@
+{{ form_start(form) }}
+<div class="field label border">
+    {{ form_widget(form.buyerId) }}
+    <label>Compradoe</label>
+</div>
+<div class="field label border">
+    {{ form_widget(form.sellerId) }}
+    <label>Vendedor</label>
+</div>
+<div class="field label border">
+    {{ form_widget(form.standId) }}
+    <label>Stand</label>
+</div>
+<div class="field label border">
+    {{ form_widget(form.date) }}
+    <label>Fecha de la orden</label>
+</div>
+<div class="field label border">
+    {{ form_widget(form.state) }}
+    <label>Estado de la orden</label>
+</div>
+{{ form_widget(form.submit) }}
+{{ form_end(form) }}
