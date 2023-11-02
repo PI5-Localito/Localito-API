@@ -1,0 +1,23 @@
+{{ form_start(form) }}
+<div class="field label border">
+    {{ form_widget(form.sellerId) }}
+    <label>Dueño del stand</label>
+</div>
+<div class="field label border">
+    {{ form_widget(form.tag) }}
+    <label>Clave del stand</label>
+</div>
+<div class="field label border">
+    {{ form_widget(form.standName) }}
+    <label>Nombre del stand</label>
+</div>
+<div class="field label border">
+    {{ form_widget(form.info) }}
+    <label>Información del stand</label>
+</div>
+<div class="field label border">
+    {{ form_widget(form.city) }}
+    <label>Ciudad a la que pertenece</label>
+</div>
+{{ form_widget(form.submit) }}
+{{ form_end(form) }}
