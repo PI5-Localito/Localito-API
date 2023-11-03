@@ -5,6 +5,7 @@ create table if not exists users(
 	phone varchar(15) unique,
 	email varchar(255) unique,
     password varchar(60) not null,
+    avatar varchar(255),
     constraint chk_user 
         check(`phone` is not null or `email` is not null)
 ) engine=innodb;
