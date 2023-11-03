@@ -1,0 +1,15 @@
+{{ form_start(form) }}
+<div class="field label border">
+    {{ form_widget(form.orderId) }}
+    <label>Numero de orden</label>
+</div>
+<div class="field label border">
+    {{ form_widget(form.productId) }}
+    <label>Producto</label>
+</div>
+<div class="field label border">
+    {{ form_widget(form.productQuantity) }}
+    <label>Cantidad</label>
+</div>
+{{ form_widget(form.submit) }}
+{{ form_end(form) }}

@@ -1,0 +1,19 @@
+{{ form_start(form) }}
+<div class="field label border">
+    {{ form_widget(form.countryCode) }}
+    <label>Codigo del pais</label>
+</div>
+<div class="field label border">
+    {{ form_widget(form.cityName) }}
+    <label>Nombre de la ciudad</label>
+</div>
+<div class="field label border">
+    {{ form_widget(form.longitude) }}
+    <label>Longitud</label>
+</div>
+<div class="field label border">
+    {{ form_widget(form.latitude) }}
+    <label>Latitud</label>
+</div>
+{{ form_widget(form.submit) }}
+{{ form_end(form) }}

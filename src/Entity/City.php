@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Lib\Storage\Entity;
 use Lib\Storage\Traits\MethodHydrator;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 class City implements Entity
@@ -11,6 +12,7 @@ class City implements Entity
     use MethodHydrator;
 
     protected ?int $id;
+    #[Assert\Length(exactly: 3, exactMessage:"El codigo debe de ser de 3 caracteres")]
     protected string $countryCode;
     protected string $cityName;
     protected float $longitude;
