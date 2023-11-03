@@ -12,7 +12,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class BuyerForm extends AbstractType
 {
-    public function __construct(protected MysqlStorage $storage){
+    public function __construct(protected MysqlStorage $storage)
+    {
 
     }
 
@@ -21,7 +22,7 @@ class BuyerForm extends AbstractType
         $model  = $this->storage->getModel(Users::class);
         $users = $model->all();
         $builder->add('submit', SubmitType::class)
-            ->add('userId', ChoiceType::class,[
+            ->add('userId', ChoiceType::class, [
                 'choices' => $users,
                 'choice_label' => fn ($u) => $u?->getFullName(),
                 'choice_value' => fn ($u) => $u?->getId(),
