@@ -1,69 +1,52 @@
 {% extends 'base.html.twig' %}
-{% block title %}Usuarios{% endblock %}
-
-{% block js %}
-    <script defer>
-        const DELETE_EVENT = new Event('delete-accept');
-
-    </script>
-{% endblock %}
-
-{% block css %}
-    <style>
-        main {
-            margin: 2em auto;
-            max-width: 1000px;
-        }
-
-        .actions-container {
-            display: flex;
-            position: fixed;
-        }
-    </style>
-{% endblock %}
-
 {% block body %}
-<main>
-    <div class="display-flex">
-        <a class="button" href="/user/new">
-            <i>add</i>
-            <span>Nuevo</span>
-        </a>
+<main class="responsive">
+  <h1>Usuarios</h1>
+  <div class="my-mid">
+    <a class="button" href="/user/new">
+      <i>add</i>
+      <span>Nuevo</span>
+    </a>
+  </div>
+  {% if users %}
+  <table class="border large-space">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr class="flex">
+        <td>{{ u.getFullName() }}</td>
+        <td>{{ u.getEmail() }}</td>
+        <td>{{ u.getPhone() }}</td>
+        <td>
+          <a href="/user/{{ u.getId() }}/edit" class="button transparent circle medium"><i>edit</i></a>
+          <a href="/user/{{ u.getId() }}/delete" class="button transparent circle medium"><i>delete</i></a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <article class="border medium no-padding middle-align center-align">
+    <div class="padding">
+      <h5>No hay nada...</h5>
     </div>
-
-    <table class="border large-space">
-        <thead>
-            <tr>
-                <th></th>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Phone</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for u in users %}
-            <tr>
-                <td>
-                    <label class="checkbox">
-                        <input type="checkbox">
-                        <span></span>
-                    </label>
-                </td>
-                <td>{{ u.getFullName() }}</td>
-                <td>{{ u.getEmail() }}</td>
-                <td>{{ u.getPhone() }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+  </article>
+  <nav>
+    {% if page > 1 %}
+    <a href="?page={{ page - 1}}" class="button transparent circle"><i>chevron_left</i></a>
+    {% else %}
+    <a disabled class="button transparent circle"><i>chevron_left</i></a>
+    {% endif %}
+    {{ page }}
+    <a href="?page={{ page + 1 }}" class="button transparent circle"><i>chevron_right</i></a>
+  </nav>
+  {% endif %}
 </main>
-
-<dialog id="delete-dialog">
-    <h5>Eliminar ?? elementos</h5>
-    <div>Esta apunto de eliminar ?? cantidad de elementos, esta accion no puede revertise</div>
-    <nav class="right-align">
-        <button data-ui="#delete-dialog" class="border">Cancelar</button>
-        <button data-ui="#delete-dialog">Eliminar</button>
-    </nav>
-</dialog>
 {% endblock %}

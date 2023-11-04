@@ -14,46 +14,70 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserManagement extends AbstractController
 {
+    protected Users $model;
+
+    public function __construct(MysqlStorage $storage)
+    {
+        $this->model = $storage->getModel(Users::class);
+    }
+
+    protected function ifEntity(int $id): User
+    {
+        $user = $this->model->get($id);
+        if ($user === null) {
+            throw new NotFoundHttpException();
+        }
+        return $user;
+    }
+
+    #[Route(name: 'users', path: '/users', methods: 'GET')]
+    public function list(Request $request): Response
+    {
+        $page = $request->query->get('page', 1);
+
+        $entities = $this->model->all(limit: 20, page: $page);
+        return $this->render('users.html.twig', [
+            'users' => $entities,
+            'page' => $page,
+        ]);
+    }
+
+    #[Route('/user/{id}/edit', methods: [ 'GET', 'POST' ])]
+    public function edit(Request $request, int $id): Response
+    {
+        $user = $this->ifEntity($id);
+        $form = $this->createForm(UserForm::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->model->update($form->getData());
+            return $this->redirectToRoute('users');
+        }
+
+        return $this->render('user_edit.html.twig', [ 'form' => $form ]);
+    }
+
+    #[Route('/user/{id}/delete', methods: [ 'GET' ])]
+    public function delete(Request $request, int $id): Response
+    {
+        $user = $this->ifEntity($id);
+        if ($request->query->has('confirmation')) {
+            $this->model->delete($user);
+            return $this->redirectToRoute('users');
+        }
+        return $this->render('user_delete.html.twig', ['user' => $user]);
+    }
+
     #[Route('/user/new', methods: [ 'GET', 'POST' ])]
-    public function create(Request $request, MysqlStorage $storage): Response
+    public function create(Request $request): Response
     {
         $user = new User();
         $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $model = $storage->getModel(Users::class);
-            $model->save($form->getData());
-            return $this->redirect('/users');
+            $this->model->save($form->getData());
+            return $this->redirectToRoute('users');
         }
 
-        return $this->render('edit_user.html.twig', [ 'form' => $form ]);
-    }
-
-    #[Route('/user/{id}/edit', methods: [ 'GET', 'POST' ])]
-    public function edit(Request $request, int $id, MysqlStorage $storage): Response
-    {
-        $model = $storage->getModel(Users::class);
-        $user = $model->get($id);
-        if ($user === null) {
-            throw new NotFoundHttpException();
-        }
-        $form = $this->createForm(UserForm::class, $user);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $model->update($form->getData());
-            return $this->redirect('/users');
-        }
-
-        return $this->render('edit_user.html.twig', [ 'form' => $form ]);
-    }
-
-    #[Route('/users', methods: 'GET')]
-    public function usersView(MysqlStorage $storage): Response
-    {
-        $model = $storage->getModel(Users::class);
-        $entities = $model->all();
-        return $this->render('users.html.twig', [
-            'users' => $entities,
-        ]);
+        return $this->render('user_edit.html.twig', [ 'form' => $form ]);
     }
 }

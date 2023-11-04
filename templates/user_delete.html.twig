@@ -1,0 +1,20 @@
+
+{% extends 'base.html.twig'  %}
+
+{% block body %}
+<main class="responsive">
+  <h1>¿Desea eliminar el usuario {{user.getFullName()}}?</h1>
+  <p class="large-text">Nota: Esta accion no se puede deshacer</p>
+  
+  <nav class="my-mid">
+    <a class="button fill" href="/users">Regresar</a>
+    <a class="button" href="?confirmation=1">Borrar</a>
+  </nav>
+</main>
+{% endblock %}
+
+{% block style %}
+<style>
+  .
+</style>
+{% endblock %}

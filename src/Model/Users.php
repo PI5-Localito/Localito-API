@@ -111,7 +111,7 @@ class Users implements Model
     public function delete(Entity $entity): bool
     {
         $stmt = $this->db->prepare("DELETE FROM `{$this->getTable()}` WHERE id=?");
-        $stmt->bindValue(0, $entity->getId());
+        $stmt->bindValue(1, $entity->getId());
         return $stmt->execute();
     }
 
