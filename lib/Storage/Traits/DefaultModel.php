@@ -39,4 +39,3 @@ trait DefaultModel
         return $row;
     }
 }
-

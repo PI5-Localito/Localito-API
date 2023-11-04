@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use Lib\Storage\Entity;
 use Lib\Storage\Traits\MethodHydrator;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class User implements Entity
 {

@@ -6,6 +6,10 @@ body {
 
 .my-mid { margin: 2em 0 }
 .mx-mid { margin: 0 2em }
+.big {
+    block-size: 12rem !important;
+    inline-size: 12rem !important;
+ }
 
 body.light {
     --primary: #b02f00;

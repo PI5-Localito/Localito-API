@@ -35,7 +35,7 @@ class UserManagement extends AbstractController
     {
         $page = $request->query->get('page', 1);
 
-        $entities = $this->model->all(limit: 20, page: $page);
+        $entities = $this->model->all(limit: 20, page: $page - 1);
         return $this->render('users.html.twig', [
             'users' => $entities,
             'page' => $page,
