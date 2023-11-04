@@ -53,7 +53,7 @@ class UserManagement extends AbstractController
             return $this->redirectToRoute('users');
         }
 
-        return $this->render('user_edit.html.twig', [ 'form' => $form ]);
+        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form ]);
     }
 
     #[Route('/user/{id}/delete', methods: [ 'GET' ])]
@@ -74,10 +74,11 @@ class UserManagement extends AbstractController
         $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            dd($form->getData());
             $this->model->save($form->getData());
             return $this->redirectToRoute('users');
         }
 
-        return $this->render('user_edit.html.twig', [ 'form' => $form ]);
+        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form ]);
     }
 }

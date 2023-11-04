@@ -4,17 +4,37 @@ namespace App\Entity;
 
 use Lib\Storage\Entity;
 use Lib\Storage\Traits\MethodHydrator;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 class User implements Entity
 {
     use MethodHydrator;
 
     protected ?int $id;
+    #
+    #[Assert\NotBlank(message: 'not.blank')]
+    #[Assert\NotNull(message: 'not.null')]
     protected string $name;
+
+    #[Assert\NotBlank(message: 'not.blank')]
+    #[Assert\NotNull(message: 'not.null')]
     protected string $lastName;
+
+    #[Assert\Length(exactly: 10, exactMessage: 'string.length')]
+    #[Assert\Type(type: 'digit', message: 'type.digit')]
     protected ?string $phone;
-    protected string $password;
+
+    #[Assert\NotBlank(message: 'not.blank')]
+    #[Assert\NotNull(message: 'not.null')]
     protected ?string $email;
+    protected ?string $avatar;
+
+    #[Assert\NotBlank(message: 'not.blank')]
+    #[Assert\NotNull]
+    #[Assert\NotCompromisedPassword(message: 'password.compromised')]
+    #[Assert\PasswordStrength([ 'minScore' => PasswordStrength::STRENGTH_MEDIUM ], message: 'password.weak')]
+    protected string $password;
 
     /**
      * @return array<string,array>
@@ -28,6 +48,7 @@ class User implements Entity
             'phone' => ['getPhone', 'setPhone'],
             'password' => ['getPassword', 'setPassword'],
             'email' => ['getEmail', 'setEmail'],
+            'avatar' => ['getAvatar', 'setAvatar'],
         ];
     }
 
@@ -39,7 +60,7 @@ class User implements Entity
 
     public function getId(): ?int
     {
-        return $this->id;
+        return $this->id ?? null;
     }
 
     public function setName(string $name): static
@@ -101,5 +122,16 @@ class User implements Entity
     public function getPassword(): string
     {
         return $this->password;
+    }
+
+    public function getAvatar(): string
+    {
+        return $this->avatar ?? null;
+    }
+
+    public function setAvatar(?string $avatar): static
+    {
+        $this->avatar = $avatar;
+        return $this;
     }
 }
