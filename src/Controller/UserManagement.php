@@ -7,6 +7,7 @@ use App\Form\UserForm;
 use App\Model\Users;
 use App\Service\MysqlStorage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -73,8 +74,9 @@ class UserManagement extends AbstractController
         $user = new User();
         $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
+        /** @var UploadedFile */
+        $file = $form->get('avatar')->getData();
         if ($form->isSubmitted() && $form->isValid()) {
-            dd($form->getData());
             $this->model->save($form->getData());
             return $this->redirectToRoute('users');
         }

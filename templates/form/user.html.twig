@@ -4,7 +4,7 @@
   <div class="s3">
     <a class="button transparent circle big">
       <img class="big small-elevate responsive" id="avatar_preview" src="/user-default.svg">
-      {{ form_widget(form.avatar, { attr: { accept: 'image/*' } }) }}
+      {{ form_widget(form.avatar, { attr: { accept: 'image/png,image/jpeg,image/gif' } }) }}
     </a>
   </div>
   <div class="s4">
@@ -20,6 +20,9 @@
     </div>
   </div>
 </div>
+{% if not form_errors(form.avatar) is empty %}
+  <div class="snackbar error top active">{{ form_errors(form.avatar) }}</div>
+{% endif %}
 {{ form_end(form) }}
 <script defer type="module">
   import { setup_preview } from '/assets/image_preview.js';

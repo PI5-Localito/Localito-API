@@ -28,6 +28,13 @@ class User implements Entity
     #[Assert\NotBlank(message: 'not.blank')]
     #[Assert\NotNull(message: 'not.null')]
     protected ?string $email;
+
+    #[Assert\NotBlank(message: 'not.blank')]
+    #[Assert\NotNull(message: 'not.null')]
+    #[Assert\File(
+        maxSize: '2M',
+        extensions: ['jpeg', 'png', 'gif'],
+    )]
     protected ?string $avatar;
 
     #[Assert\NotBlank(message: 'not.blank')]
