@@ -38,6 +38,7 @@
       <h5>No hay nada...</h5>
     </div>
   </article>
+  {% endif %}
   <nav>
     {% if page > 1 %}
     <a href="?page={{ page - 1}}" class="button transparent circle"><i>chevron_left</i></a>
@@ -47,6 +48,5 @@
     {{ page }}
     <a href="?page={{ page + 1 }}" class="button transparent circle"><i>chevron_right</i></a>
   </nav>
-  {% endif %}
 </main>
 {% endblock %}
