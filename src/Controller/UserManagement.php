@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserForm;
-use App\Model\Users;
+use App\Model\UserRepo;
 use App\Service\MysqlStorage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -15,11 +15,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserManagement extends AbstractController
 {
-    protected Users $model;
+    protected UserRepo $model;
 
     public function __construct(MysqlStorage $storage)
     {
-        $this->model = $storage->getModel(Users::class);
+        $this->model = $storage->getModel(User::class);
     }
 
     protected function ifEntity(int $id): User
@@ -74,10 +74,15 @@ class UserManagement extends AbstractController
         $user = new User();
         $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
-        /** @var UploadedFile */
-        $file = $form->get('avatar')->getData();
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->model->save($form->getData());
+            /** @var User */
+            $entity = $form->getData();
+            /** @var UploadedFile */
+            $file = $form->get('avatar')->getData();
+
+            $file->move('public/avatars', uniqid() . $file->guessExtension());
+            $entity->setAvatar($file->getPathname());
+            $this->model->save($entity);
             return $this->redirectToRoute('users');
         }
 

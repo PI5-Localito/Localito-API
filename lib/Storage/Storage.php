@@ -16,9 +16,7 @@ interface Storage
     /**
      * Get the model related to the database
      *
-     * @template T of Model
-     * @param class-string<T> $model
-     * @return T
+     * @param string $entity
      */
-    public function getModel(string $model): Model;
+    public function getModel(string $entity): AbstractModel;
 }

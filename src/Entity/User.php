@@ -2,105 +2,53 @@
 
 namespace App\Entity;
 
-use Lib\Storage\Entity;
-use Lib\Storage\Traits\MethodHydrator;
+use App\Model\UserRepo;
+use Lib\Storage\AbstractEntity;
+use Lib\Storage\Annotations\Column;
+use Lib\Storage\Annotations\Table;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\PasswordStrength;
 
-class User implements Entity
+#[Table('users', UserRepo::class)]
+class User extends AbstractEntity
 {
-    use MethodHydrator;
-
-    protected ?int $id;
-    #
+    #[Column('name')]
     #[Assert\NotBlank(message: 'not.blank')]
     #[Assert\NotNull(message: 'not.null')]
-    protected string $name;
+    public string $name;
 
+    #[Column('last_name')]
     #[Assert\NotBlank(message: 'not.blank')]
     #[Assert\NotNull(message: 'not.null')]
-    protected string $lastName;
+    public string $lastName;
 
+    #[Column('phone')]
     #[Assert\Length(exactly: 10, exactMessage: 'string.length')]
     #[Assert\Type(type: 'digit', message: 'type.digit')]
-    protected ?string $phone;
+    public ?string $phone;
 
+    #[Column('email')]
     #[Assert\NotBlank(message: 'not.blank')]
     #[Assert\NotNull(message: 'not.null')]
-    protected ?string $email;
+    public Email $email;
 
+    #[Column('avatar', 'getAvatarUri', 'setAvatarFromUri')]
     #[Assert\NotBlank(message: 'not.blank')]
     #[Assert\NotNull(message: 'not.null')]
-    #[Assert\File(
-        maxSize: '2M',
-        extensions: ['jpeg', 'png', 'gif'],
-    )]
-    protected ?string $avatar;
+    public ?File $avatar;
 
+    #[Column('password')]
     #[Assert\NotBlank(message: 'not.blank')]
     #[Assert\NotNull]
     #[Assert\NotCompromisedPassword(message: 'password.compromised')]
     #[Assert\PasswordStrength([ 'minScore' => PasswordStrength::STRENGTH_MEDIUM ], message: 'password.weak')]
-    protected string $password;
-
-    /**
-     * @return array<string,array>
-     */
-    public function mappings(): array
-    {
-        return [
-            'id' => ['getId', 'setId'],
-            'name' => ['getName', 'setName'],
-            'last_name' => ['getLastName', 'setLastName'],
-            'phone' => ['getPhone', 'setPhone'],
-            'password' => ['getPassword', 'setPassword'],
-            'email' => ['getEmail', 'setEmail'],
-            'avatar' => ['getAvatar', 'setAvatar'],
-        ];
-    }
-
-    public function setId(?int $id = null): static
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id ?? null;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = mb_strcut($name, 0, 100);
-        return $this;
-    }
-
-    public function setLastName(string $last_name): static
-    {
-        $this->lastName = mb_strcut($last_name, 0, 100);
-        return $this;
-    }
+    public string $password;
 
     public function getFullName(string $format = '%s %s'): string
     {
         return sprintf($format, $this->name, $this->lastName);
-    }
-
-    public function getLastName(): string
-    {
-        return $this->lastName;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setPhone(string $phone): static
-    {
-        $this->phone = mb_strcut($phone, 0, 15);
-        return $this;
     }
 
     public function getPhone(?string $format = null): ?string
@@ -120,25 +68,19 @@ class User implements Entity
         return $this->email ?? null;
     }
 
-    public function setPassword(string $password, bool $hash = false): static
+    public function hashPassword(string $password): string
     {
-        $this->password = !$hash ? $password : password_hash($password, PASSWORD_DEFAULT);
-        return $this;
+        return password_hash($this->password, PASSWORD_DEFAULT);
     }
 
-    public function getPassword(): string
+    public function getAvatarUri(): string
     {
-        return $this->password;
+        return $this->avatar->getPathname();
     }
 
-    public function getAvatar(): string
+    public function setAvatarFromUri(string $path): static
     {
-        return $this->avatar ?? null;
-    }
-
-    public function setAvatar(?string $avatar): static
-    {
-        $this->avatar = $avatar;
+        $this->avatar = new File(path: $path);
         return $this;
     }
 }
