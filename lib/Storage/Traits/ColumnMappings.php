@@ -13,7 +13,7 @@ trait ColumnMappings
      * Get the mappings from reflection
      * @param AbstractEntity $entity
      *
-     * @return array<string, Transform>
+     * @return array<string, Column>
      */
     protected function getMappings(AbstractEntity $entity): array
     {

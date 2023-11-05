@@ -7,6 +7,6 @@ use PDO;
 
 abstract class AbstractEntity
 {
-    #[Column(type: PDO::PARAM_STR)]
-    public ?int $id;
+    #[Column('id', type: PDO::PARAM_INT)]
+    public ?int $id = null;
 }

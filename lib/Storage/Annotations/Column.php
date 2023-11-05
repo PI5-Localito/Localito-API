@@ -10,8 +10,8 @@ class Column
 {
     public function __construct(
         protected string $column,
-        protected string $get = null,
-        protected string $set = null,
+        protected ?string $get = null,
+        protected ?string $set = null,
         protected string $type = PDO::PARAM_STR,
     ) {
     }

@@ -2,7 +2,6 @@
 
 namespace Lib\Storage\Traits;
 
-use Lib\Storage\Annotations\Transform;
 use Lib\Storage\Annotations\Column;
 use Lib\Storage\AbstractEntity;
 
@@ -24,7 +23,7 @@ trait ColumnHydrate
         $mappings = $this->getMappings($entity);
         foreach($mappings as $name => $column) {
             $getter = $column->getGetter();
-            $data = empty($getter) ? $entity->$name : $entity->$getter();
+            $data = empty($getter) ? $entity->$name ?? null : $entity->$getter();
             $values[$column->getColumn] = $data;
         }
         return $values;

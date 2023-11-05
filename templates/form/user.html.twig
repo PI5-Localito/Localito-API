@@ -1,9 +1,10 @@
 {% form_theme form 'form/beer_theme.html.twig'  %}
 {{ form_start(form, { attr: { id: 'user_form' }}) }}
+{% set avatar = form.vars.value.avatar is empty? 'user-default.svg' : form.vars.value.avatar.getPathname() %} 
 <div class="grid">
   <div class="s3">
     <a class="button transparent circle big">
-      <img class="big small-elevate responsive" id="avatar_preview" src="/user-default.svg">
+      <img class="big small-elevate responsive" id="avatar_preview" src="/{{ avatar }}">
       {{ form_widget(form.avatar, { attr: { accept: 'image/png,image/jpeg,image/gif' } }) }}
     </a>
   </div>

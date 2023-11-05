@@ -22,11 +22,11 @@
       {% for u in users %}
       <tr class="flex">
         <td>{{ u.getFullName() }}</td>
-        <td>{{ u.getEmail() }}</td>
-        <td>{{ u.getPhone() }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.phone }}</td>
         <td>
-          <a href="/user/{{ u.getId() }}/edit" class="button transparent circle medium"><i>edit</i></a>
-          <a href="/user/{{ u.getId() }}/delete" class="button transparent circle medium"><i>delete</i></a>
+          <a href="/user/{{ u.id }}/edit" class="button transparent circle medium"><i>edit</i></a>
+          <a href="/user/{{ u.id }}/delete" class="button transparent circle medium"><i>delete</i></a>
         </td>
       </tr>
       {% endfor %}

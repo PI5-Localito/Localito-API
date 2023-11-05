@@ -56,7 +56,7 @@ abstract class AbstractModel
     {
         foreach($columns as $name => $column) {
             $getter = $column->getGetter();
-            $value = empty($getter) ? $entity->$name : $entity->$getter();
+            $value = empty($getter) ? $entity->$name ?? null : $entity->$getter();
             $stmt->bindValue(":$name", $value, $column->getType());
         }
     }
@@ -91,10 +91,13 @@ abstract class AbstractModel
     public function save(AbstractEntity $entity): bool
     {
         $mappings = $this->excludeMappigns($entity, ['id']);
-        $col_filter = fn ($map) => "`{$map[0]->getCloumn()}`";
         $query = "INSERT INTO {$this->getTable()}";
-        $query .= '('. implode(',', array_map($mappings, $col_filter)) . ')';
-        $query .= 'VALUES (' . implode(',', array_map(array_keys($mappings), fn ($n) => ":$n")) . ')';
+
+        $columns = array_map(fn (Column $col) => "`{$col->getColumn()}`", $mappings);
+        $query .= '('. implode(',', $columns)  . ')';
+
+        $values = array_map(fn ($n) => ":$n", array_keys($mappings));
+        $query .= 'VALUES (' . implode(',', $values) . ')';
         $stmt = $this->db->prepare($query);
         $this->bindValues($stmt, $entity, $mappings);
         return $stmt->execute();
@@ -108,17 +111,17 @@ abstract class AbstractModel
      */
     public function update(AbstractEntity $entity): bool
     {
-        $mappings = $this->excludeMappigns($entity, ['id']);
+        $mappings = $this->getMappings($entity);
+        $withoutId = $this->excludeMappigns($entity, ['id']);
         $query = "UPDATE {$this->getTable()} SET";
         $bindings = [];
-        foreach($mappings as $name => $column) {
-            $bindings .= "`{$column->getColumn()}` = :$name";
+        foreach($withoutId as $name => $column) {
+            $bindings[] = "`{$column->getColumn()}` = :$name";
         }
         $query .= ' ' . implode(',', $bindings);
-        $query .= ' WHERE `id` = ?';
+        $query .= ' WHERE `id` = :id';
         $stmt = $this->db->prepare($query);
         $this->bindValues($stmt, $entity, $mappings);
-        $stmt->bindValue(1, $entity->id);
         return $stmt->execute();
     }
 
@@ -145,11 +148,19 @@ abstract class AbstractModel
      */
     public function all(int $limit = 0, int $offset = 0, int $page = 0): array
     {
-        //     $entities = [];
-        //     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        //         $entity = new User();
-        //         $entity->hydrate($row);
-        //         $entities[] = $entity;
-        //     }
+        $query = "SELECT * FROM `{$this->getTable()}`";
+        if ($limit !== 0) {
+            $offset += $page * $limit;
+            $query .= "LIMIT $limit OFFSET $offset";
+        }
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $entities = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $entity = new $this->entity();
+            $this->hydrate($entity, $row);
+            $entities[] = $entity;
+        }
+        return $entities;
     }
 }

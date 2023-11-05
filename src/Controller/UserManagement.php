@@ -50,7 +50,15 @@ class UserManagement extends AbstractController
         $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->model->update($form->getData());
+            /** @var User */
+            $entity = $form->getData();
+            /** @var UploadedFile */
+            $file = $form->get('avatar')->getData();
+            if (!empty($file)) {
+                $new_file = $file->move('avatars', uniqid() . ".{$file->guessExtension()}");
+                $entity->avatar = $new_file;
+            }
+            $this->model->update($entity);
             return $this->redirectToRoute('users');
         }
 
@@ -79,9 +87,10 @@ class UserManagement extends AbstractController
             $entity = $form->getData();
             /** @var UploadedFile */
             $file = $form->get('avatar')->getData();
-
-            $file->move('public/avatars', uniqid() . $file->guessExtension());
-            $entity->setAvatar($file->getPathname());
+            if (!empty($file)) {
+                $new_file = $file->move('avatars', uniqid() . ".{$file->guessExtension()}");
+                $entity->avatar = $new_file;
+            }
             $this->model->save($entity);
             return $this->redirectToRoute('users');
         }

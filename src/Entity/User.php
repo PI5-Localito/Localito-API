@@ -7,7 +7,6 @@ use Lib\Storage\AbstractEntity;
 use Lib\Storage\Annotations\Column;
 use Lib\Storage\Annotations\Table;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\PasswordStrength;
 
@@ -32,12 +31,10 @@ class User extends AbstractEntity
     #[Column('email')]
     #[Assert\NotBlank(message: 'not.blank')]
     #[Assert\NotNull(message: 'not.null')]
-    public Email $email;
+    public string $email;
 
     #[Column('avatar', 'getAvatarUri', 'setAvatarFromUri')]
-    #[Assert\NotBlank(message: 'not.blank')]
-    #[Assert\NotNull(message: 'not.null')]
-    public ?File $avatar;
+    public ?File $avatar = null;
 
     #[Column('password')]
     #[Assert\NotBlank(message: 'not.blank')]
@@ -51,36 +48,28 @@ class User extends AbstractEntity
         return sprintf($format, $this->name, $this->lastName);
     }
 
-    public function getPhone(?string $format = null): ?string
+    public function getPhoneFormat(string $format = null): ?string
     {
         // TODO: Implement formatting for the phone number
         return $format ?: $this->phone ?? null;
     }
 
-    public function setEmail(string $email): static
+    public function setPasswordHash(string $password): static
     {
-        $this->email = mb_strcut($email, 0, 255);
+        $this->password = password_hash($this->password, PASSWORD_DEFAULT);
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getAvatarUri(): ?string
     {
-        return $this->email ?? null;
+        return $this->avatar?->getPathname();
     }
 
-    public function hashPassword(string $password): string
+    public function setAvatarFromUri(?string $path): static
     {
-        return password_hash($this->password, PASSWORD_DEFAULT);
-    }
-
-    public function getAvatarUri(): string
-    {
-        return $this->avatar->getPathname();
-    }
-
-    public function setAvatarFromUri(string $path): static
-    {
-        $this->avatar = new File(path: $path);
+        if (!empty($path)) {
+            $this->avatar = new File($path, false);
+        }
         return $this;
     }
 }
