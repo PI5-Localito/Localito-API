@@ -11,6 +11,6 @@ class FileAPI
     #[Route(path: '/file/upload', methods: 'PUT')]
     public function newFile(): Response
     {
-        return new JsonResponse();
+        return new JsonResponse([]);
     }
 }

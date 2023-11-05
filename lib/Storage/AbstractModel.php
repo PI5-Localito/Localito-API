@@ -4,7 +4,6 @@ namespace Lib\Storage;
 
 use Lib\Storage\Annotations\Column;
 use Lib\Storage\Annotations\Table;
-use Lib\Storage\Traits\ColumnMappings;
 use PDOStatement;
 use ReflectionClass;
 use PDO;
@@ -47,7 +46,7 @@ abstract class AbstractModel
      *
      * @return void
      */
-    public function bindValues(PDOStatement $stmt, ColumnMappings $entity, array $columns = []): void
+    public function bindValues(PDOStatement $stmt, AbstractEntity $entity, array $columns = []): void
     {
         foreach($columns as $name => $column) {
             $getter = $column->getGetter();
@@ -82,9 +81,9 @@ abstract class AbstractModel
      *
      * @return bool
      */
-    public function save(ColumnMappings $entity): bool
+    public function save(AbstractEntity $entity): bool
     {
-        $mappings = $entity->excludeMappigns($entity, ['id']);
+        $mappings = $entity->excludeMappigns(['id']);
         $query = "INSERT INTO {$this->getTable()}";
 
         $columns = array_map(fn (Column $col) => "`{$col->getColumn()}`", $mappings);
@@ -102,9 +101,9 @@ abstract class AbstractModel
      *
      * @return bool
      */
-    public function update(ColumnMappings $entity): bool
+    public function update(AbstractEntity $entity): bool
     {
-        $mappings = $entity->excludeMappigns($entity, ['id']);
+        $mappings = $entity->excludeMappigns(['id']);
         $query = "UPDATE {$this->getTable()} SET";
         $bindings = [];
         foreach($mappings as $name => $column) {
@@ -122,12 +121,12 @@ abstract class AbstractModel
     /**
      * Patch specified fields for an entity
      *
-     * @param ColumnMappings $entity
+     * @param AbstractEntity $entity
      * @param array<int, string> $fields
      */
-    public function patch(ColumnMappings $entity, array $fields): bool
+    public function patch(AbstractEntity $entity, array $fields): bool
     {
-        $mappings = $entity->excludeMappigns($entity, [ 'id', ...$fields ]);
+        $mappings = $entity->excludeMappigns([ 'id', ...$fields ]);
         $query = "UPDATE {$this->getTable()} SET";
         $bindings = [];
         foreach($mappings as $name => $column) {
@@ -137,7 +136,7 @@ abstract class AbstractModel
         $query .= ' WHERE `id` = :id';
         $stmt = $this->db->prepare($query);
 
-        $mappings = $entity->getMappings($entity, $fields);
+        $mappings = $entity->getMappings($fields);
         $this->bindValues($stmt, $entity, $mappings);
         return $stmt->execute();
 
@@ -145,11 +144,10 @@ abstract class AbstractModel
 
     /**
      * Delete the entity
-     * @param T $entity
      *
      * @return bool
      */
-    public function delete(ColumnMappings $entity): bool
+    public function delete(AbstractEntity $entity): bool
     {
         $stmt = $this->db->prepare("DELETE FROM {$this->getTable()} WHERE `id` = ?");
         $stmt->bindValue(1, $entity->id);

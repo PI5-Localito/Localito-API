@@ -46,9 +46,10 @@ class UserAPI extends AbstractController
     }
     #
     #[Route(path: '/api/user/{id}', methods: 'PUT')]
-    public function editUser(int $id): Response
+    public function editUser(Request $request, int $id): Response
     {
         $entity = $this->ifEntity($id);
+        // $data = $request
         return new JsonResponse($entity);
     }
 
