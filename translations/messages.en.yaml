@@ -1,6 +1,10 @@
 users: "Users"
 user: "User"
 home: "Home"
+stands: "Stands"
+stand: "Stand"
+cities: "Cities"
+city: "City"
 
 user.create: "Create user"
 user.edit: "Edit \"%username%\""

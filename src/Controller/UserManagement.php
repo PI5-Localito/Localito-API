@@ -7,7 +7,6 @@ use App\Form\UserForm;
 use App\Model\UserRepo;
 use App\Service\MysqlStorage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -50,15 +49,12 @@ class UserManagement extends AbstractController
         $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var User */
-            $entity = $form->getData();
-            /** @var UploadedFile */
-            $file = $form->get('avatar')->getData();
-            if (!empty($file)) {
-                $new_file = $file->move('avatars', uniqid() . ".{$file->guessExtension()}");
-                $entity->avatar = $new_file;
+            if (!empty($user->avatar)) {
+                $new_file = $user->avatar->move('avatars', uniqid() . ".{$user->avatar->guessExtension()}");
+                $user->avatar = $new_file;
             }
-            $this->model->save($entity);
+            $user->setPasswordHash($user->password);
+            $this->model->save($user);
             return $this->redirectToRoute('users');
         }
 
@@ -74,11 +70,8 @@ class UserManagement extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var User */
             $entity = $form->getData();
-            /** @var UploadedFile */
-            $file = $form->get('avatar')->getData();
-            if (!empty($file)) {
-                $new_file = $file->move('avatars', uniqid() . ".{$file->guessExtension()}");
-                // $file->
+            if (!empty($entity->file)) {
+                $new_file = $entity->file->move('avatars', uniqid() . " . {$entity->file->guessExtension()}");
                 $entity->avatar = $new_file;
             }
             $this->model->update($entity);
