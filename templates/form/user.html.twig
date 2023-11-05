@@ -16,8 +16,8 @@
     <div class="medium-divider"></div>
     {{ form_row(form.password) }}
     <div class="row">
-      {{ form_widget(form.submit, { label: 'Enviar' }) }}
-      <a class="button app-back fill">Regresar</a>
+      {{ form_widget(form.submit) }}
+      <a class="button app-back fill">{{ 'action.back'|trans }}</a>
     </div>
   </div>
 </div>

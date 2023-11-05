@@ -1,0 +1,15 @@
+users: "Users"
+user: "User"
+home: "Home"
+
+user.create: "Create user"
+user.edit: "Edit \"%username%\""
+
+delete.warning: "Do you want to delete \"%username%\" user?"
+delete.note: "This action cannot be undone"
+
+action.new: 'Add'
+action.delete: "Delete"
+action.back: "Back"
+
+table.empty: 'Nothing here..'

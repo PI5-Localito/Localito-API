@@ -4,8 +4,9 @@ body {
     font-family: 'Montserrat';
 }
 
-.my-mid { margin: 2em 0 }
-.mx-mid { margin: 0 2em }
+.mb-small { margin-bottom: 1rem !important }
+.my-mid { margin: 2rem 0 !important }
+.mx-mid { margin: 0 2rem !important }
 .big {
     block-size: 12rem !important;
     inline-size: 12rem !important;

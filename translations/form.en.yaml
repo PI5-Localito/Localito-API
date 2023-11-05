@@ -1,0 +1,8 @@
+form.submit: "Submit"
+input.name: "Name"
+input.last_name: "Lastname"
+input.phone: "Phone"
+input.password: "Password"
+input.repeated_password: "Repeat password"
+input.email: "Email"
+

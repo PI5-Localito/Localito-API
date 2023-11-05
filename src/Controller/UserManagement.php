@@ -36,44 +36,11 @@ class UserManagement extends AbstractController
     {
         $page = $request->query->get('page', 1);
 
-        $entities = $this->model->all(limit: 20, page: $page - 1);
+        $entities = $this->model->all(limit: 10, page: $page - 1);
         return $this->render('users.html.twig', [
             'users' => $entities,
             'page' => $page,
         ]);
-    }
-
-    #[Route('/user/{id}/edit', methods: [ 'GET', 'POST' ])]
-    public function edit(Request $request, int $id): Response
-    {
-        $user = $this->ifEntity($id);
-        $form = $this->createForm(UserForm::class, $user);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var User */
-            $entity = $form->getData();
-            /** @var UploadedFile */
-            $file = $form->get('avatar')->getData();
-            if (!empty($file)) {
-                $new_file = $file->move('avatars', uniqid() . ".{$file->guessExtension()}");
-                $entity->avatar = $new_file;
-            }
-            $this->model->update($entity);
-            return $this->redirectToRoute('users');
-        }
-
-        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form ]);
-    }
-
-    #[Route('/user/{id}/delete', methods: [ 'GET' ])]
-    public function delete(Request $request, int $id): Response
-    {
-        $user = $this->ifEntity($id);
-        if ($request->query->has('confirmation')) {
-            $this->model->delete($user);
-            return $this->redirectToRoute('users');
-        }
-        return $this->render('user_delete.html.twig', ['user' => $user]);
     }
 
     #[Route('/user/new', methods: [ 'GET', 'POST' ])]
@@ -96,5 +63,46 @@ class UserManagement extends AbstractController
         }
 
         return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form ]);
+    }
+
+    #[Route('/user/{id}/edit', methods: [ 'GET', 'POST' ])]
+    public function edit(Request $request, int $id): Response
+    {
+        $user = $this->ifEntity($id);
+        $form = $this->createForm(UserForm::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User */
+            $entity = $form->getData();
+            /** @var UploadedFile */
+            $file = $form->get('avatar')->getData();
+            if (!empty($file)) {
+                $new_file = $file->move('avatars', uniqid() . ".{$file->guessExtension()}");
+                // $file->
+                $entity->avatar = $new_file;
+            }
+            $this->model->update($entity);
+            return $this->redirectToRoute('users');
+        }
+
+        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form ]);
+    }
+
+    #[Route('/user/{id}/delete', methods: 'GET')]
+    public function delete(Request $request, int $id): Response
+    {
+        $user = $this->ifEntity($id);
+        if ($request->query->has('confirmation')) {
+            $this->model->delete($user);
+            return $this->redirectToRoute('users');
+        }
+        return $this->render('user_delete.html.twig', ['user' => $user]);
+    }
+
+    #[Route('/user/{id}', methods: 'GET')]
+    public function details(int $id): Response
+    {
+        $entity = $this->ifEntity($id);
+        return $this->render('user.html.twig', ['user' => $entity]);
     }
 }

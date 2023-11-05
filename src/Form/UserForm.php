@@ -19,27 +19,36 @@ class UserForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('submit', SubmitType::class)
-            ->add('name', TextType::class)
-            ->add('lastName', TextType::class)
-            ->add('phone', TelType::class, [ 'required' => false ])
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'invalid_message' => 'password.not_match',
-                'required' => true,
-                'first_options'  => ['label' => 'Password'],
-                'second_options' => ['label' => 'Repeated Password'],
+        ->add('name', TextType::class, [
+            'label' => 'input.name',
+        ])
+        ->add('lastName', TextType::class, [
+            'label' => 'input.last_name'
+        ])
+        ->add('phone', TelType::class, [
+            'required' => false,
+            'label' => 'input.phone'
+        ])
+        ->add('password', RepeatedType::class, [
+            'type' => PasswordType::class,
+            'invalid_message' => 'password.not_match',
+            'required' => true,
+            'first_options'  => ['label' => 'input.password'],
+            'second_options' => ['label' => 'input.repeated_password'],
 
-            ])
-            ->add('email', EmailType::class)
-            ->add('avatar', FileType::class, [
-                'required' => false,
-                'constraints' => [
-                    new File(
-                        maxSize: '2M',
-                        extensions: ['jpg', 'jpeg', 'png', 'gif'],
-                    ),
-                ],
-            ]);
+        ])
+        ->add('email', EmailType::class, [
+            'label' => 'input.email'
+        ])
+        ->add('avatar', FileType::class, [
+            'required' => false,
+            'constraints' => [
+                new File(
+                    maxSize: '2M',
+                    extensions: ['jpg', 'jpeg', 'png', 'gif'],
+                ),
+            ],
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

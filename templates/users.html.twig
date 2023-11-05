@@ -1,20 +1,20 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<main class="responsive">
-  <h1>Usuarios</h1>
+<main class="responsive mb-small">
+  <h1>{{ 'users'|trans }}</h1>
   <div class="my-mid">
     <a class="button" href="/user/new">
       <i>add</i>
-      <span>Nuevo</span>
+      <span>{{ 'action.new'|trans }}</span>
     </a>
   </div>
   {% if users %}
   <table class="border large-space">
     <thead>
       <tr>
-        <th>Nombre</th>
-        <th>Email</th>
-        <th>Phone</th>
+        <th>{{ 'input.name'|trans([], 'form') }}</th>
+        <th>{{ 'input.email'|trans([], 'form') }}</th>
+        <th>{{ 'input.phone'|trans([], 'form') }}</th>
         <th></th>
       </tr>
     </thead>
@@ -25,6 +25,7 @@
         <td>{{ u.email }}</td>
         <td>{{ u.phone }}</td>
         <td>
+          <a href="/user/{{ u.id }}" class="button transparent circle medium"><i>visibility</i></a>
           <a href="/user/{{ u.id }}/edit" class="button transparent circle medium"><i>edit</i></a>
           <a href="/user/{{ u.id }}/delete" class="button transparent circle medium"><i>delete</i></a>
         </td>
@@ -35,7 +36,7 @@
   {% else %}
   <article class="border medium no-padding middle-align center-align">
     <div class="padding">
-      <h5>No hay nada...</h5>
+      <h5>{{ 'table.empty'|trans }}<h5>
     </div>
   </article>
   {% endif %}

@@ -3,12 +3,12 @@
 
 {% block body %}
 <main class="responsive">
-  <h1>¿Desea eliminar el usuario {{user.getFullName()}}?</h1>
-  <p class="large-text">Nota: Esta accion no se puede deshacer</p>
+  <h1>{{ 'delete.warning'|trans({ '%username%': user.getFullName() }) }}</h1>
+  <p class="large-text">{{ 'delete.note'|trans }}</p>
   
   <nav class="my-mid">
-    <a class="button fill" href="/users">Regresar</a>
-    <a class="button" href="?confirmation=1">Borrar</a>
+    <a class="button fill" href="/users">{{ 'action.back'|trans }}</a>
+    <a class="button" href="?confirmation=1">{{ 'action.delete'|trans }}</a>
   </nav>
 </main>
 {% endblock %}

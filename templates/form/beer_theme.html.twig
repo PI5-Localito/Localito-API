@@ -1,26 +1,32 @@
 {% use 'form_div_layout.html.twig' %}
+{% trans_default_domain 'form' %}
 
 {%- block form_row -%}
-<div class="field label border {{errors is empty? '' : 'invalid'}}">
-  {{- form_widget(form) -}}
-  {{- form_label(form) -}}
-  {% if not (errors is empty) %}
-  {{- form_errors(form) -}}
-  {% else %}
-  {{- form_help(form) -}}
-  {% endif %}
-</div>
+  <div class="field label border {{errors is empty? '' : 'invalid'}}">
+    {{- form_widget(form) -}}
+    {{- form_label(form) -}}
+    {% if not (errors is empty) %}
+      {{- form_errors(form) -}}
+    {% else %}
+      {{- form_help(form) -}}
+    {% endif %}
+  </div>
 {%- endblock form_row -%}
 
+{%- block form_label_content -%}
+  {{ label|trans  }}
+{%- endblock -%}
+
 {%- block form_errors -%}
-{% set err = errors|first %}
-{%- if err -%}
-<span class="error">{{ err.message }}</span>
-{%- endif -%}
+  {% set err = errors|first %}
+  {%- if err -%}
+    <span class="error">{{ err.message }}</span>
+  {%- endif -%}
 {%- endblock form_errors -%}
 
 {% block form_help -%}
-{%- if help is not empty -%}
-<span class="helper">{{- block('form_help_content') -}}</span>
-{%- endif -%}
+  {%- if help is not empty -%}
+    <span class="helper">{{- block('form_help_content') -}}</span>
+  {%- endif -%}
 {%- endblock form_help %}
+

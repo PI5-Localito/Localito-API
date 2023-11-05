@@ -1,0 +1,8 @@
+not.blank: "This field should not be blank"
+not.null: "Input should not be null"
+password.compromised: "This password has ben compromised"
+password.weak: "Password too weak"
+password.not_match: "Passwords should be equals"
+string.length: "Input should be exactly {{ limit }} characters"
+type.digit: "The value should be numeric"
+file.extension: "Upload a valid file type"
