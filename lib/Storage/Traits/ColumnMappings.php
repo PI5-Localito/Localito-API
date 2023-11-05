@@ -2,23 +2,20 @@
 
 namespace Lib\Storage\Traits;
 
-use Lib\Storage\Annotations\Transform;
 use Lib\Storage\Annotations\Column;
 use ReflectionClass;
-use Lib\Storage\AbstractEntity;
 
 trait ColumnMappings
 {
     /**
      * Get the mappings from reflection
-     * @param AbstractEntity $entity
      *
      * @return array<string, Column>
      */
-    protected function getMappings(AbstractEntity $entity): array
+    public function getMappings(): array
     {
         $values = [];
-        $reflection = new ReflectionClass($entity::class);
+        $reflection = new ReflectionClass($this::class);
         $properties = $reflection->getProperties();
 
         foreach($properties as $property) {
@@ -30,28 +27,26 @@ trait ColumnMappings
 
     /**
      * Get the mappings of an entty exluding some props
-     * @param AbstractEntity $entity
      * @param array<int, string> $exclude
      *
      * @return array<int, Column>
      */
-    protected function excludeMappigns(AbstractEntity $entity, array $exclude): array
+    public function excludeMappigns(array $exclude): array
     {
-        $mappings = $this->getMappings($entity);
+        $mappings = $this->getMappings();
         $filter = fn ($name) => !in_array($name, $exclude);
         return array_filter($mappings, $filter, ARRAY_FILTER_USE_KEY);
     }
 
     /**
      * Get the mappings of an entty with only the specified
-     * @param AbstractEntity $entity
      * @param array<int, string> $include
      *
      * @return array<string, Column>
      */
-    protected function includeMapping(AbstractEntity $entity, array $include): array
+    public function includeMapping(array $include): array
     {
-        $mappings = $this->getMappings($entity);
+        $mappings = $this->getMappings();
         $filter = fn ($name) => in_array($name, $include);
         return array_filter($mappings, $filter, ARRAY_FILTER_USE_KEY);
     }

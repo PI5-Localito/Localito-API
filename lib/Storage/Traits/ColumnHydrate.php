@@ -3,28 +3,27 @@
 namespace Lib\Storage\Traits;
 
 use Lib\Storage\Annotations\Column;
-use Lib\Storage\AbstractEntity;
 
 trait ColumnHydrate
 {
     /**
-     * @return array<int, Column>
+     * @return array<string, Column>
      */
-    abstract protected function getMappings(AbstractEntity $entity): array;
+    abstract public function getMappings(): array;
 
     /**
      * Extract the values from the entity
      *
      * @return array<string, mixed>
      */
-    protected function extract(AbstractEntity $entity): array
+    public function extract(): array
     {
         $values = [];
-        $mappings = $this->getMappings($entity);
+        $mappings = $this->getMappings();
         foreach($mappings as $name => $column) {
             $getter = $column->getGetter();
-            $data = empty($getter) ? $entity->$name ?? null : $entity->$getter();
-            $values[$column->getColumn] = $data;
+            $data = empty($getter) ? $this->$name ?? null : $this->$getter();
+            $values[$column->getColumn()] = $data;
         }
         return $values;
     }
@@ -35,16 +34,16 @@ trait ColumnHydrate
      *
      * @return void
      */
-    protected function hydrate(AbstractEntity $entity, array $data): void
+    public function hydrate(array $data): void
     {
-        $mappings = $this->getMappings($entity);
+        $mappings = $this->getMappings();
         foreach($mappings as $name => $column) {
             $value = $data[$column->getColumn()];
             $setter = $column->getSetter();
             if (empty($setter)) {
-                $entity->$name = $value;
+                $this->$name = $value;
             } else {
-                $entity->$setter($value);
+                $this->$setter($value);
             }
         }
     }

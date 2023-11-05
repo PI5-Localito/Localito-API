@@ -34,8 +34,34 @@ class UserAPI extends AbstractController
     public function list(Request $request): Response
     {
         $page = $request->query->get('page', 1);
-
         $entities = $this->model->all(limit: 10, page: $page - 1);
         return new JsonResponse($entities);
+    }
+
+    #[Route(path: '/api/user/{id}', methods: 'GET')]
+    public function user(int $id): Response
+    {
+        $entity = $this->ifEntity($id);
+        return new JsonResponse($entity);
+    }
+    #
+    #[Route(path: '/api/user/{id}', methods: 'PUT')]
+    public function editUser(int $id): Response
+    {
+        $entity = $this->ifEntity($id);
+        return new JsonResponse($entity);
+    }
+
+    #[Route(path: '/api/user/{id}', methods: 'DELETE')]
+    public function deleteUser(int $id): Response
+    {
+        $entity = $this->ifEntity($id);
+        return new JsonResponse($entity);
+    }
+
+    #[Route(path: '/api/user', methods: 'POST')]
+    public function create(): Response
+    {
+
     }
 }
