@@ -1,6 +1,6 @@
 not.blank: "Introduzca un valor"
 not.null: "Este valor es requerido"
-password:.compromised: "Esta contraseña ha sido comprometida en internet"
+password.compromised: "Esta contraseña ha sido comprometida en internet"
 password.weak: "La contraseña es muy debil"
 password.not_match: "Las contraseñas deben de ser identicas"
 string.length: "Este campo requiere {{ limit }} caracteres"
