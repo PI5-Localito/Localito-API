@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class UserForm extends AbstractType
 {
@@ -30,8 +31,15 @@ class UserForm extends AbstractType
 
             ])
             ->add('email', EmailType::class)
-            ->add('avatar', FileType::class, [ 'required' => false ]);
-
+            ->add('avatar', FileType::class, [
+                'required' => false,
+                'constraints' => [
+                    new File(
+                        maxSize: '2M',
+                        extensions: ['jpg', 'jpeg', 'png', 'gif'],
+                    ),
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
