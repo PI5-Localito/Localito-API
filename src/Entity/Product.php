@@ -5,12 +5,13 @@ namespace App\Entity;
 use Lib\Storage\AbstractEntity;
 use Lib\Storage\Annotations\Column;
 use Lib\Storage\Traits\AnnotationColumns;
+use Lib\Storage\Traits\AnnotationMappings;
 use Lib\Storage\Traits\ColumnHydrate;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Product extends AbstractEntity
 {
-    use AnnotationColumns;
+    use AnnotationMappings;
     use ColumnHydrate;
 
     #[Column('stand_id')]

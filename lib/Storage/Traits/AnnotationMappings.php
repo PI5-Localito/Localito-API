@@ -5,7 +5,7 @@ namespace Lib\Storage\Traits;
 use Lib\Storage\Annotations\Column;
 use ReflectionClass;
 
-trait AnnotationColumns
+trait AnnotationMappings
 {
     /**
      * Get the mappings from reflection

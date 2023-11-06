@@ -4,14 +4,14 @@ namespace App\Entity;
 
 use Lib\Storage\AbstractEntity;
 use Lib\Storage\Annotations\Column;
-use Lib\Storage\Traits\AnnotationColumns;
+use Lib\Storage\Traits\AnnotationMappings;
 use Lib\Storage\Traits\ColumnHydrate;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Stand extends AbstractEntity
 {
     use ColumnHydrate;
-    use AnnotationColumns;
+    use AnnotationMappings;
 
     #[Column('seller_id')]
     protected int $idSeller;

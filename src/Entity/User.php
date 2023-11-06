@@ -6,7 +6,7 @@ use App\Model\UserRepo;
 use Lib\Storage\AbstractEntity;
 use Lib\Storage\Annotations\Column;
 use Lib\Storage\Annotations\Table;
-use Lib\Storage\Traits\AnnotationColumns;
+use Lib\Storage\Traits\AnnotationMappings;
 use Lib\Storage\Traits\ColumnHydrate;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints\PasswordStrength;
 class User extends AbstractEntity
 {
     use ColumnHydrate;
-    use AnnotationColumns;
+    use AnnotationMappings;
 
     #[Column('name')]
     #[Assert\NotBlank(message: 'not.blank')]
