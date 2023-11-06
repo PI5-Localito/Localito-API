@@ -14,6 +14,11 @@ use PDO;
  */
 abstract class AbstractModel
 {
+    /**
+     * @var aray<int, mixed>
+     */
+    protected array $errors;
+
     public function __construct(
         protected PDO $db,
         protected string $entity
@@ -30,6 +35,15 @@ abstract class AbstractModel
         $table = $table->newInstance();
         return $table->getValue();
     }
+    /**
+     * Get the errors raised by the wrapper
+     *
+     * @return aray<int,mixed>
+     */
+    final public function getErrors(): array
+    {
+        return $this->errors;
+    }
 
     /**
      * Bind the values of the bundle
@@ -38,7 +52,7 @@ abstract class AbstractModel
      *
      * @return bool
      */
-    public function bindValues(PDOStatement $stmt, AbstractEntity $entity, array $columns = []): bool
+    public function bindEntity(PDOStatement $stmt, AbstractEntity $entity, array $columns = []): bool
     {
         foreach($columns as $name => $column) {
             $getter = $column->getGetter();
@@ -49,6 +63,45 @@ abstract class AbstractModel
         }
         return true;
     }
+    /**
+     * Wrapper around the execute pdo statement
+     *
+     * @param array<string,Column> $mappings
+     */
+    protected function executeWrapper(string $query, ?AbstractEntity $entity = null, ?array $mappings = null): bool|array
+    {
+        $stmt = $this->db->prepare($query);
+        if($stmt === false) {
+            $this->errors[$stmt->errorCode()] = $stmt->errorInfo();
+            return false;
+        }
+
+        if ($entity && $mappings) {
+            if (!$this->bindEntity($stmt, $entity, $mappings)) {
+                $this->errors[$stmt->errorCode()] = $stmt->errorInfo();
+                return false;
+            }
+        }
+        if (!$stmt->execute()) {
+            $this->errors[$stmt->errorCode()] = $stmt->errorInfo();
+            return false;
+        }
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if($rows === false) {
+            $this->errors[$stmt->errorCode()] = $stmt->errorInfo();
+            return false;
+        }
+
+        $entities = [];
+        foreach($rows as $row) {
+            $entity = new $this->entity();
+            $entity->hydrate($row);
+            $entities[] = $entity;
+        }
+        return $entities;
+    }
+
 
     /**
      * Get an entity with the corresponding ID
@@ -58,17 +111,16 @@ abstract class AbstractModel
      */
     public function get(int $id): ?AbstractEntity
     {
-        $query = "SELECT * FROM {$this->getTable()} WHERE id = ?";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindValue(1, $id);
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($row === false) {
-            return null;
-        }
         $entity = new $this->entity();
-        $entity->hydrate($row);
-        return $entity;
+        $entity->id = $id;
+
+        $data = $this->executeWrapper(
+            "SELECT * FROM {$this->getTable()} WHERE id = :id",
+            $entity,
+            $entity->includeMapping(['id']),
+        );
+
+        return $data[0] ?? null;
     }
 
     /**
@@ -86,13 +138,12 @@ abstract class AbstractModel
 
         $values = array_map(fn ($n) => ":$n", array_keys($mappings));
         $query .= 'VALUES (' . implode(',', $values) . ')';
-        if($stmt = $this->db->prepare($query)) {
-            $this->bindValues($stmt, $entity, $mappings);
-            if ($stmt->execute()) {
-                $entity->id = $this->db->lastInsertId();
-                return true;
-            }
+
+        if ($this->executeWrapper($query, $entity, $mappings) !== false) {
+            $entity->id = $this->db->lastInsertId();
+            return true;
         }
+
         return false;
     }
 
@@ -111,11 +162,9 @@ abstract class AbstractModel
         }
         $query .= ' ' . implode(',', $bindings);
         $query .= ' WHERE `id` = :id';
-        $stmt = $this->db->prepare($query);
-
         $mappings = $entity->getMappings();
-        $this->bindValues($stmt, $entity, $mappings);
-        return $stmt->execute();
+
+        return $this->executeWrapper($query, $entity, $mappings) !== false;
     }
 
     /**
@@ -134,12 +183,9 @@ abstract class AbstractModel
         }
         $query .= ' ' . implode(',', $bindings);
         $query .= ' WHERE `id` = :id';
-        $stmt = $this->db->prepare($query);
 
         $mappings = $entity->getMappings($fields);
-        $this->bindValues($stmt, $entity, $mappings);
-        return $stmt->execute();
-
+        return $this->executeWrapper($query, $entity, $mappings) !== false;
     }
 
     /**
@@ -149,9 +195,11 @@ abstract class AbstractModel
      */
     public function delete(AbstractEntity $entity): bool
     {
-        $stmt = $this->db->prepare("DELETE FROM {$this->getTable()} WHERE `id` = ?");
-        $stmt->bindValue(1, $entity->id);
-        return $stmt->execute();
+        return $this->executeWrapper(
+            "DELETE FROM {$this->getTable()} WHERE `id` = :id",
+            $entity,
+            $entity->includeMapping(['id']),
+        ) !== false;
     }
 
     /**
@@ -169,14 +217,6 @@ abstract class AbstractModel
             $offset += $page * $limit;
             $query .= "LIMIT $limit OFFSET $offset";
         }
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        $entities = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $entity = new $this->entity();
-            $entity->hydrate($row);
-            $entities[] = $entity;
-        }
-        return $entities;
+        return $this->executeWrapper($query);
     }
 }
