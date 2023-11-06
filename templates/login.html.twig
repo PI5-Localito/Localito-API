@@ -1,0 +1,9 @@
+{% extends 'base.html.twig'  %}
+{% form_theme form 'form/beer_theme.html.twig'  %}
+
+{% block body %}
+<main class="responsive">
+  <h1>Login</h1>
+  {{ form(form) }}
+</main>
+{% endblock %}
