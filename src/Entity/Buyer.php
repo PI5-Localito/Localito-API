@@ -4,21 +4,26 @@ namespace App\Entity;
 
 use Lib\Storage\AbstractEntity;
 use Lib\Storage\Annotations\Column;
+use Lib\Storage\Traits\AnnotationColumns;
 use Lib\Storage\Traits\ColumnHydrate;
-use Lib\Storage\Traits\ColumnMappings;
-use Lib\Storage\Traits\ColumnSerialize;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class Buyer extends AbstractEntity
 {
-    use ColumnSerialize;
-    use ColumnMappings;
+    use AnnotationColumns;
     use ColumnHydrate;
 
     #[Column('user_id')]
+    #[Assert\NotBlank(message: 'not.blank')]
+    #[Assert\NotNull(message: 'not.null')]
+    #[Assert\Type(type: 'int', message: 'type.digit')]
     public int $userId;
 
     #[Column('state')]
-    protected bool $state;
+    #[Assert\NotBlank(message: 'not.blank')]
+    #[Assert\NotNull(message: 'not.null')]
+    #[Assert\Type(type: 'digit', message: 'type.digit')]
+    protected bool $state = true;
 
     public function setUser(int $uid): static
     {

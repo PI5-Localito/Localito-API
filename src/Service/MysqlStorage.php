@@ -2,35 +2,23 @@
 
 namespace App\Service;
 
-use Lib\Storage\AbstractModel;
-use Lib\Storage\Annotations\Table;
-use Lib\Storage\Storage;
+use Lib\Storage\AbstractStorage;
 use PDO;
-use ReflectionClass;
 
-class MysqlStorage implements Storage
+class MysqlStorage extends AbstractStorage
 {
-    protected PDO $db;
-
-    public function __construct()
-    {
-        $this->db = new PDO($_ENV['MYSQL_URL'], $_ENV['MYSQL_USER'], $_ENV['MYSQL_PASS']);
-    }
-
-    public function getModel(string $entity): AbstractModel
-    {
-        $refl = new ReflectionClass($entity);
-        $table = $refl->getAttributes(Table::class)[0] ?? null;
-        if (!$table) {
-            return null;
-        }
-        $table = $table->newInstance();
-        $model = $table->getModel();
-        return new $model($this, $entity);
-    }
-
     public function getDatabase(): PDO
     {
-        return $this->db;
+        return new PDO(
+            $_ENV['MYSQL_URL'],
+            $_ENV['MYSQL_USER'],
+            $_ENV['MYSQL_PASS'],
+            options: [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT,
+                PDO::ATTR_EMULATE_PREPARES => false,
+                // TODO: Work in persistency
+                // PDO::ATTR_PERSISTENT => true,
+            ]
+        );
     }
 }

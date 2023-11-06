@@ -2,43 +2,31 @@
 
 namespace App\Entity;
 
-use Lib\Storage\Entity;
-use Lib\Storage\Traits\MethodHydrator;
+use Lib\Storage\AbstractEntity;
+use Lib\Storage\Annotations\Column;
+use Lib\Storage\Traits\AnnotationColumns;
+use Lib\Storage\Traits\ColumnHydrate;
+use Symfony\Component\Validator\Constraints as Assert;
 
-
-class Message implements Entity
+class Message extends AbstractEntity
 {
-    use MethodHydrator;
+    use AnnotationColumns;
+    use ColumnHydrate;
 
-    protected ?int $id;
-    protected ?int $userFrom;
-    protected ?int $userTo;
-    protected ?int $orderId;
-    protected ?string $body;
-    protected string $messageTimestamp;
-    /**
-     * @return array<string,array>
-     */
-    public function mappings(): array{
-        return [
-            'id' => [$this->getId, $this->setId],
-            'user_from' => [$this->getFrom, $this->setFrom],
-            'user_to' => [$this->getTo, $this->setTo],
-            'order_id' => [$this->getOrder, $this->setOrder],
-            'body' => [$this->getBody, $this->setBody],
-            'message_timestamp' => [$this->getTimestamp, $this->setTimestamp]
-        ];
-    }
+    #[Column('user_from')]
+    public ?int $userFrom;
 
-    public function setId(?int $id = null): static
-    {
-        $this->id = $id;
-        return $this;
-    }
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    #[Column('user_to')]
+    public ?int $userTo;
+
+    #[Column('order_id')]
+    public ?int $orderId;
+
+    #[Column('body')]
+    public ?string $body;
+
+    #[Column('message_timestamp')]
+    public string $messageTimestamp;
 
     public function setFrom(int $uid): static
     {
@@ -95,4 +83,3 @@ class Message implements Entity
         return $this->messageTimestamp;
     }
 }
-

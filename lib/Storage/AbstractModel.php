@@ -11,21 +11,13 @@ use PDO;
 /**
  * Defines the default model implementation
  *
- * @template T of AbstractEntity
  */
 abstract class AbstractModel
 {
-    protected PDO $db;
-
-    /**
-     * @param class-string<T> $entity
-     */
-    protected string $entity;
-
-    public function __construct(Storage $storage, string $entity)
-    {
-        $this->db = $storage->getDatabase();
-        $this->entity = $entity;
+    public function __construct(
+        protected PDO $db,
+        protected string $entity
+    ) {
     }
 
     protected function getTable(): ?string
@@ -44,22 +36,25 @@ abstract class AbstractModel
      * @param PDOStatement $stmt
      * @param array<string, Column> $columns
      *
-     * @return void
+     * @return bool
      */
-    public function bindValues(PDOStatement $stmt, AbstractEntity $entity, array $columns = []): void
+    public function bindValues(PDOStatement $stmt, AbstractEntity $entity, array $columns = []): bool
     {
         foreach($columns as $name => $column) {
             $getter = $column->getGetter();
             $value = empty($getter) ? $entity->$name ?? null : $entity->$getter();
-            $stmt->bindValue(":$name", $value, $column->getType());
+            if (!$stmt->bindValue(":$name", $value, $column->getType())) {
+                return false;
+            }
         }
+        return true;
     }
 
     /**
      * Get an entity with the corresponding ID
      * @param int $id
      *
-     * @return ?T
+     * @return ?AbstractEntity
      */
     public function get(int $id): ?AbstractEntity
     {
@@ -91,9 +86,14 @@ abstract class AbstractModel
 
         $values = array_map(fn ($n) => ":$n", array_keys($mappings));
         $query .= 'VALUES (' . implode(',', $values) . ')';
-        $stmt = $this->db->prepare($query);
-        $this->bindValues($stmt, $entity, $mappings);
-        return $stmt->execute();
+        if($stmt = $this->db->prepare($query)) {
+            $this->bindValues($stmt, $entity, $mappings);
+            if ($stmt->execute()) {
+                $entity->id = $this->db->lastInsertId();
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -160,7 +160,7 @@ abstract class AbstractModel
      * @param int $offset
      * @param int $page
      *
-     * @return Entity[]
+     * @return AbstractEntity[]
      */
     public function all(int $limit = 0, int $offset = 0, int $page = 0): array
     {

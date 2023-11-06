@@ -2,44 +2,31 @@
 
 namespace App\Entity;
 
-use Lib\Storage\Entity;
-use Lib\Storage\Traits\MethodHydrator;
+use Lib\Storage\AbstractEntity;
+use Lib\Storage\Annotations\Column;
+use Lib\Storage\Traits\AnnotationColumns;
+use Lib\Storage\Traits\ColumnHydrate;
+use Symfony\Component\Validator\Constraints as Assert;
 
-class Product implements Entity
+class Product extends AbstractEntity
 {
-    use MethodHydrator;
+    use AnnotationColumns;
+    use ColumnHydrate;
 
-    protected ?int $id;
-    protected int $standId;
-    protected string $name;
-    protected string $info;
-    protected string $image;
-    protected float $price;
-    
-    /**
-     * @return array<string,array>
-     */
-    public function mappings(): array{
-        return [
-            'id' => [$this->getId, $this->setId],
-            'stand_id' => [$this->getStand, $this->setStand],
-            'name' => [$this->getName, $this->setName],
-            'info' => [$this->getInfo, $this->setInfo],
-            'image' => [$this->getImage, $this->setImage],
-            'price' => [$this->getPrice, $this->setPrice],
-        ];
-    }
+    #[Column('stand_id')]
+    public int $standId;
 
-    public function setId(int $id): static
-    {
-        $this->id = $id;
-        return $this;
-    }
+    #[Column('name')]
+    public string $name;
 
-    public function getId(): int
-    {
-        return $this->id;
-    }
+    #[Column('info')]
+    public string $info;
+
+    #[Column('image')]
+    public string $image;
+
+    #[Column('price')]
+    public float $price;
 
     public function setStand(int $sid): static
     {
@@ -96,4 +83,3 @@ class Product implements Entity
         return $this->price;
     }
 }
-

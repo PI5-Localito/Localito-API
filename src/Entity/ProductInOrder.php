@@ -2,31 +2,25 @@
 
 namespace App\Entity;
 
-use Lib\Storage\Entity;
-use Lib\Storage\Traits\MethodHydrator;
+use Lib\Storage\AbstractEntity;
+use Lib\Storage\Annotations\Column;
+use Lib\Storage\Traits\AnnotationColumns;
+use Lib\Storage\Traits\ColumnHydrate;
+use Symfony\Component\Validator\Constraints as Assert;
 
-class ProductInOrder implements Entity
+class ProductInOrder extends AbstractEntity
 {
-    use MethodHydrator;
+    use AnnotationColumns;
+    use ColumnHydrate;
 
+    #[Column('order_id')]
     protected int $orderId;
-    protected int $productId;
-    protected int $productQuantity;
-    
-    /**
-     * @return array<string,array>
-     */
-    public function mapping(): array{
-        return [
-        'order_id' => [$this->getOrder, $this->setOrder],
-        'product_id' => [$this->getProduct, $this->setgetProduct],
-        'product_quantity' => [$this->getProductQuantity, $this->getProductQuantity],
-        ];
-    }
 
-    public function getId(): ?int{
-        return null;
-    }
+    #[Column('product_id')]
+    protected int $productId;
+
+    #[Column('product_quantity')]
+    protected int $productQuantity;
 
     public function setOrder(int $oid): static
     {
@@ -61,4 +55,3 @@ class ProductInOrder implements Entity
         return $this->productQuantity;
     }
 }
-

@@ -2,46 +2,29 @@
 
 namespace App\Entity;
 
-use Lib\Storage\Entity;
-use Lib\Storage\Traits\MethodHydrator;
+use Lib\Storage\AbstractEntity;
+use Lib\Storage\Annotations\Column;
+use Lib\Storage\Traits\AnnotationColumns;
+use Lib\Storage\Traits\ColumnHydrate;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
-class City implements Entity
+class City extends AbstractEntity
 {
-    use MethodHydrator;
+    use AnnotationColumns;
+    use ColumnHydrate;
 
-    protected ?int $id;
-    #[Assert\Length(exactly: 3, exactMessage:"El codigo debe de ser de 3 caracteres")]
-    protected string $countryCode;
-    protected string $cityName;
-    protected float $longitude;
-    protected float $latitude;
-    /**
-     * @return array<string,array>
-     */
-    public function  mappings(): array
-    {
-        return [
-            'id' => [$this->getId, $this->setId],
-            'country_code' => [$this->getCode, $this->setCode],
-            'city_name' => [$this->getName, $this->setName],
-            'longitude' => [$this->getLong, $this->setLong],
-            'latitude' => [$this->getLat, $this->setLat]
-        ];
+    #[Column('country_code')]
+    #[Assert\Length(exactly: 3, exactMessage:"")]
+    public string $countryCode;
 
-    }
+    #[Column('city_name')]
+    public string $cityName;
 
+    #[Column('longitude')]
+    public float $longitude;
 
-    public function setId(?int $id = null): static
-    {
-        $this->id = $id;
-        return $this;
-    }
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    #[Column('latitude')]
+    public float $latitude;
 
     public function setCountry(string $countryCode): static
     {
@@ -87,4 +70,3 @@ class City implements Entity
         return $this->latitude;
     }
 }
-

@@ -2,21 +2,28 @@
 
 namespace App\Entity;
 
-use Lib\Storage\Entity;
-use Lib\Storage\Traits\MethodHydrator;
+use Lib\Storage\AbstractEntity;
+use Lib\Storage\Annotations\Column;
+use Lib\Storage\Traits\AnnotationColumns;
+use Lib\Storage\Traits\ColumnHydrate;
+use Symfony\Component\Validator\Constraints as Assert;
 
-class Seller implements Entity
+class Seller extends AbstractEntity
 {
-    use MethodHydrator;
+    use ColumnHydrate;
+    use AnnotationColumns;
 
-    protected ?int $id;
+    #[Column('user_id')]
     protected int $userId;
+
+    #[Column('state')]
     protected bool $state;
 
     /**
      * @return array<string,array>
      */
-    public function mappings(): array{
+    public function mappings(): array
+    {
         return [
             'id' => [$this->getId, $this->setId],
             'user_id' => [$this->getUser, $this->setUser],
@@ -24,12 +31,14 @@ class Seller implements Entity
         ];
     }
 
-    public function setId(int $id): static{
+    public function setId(int $id): static
+    {
         $this->id = $id;
         return $this;
     }
 
-    public function getId(): int{
+    public function getId(): int
+    {
         return $this->id;
     }
 
@@ -52,7 +61,8 @@ class Seller implements Entity
         return $this;
     }
 
-    public function getState(): string{
+    public function getState(): string
+    {
         return $this->state;
     }
 

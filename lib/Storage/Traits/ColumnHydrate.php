@@ -38,7 +38,10 @@ trait ColumnHydrate
     {
         $mappings = $this->getMappings();
         foreach($mappings as $name => $column) {
-            $value = $data[$column->getColumn()];
+            $value = $data[$column->getColumn()] ?? null;
+            if ($value === null) {
+                continue;
+            }
             $setter = $column->getSetter();
             if (empty($setter)) {
                 $this->$name = $value;

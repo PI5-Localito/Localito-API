@@ -2,33 +2,31 @@
 
 namespace App\Entity;
 
-use Lib\Storage\Entity;
-use Lib\Storage\Traits\MethodHydrator;
+use Lib\Storage\AbstractEntity;
+use Lib\Storage\Annotations\Column;
+use Lib\Storage\Traits\AnnotationColumns;
+use Lib\Storage\Traits\ColumnHydrate;
+use Symfony\Component\Validator\Constraints as Assert;
 
-class Stand implements Entity
+class Stand extends AbstractEntity
 {
-    use MethodHydrator;
+    use ColumnHydrate;
+    use AnnotationColumns;
 
-    protected ?int $id;
+    #[Column('seller_id')]
     protected int $idSeller;
-    protected string $tag;
-    protected string $standName;
-    protected ?string $info;
-    protected int $city;
 
-    /**
-     * @return array<string,array>
-     */
-    public function mappings(): array{
-        return [
-            'id' => [$this->getId, $this->setId],
-            'seller_id' => [$this->getSeller, $this->setSeller],
-            'tag' => [$this->getTag, $this->setTag],
-            'stand_name' => [$this->getName, $this->setName],
-            'info' => [$this->getInfo, $this->setInfo],
-            'city' => [$this->getCity, $this->setCity],
-        ];
-    }
+    #[Column('tag')]
+    protected string $tag;
+
+    #[Column('stand_name')]
+    protected string $standName;
+
+    #[Column('info')]
+    protected ?string $info;
+
+    #[Column('city')]
+    protected int $city;
 
     public function setId(int $id): static
     {
@@ -96,4 +94,3 @@ class Stand implements Entity
         return $this->city;
     }
 }
-

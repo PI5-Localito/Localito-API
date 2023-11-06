@@ -11,13 +11,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserAPI extends AbstractController
 {
     protected UserRepo $model;
 
-    public function __construct(MysqlStorage $storage)
-    {
+    public function __construct(
+        MysqlStorage $storage,
+        protected ValidatorInterface $validator
+    ) {
         $this->model = $storage->getModel(User::class);
     }
 
@@ -38,31 +41,48 @@ class UserAPI extends AbstractController
         return new JsonResponse($entities);
     }
 
-    #[Route(path: '/api/user/{id}', methods: 'GET')]
+    #[Route(path: '/api/user/{id}', methods: 'GET', requirements: ['id' => '\d+'])]
     public function user(int $id): Response
     {
         $entity = $this->ifEntity($id);
         return new JsonResponse($entity);
     }
-    #
-    #[Route(path: '/api/user/{id}', methods: 'PUT')]
+
+    #[Route(path: '/api/user/{id}', methods: 'PUT', requirements: ['id' => '\d+'])]
     public function editUser(Request $request, int $id): Response
     {
         $entity = $this->ifEntity($id);
-        // $data = $request
         return new JsonResponse($entity);
     }
 
-    #[Route(path: '/api/user/{id}', methods: 'DELETE')]
+    #[Route(path: '/api/user/{id}', methods: 'DELETE', requirements: ['id' => '\d+'])]
     public function deleteUser(int $id): Response
     {
         $entity = $this->ifEntity($id);
+        $this->model->delete($entity);
         return new JsonResponse($entity);
     }
 
     #[Route(path: '/api/user', methods: 'POST')]
-    public function create(): Response
+    public function create(Request $request): Response
     {
+        $user = new User();
+        $data = $request->getPayload()->all();
+        $user->hydrate($data);
+        $validations = $this->validator->validate($user);
+        if ($validations->count() > 0) {
+            $last_violation = $validations->get(0);
+            return new JsonResponse(
+                data: [
+                    'errors' => $validations->count(),
+                    'messages' => $last_violation->getMessage(),
+                    'parameter' => $last_violation->getPropertyPath(),
+                ],
+                status: 400,
+            );
+        }
 
+        $this->model->save($user);
+        return new JsonResponse($user);
     }
 }
