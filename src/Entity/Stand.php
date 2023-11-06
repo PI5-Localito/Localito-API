@@ -2,12 +2,15 @@
 
 namespace App\Entity;
 
+use App\Model\StandRepo;
 use Lib\Storage\AbstractEntity;
 use Lib\Storage\Annotations\Column;
+use Lib\Storage\Annotations\Table;
 use Lib\Storage\Traits\AnnotationMappings;
 use Lib\Storage\Traits\ColumnHydrate;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[Table('stands', StandRepo::class)]
 class Stand extends AbstractEntity
 {
     use ColumnHydrate;

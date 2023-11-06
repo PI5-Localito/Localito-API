@@ -2,12 +2,15 @@
 
 namespace App\Entity;
 
+use App\Model\ProductInOrderRepo;
 use Lib\Storage\AbstractEntity;
 use Lib\Storage\Annotations\Column;
+use Lib\Storage\Annotations\Table;
 use Lib\Storage\Traits\AnnotationMappings;
 use Lib\Storage\Traits\ColumnHydrate;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[Table('products_in_orders', ProductInOrderRepo::class)]
 class ProductInOrder extends AbstractEntity
 {
     use AnnotationMappings;
