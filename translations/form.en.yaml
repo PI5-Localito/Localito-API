@@ -5,4 +5,6 @@ input.phone: "Phone"
 input.password: "Password"
 input.repeated_password: "Repeat password"
 input.email: "Email"
-
+input.country_code: "Country code"
+input.latitude: "Latitude"
+input.longitude: "Longitude"

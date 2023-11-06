@@ -1,0 +1,30 @@
+{% extends 'base.html.twig'  %}
+{% block body %}
+<main class="responsive">
+  <div class="grid">
+    <div class="s5">
+      <h2 class="my-mid">{{ city.getName() }}</h2>
+      <div class="row">
+        <b>{{'input.country_code'|trans([], 'form')}}:</b>
+        <div class="max">{{city.countryCode}}</div>
+      </div>
+      <div class="medium-divider"></div>
+      <div class="row">
+        <b>{{'input.name'|trans([], 'form')}}:</b>
+        <div class="max">{{city.name}}</div>
+      </div>
+      <div class="medium-divider"></div>
+      <div class="row">
+        <b>{{'input.longitude'|trans([], 'form')}}:</b>
+        <div class="max">{{city.longitude}}</div>
+      </div>
+      <div class="medium-divider"></div>
+      <div class="row">
+        <b>{{'input.latitude'|trans([], 'form')}}:</b>
+        <div class="max">{{city.latitude}}</div>
+      </div>
+      <a class="button app-back fill">{{ 'action.back'|trans }}</a>
+    </div>
+  </div>
+</main>
+{% endblock %}

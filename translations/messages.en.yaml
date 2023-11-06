@@ -8,8 +8,10 @@ city: "City"
 
 user.create: "Create user"
 user.edit: "Edit \"%username%\""
+city.create: "Create city"
 
 delete.warning: "Do you want to delete \"%username%\" user?"
+delete.city.warning: "Do you want to delete \"%username%\" city?"
 delete.note: "This action cannot be undone"
 
 action.new: 'Add'
