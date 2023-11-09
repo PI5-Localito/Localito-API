@@ -17,7 +17,8 @@ class Seller extends AbstractEntity
     use AnnotationMappings;
 
     #[Column('user_id')]
-    protected int $userId;
+    #[Assert\Type(type: 'digit', message: 'type.digit')]
+    public int $userId;
 
     #[Column('state')]
     protected bool $state;

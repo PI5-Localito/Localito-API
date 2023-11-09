@@ -1,0 +1,30 @@
+{% extends 'base.html.twig'  %}
+{% block body %}
+<main class="responsive">
+  <div class="grid">
+    <div class="s5">
+      <h2 class="my-mid">{{ stand.getName() }}</h2>
+      <div class="row">
+        <b>{{'input.tag'|trans([], 'form')}}:</b>
+        <div class="max">{{stand.tag}}</div>
+      </div>
+      <div class="medium-divider"></div>
+      <div class="row">
+        <b>{{'input.owner'|trans([], 'form')}}:</b>
+        <div class="max">{{stand.sellerId}}</div>
+      </div>
+      <div class="medium-divider"></div>
+      <div class="row">
+        <b>{{'input.info'|trans([], 'form')}}:</b>
+        <div class="max">{{stand.info}}</div>
+      </div>
+      <div class="medium-divider"></div>
+      <div class="row">
+        <b>{{'input.city'|trans([], 'form')}}:</b>
+        <div class="max">{{stand.city}}</div>
+      </div>
+      <a class="button app-back fill">{{ 'action.back'|trans }}</a>
+    </div>
+  </div>
+</main>
+{% endblock %}
