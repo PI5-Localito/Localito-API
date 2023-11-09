@@ -2,129 +2,137 @@
 
 namespace App\Controller;
 
+use App\Entity\Buyer;
+use App\Entity\Seller;
 use App\Entity\User;
+use App\Model\BuyerRepo;
+use App\Model\SellerRepo;
 use App\Model\UserRepo;
 use App\Service\MysqlStorage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserAPI extends AbstractController
 {
-    protected UserRepo $model;
+    protected UserRepo $userModel;
+    protected BuyerRepo $buyerModel;
+    protected SellerRepo $sellerModel;
 
     public function __construct(
         MysqlStorage $storage,
-        protected ValidatorInterface $validator
+        protected ValidatorInterface $validator,
+        protected Filesystem $filesystem,
     ) {
-        $this->model = $storage->getModel(User::class);
+        $this->userModel = $storage->getModel(User::class);
+        $this->buyerModel = $storage->getModel(Buyer::class);
+        $this->sellerModel = $storage->getModel(Seller::class);
     }
 
-    protected function ifEntity(int $id): User
+    protected function processErrors(ConstraintViolationListInterface $list): false|Response
     {
-        $user = $this->model->get($id);
-        if ($user === null) {
-            throw new NotFoundHttpException();
+        if ($list->count() == 0) {
+            return false;
         }
-        return $user;
+
+        $violations = [];
+        foreach($list as $violation) {
+            $violations[] = [
+                'message' => $violation->getMessage(),
+                'cause' => $violation->getPropertyPath(),
+            ];
+        }
+
+        return new JsonResponse($violations, status: 400);
     }
 
-    #[Route(path: '/api/users', methods: 'GET')]
-    public function list(Request $request): Response
+    #[Route(path: '/api/user/create', methods: ['POST'])]
+    public function register(Request $request): Response
     {
-        $page = $request->query->get('page', 1);
-        $entities = $this->model->all(limit: 10, page: $page - 1);
-        return new JsonResponse($entities);
+        $data = $request->getPayload();
+        $user = new User();
+        $user->hydrate($data->all());
+        $violations = $this->validator->validate($user);
+        $type = $data->getInt('type', 0);
+
+        if ($badreq = $this->processErrors($violations)) {
+            return $badreq;
+        }
+
+        $user->setPassword($user->password);
+        if ($user->avatar && !$user->avatar->isFile()) {
+            return new JsonResponse([
+                ['message' => 'File not found', 'cause' => 'avatar']
+            ], status: 400);
+        }
+
+        if (!$this->userModel->save($user)) {
+            return new JsonResponse([
+                ['message' => 'Oops! something failed', 'cause' => 'user']
+            ], status: 500);
+        }
+
+        $buyer = new Buyer();
+        $buyer->userId = $user->id;
+        if (!$this->buyerModel->save($buyer)) {
+            return new JsonResponse([
+                ['message' => 'Oops! something failed', 'cause' => 'buyer']
+            ], status: 500);
+        }
+
+        return new JsonResponse([
+            'user' => $user,
+            'buyer' => $buyer
+        ]);
     }
 
-    #[Route(path: '/api/user/{id}', methods: 'GET', requirements: ['id' => '\d+'])]
+    #[Route(path: '/api/user/{id}', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function user(int $id): Response
     {
-        $entity = $this->ifEntity($id);
-        return new JsonResponse($entity);
-    }
-
-    #[Route(path: '/api/user/{id}', methods: 'PUT', requirements: ['id' => '\d+'])]
-    public function editUser(Request $request, int $id): Response
-    {
-        $entity = $this->ifEntity($id);
-        $data = $request->getPayload()->all();
-        $password = $data['password'] ?? null;
-
-        if(!empty($password)) {
-            throw new BadRequestHttpException();
-        }
-        if (!password_verify($password, $entity->password)) {
-            throw new UnauthorizedHttpException();
+        $user = $this->userModel->get($id);
+        if (!$user) {
+            throw new JsonResponse([
+                ['message' => 'Entity not found', 'cause' => 'id']
+            ], status: 404);
         }
 
-        if (!empty($data['avatar'])) {
-            $file = new File($data['avatar'], true);
-        }
-
-        $entity->hydrate($data);
-
-
-        return new JsonResponse($entity->extract());
-    }
-
-    #[Route(path: '/api/user/{id}', methods: 'DELETE', requirements: ['id' => '\d+'])]
-    public function deleteUser(int $id): Response
-    {
-        $entity = $this->ifEntity($id);
-        $this->model->delete($entity);
-        return new JsonResponse($entity);
-    }
-
-    #[Route(path: '/api/user', methods: 'POST')]
-    public function create(Request $request): Response
-    {
-        $user = new User();
-        $data = $request->getPayload()->all();
-        $user->hydrate($data);
-        $validations = $this->validator->validate($user);
-        if ($validations->count() > 0) {
-            $last_violation = $validations->get(0);
-            return new JsonResponse(
-                data: [
-                    'type' => 'syntax',
-                    'errors' => $validations->count(),
-                    'message' => $last_violation->getMessage(),
-                    'parameter' => $last_violation->getPropertyPath(),
-                ],
-                status: 400,
-            );
-        }
-
-        if (!$this->model->save($user)) {
-            $errors = $this->model->getErrors();
-            $last_error = array_pop($errors);
-            switch($last_error[0]) {
-                case '23000':
-                    return new JsonResponse([
-                        'type' => 'duplicated',
-                        'errors' => count($errors),
-                        'message' => $last_error[2] ?? null,
-                    ], status: 400);
-                    break;
-                default:
-                    return new JsonResponse([
-                        'type' => 'internal',
-                        'errors' => count($errors),
-                        'message' => 'Internal error'
-                    ], status: 500);
-                    break;
-            }
-
-        }
         return new JsonResponse($user);
+    }
+
+    #[Route(path: '/api/user/{id}/{type}', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function userWith(int $id, string $type): Response
+    {
+        $user = $this->userModel->get($id);
+        if (!$user) {
+            return new JsonResponse([
+                ['message' => 'Entity not found', 'cause' => 'id']
+            ], status: 404);
+        }
+
+        $role = match($type) {
+            default => $this->buyerModel->getByUser($user->id),
+            'buyer' => $this->buyerModel->getByUser($user->id),
+            'seller' => $this->sellerModel->getByUser($user->id),
+        };
+
+        if(!$role) {
+            return new JsonResponse([
+                ['message' => 'Entity was not found', 'cause' => 'role']
+            ], status: 404);
+        }
+
+        return new JsonResponse([ 'entity' => $user, 'role' => $role ]);
+    }
+
+    public function createBuyer(Request $request): Response
+    {
+        $data = $request->getPayload();
+
     }
 }

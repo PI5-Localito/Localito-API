@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use BuyerRepo;
+use App\Model\BuyerRepo;
 use Lib\Storage\AbstractEntity;
 use Lib\Storage\Annotations\Column;
 use Lib\Storage\Annotations\Table;
@@ -26,7 +26,7 @@ class Buyer extends AbstractEntity
     #[Assert\NotBlank(message: 'not.blank')]
     #[Assert\NotNull(message: 'not.null')]
     #[Assert\Type(type: 'digit', message: 'type.digit')]
-    protected bool $state = true;
+    public bool $state = true;
 
     public function setUser(int $uid): static
     {

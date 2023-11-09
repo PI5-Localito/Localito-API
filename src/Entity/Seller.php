@@ -17,10 +17,10 @@ class Seller extends AbstractEntity
     use AnnotationMappings;
 
     #[Column('user_id')]
-    protected int $userId;
+    public int $userId;
 
     #[Column('state')]
-    protected bool $state;
+    public bool $state;
 
     /**
      * @return array<string,array>
