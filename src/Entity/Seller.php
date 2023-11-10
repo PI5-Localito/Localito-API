@@ -21,7 +21,7 @@ class Seller extends AbstractEntity
     public int $userId;
 
     #[Column('state')]
-    protected bool $state;
+    public bool $state;
 
     /**
      * @return array<string,array>

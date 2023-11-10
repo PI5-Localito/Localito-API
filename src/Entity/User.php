@@ -70,7 +70,7 @@ class User extends AbstractEntity
         return $format ?: $this->phone ?? null;
     }
 
-    public function setPasswordHash(string $password): static
+    public function setPassword(string $password): static
     {
         $this->password = password_hash($this->password, PASSWORD_DEFAULT);
         return $this;

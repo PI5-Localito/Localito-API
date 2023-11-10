@@ -6,7 +6,6 @@ use App\Model\ProductRepo;
 use Lib\Storage\AbstractEntity;
 use Lib\Storage\Annotations\Column;
 use Lib\Storage\Annotations\Table;
-use Lib\Storage\Traits\AnnotationColumns;
 use Lib\Storage\Traits\AnnotationMappings;
 use Lib\Storage\Traits\ColumnHydrate;
 use Symfony\Component\Validator\Constraints as Assert;
