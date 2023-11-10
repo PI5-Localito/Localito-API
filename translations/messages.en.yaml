@@ -9,9 +9,13 @@ city: "City"
 user.create: "Create user"
 user.edit: "Edit \"%username%\""
 city.create: "Create city"
+city.edit: "Create city"
+stand.create: "Create stand"
+stand.edit: "Edit \"%username%\""
 
 delete.warning: "Do you want to delete \"%username%\" user?"
 delete.city.warning: "Do you want to delete \"%username%\" city?"
+delete.stand.warning: "Do you want to delete \"%username%\" stand?"
 delete.note: "This action cannot be undone"
 
 action.new: 'Add'

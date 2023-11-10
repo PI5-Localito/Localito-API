@@ -48,6 +48,17 @@ class User extends AbstractEntity
     #[Assert\PasswordStrength([ 'minScore' => PasswordStrength::STRENGTH_MEDIUM ], message: 'password.weak')]
     public string $password;
 
+    public function setId(int $id): static
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
     public function getFullName(string $format = '%s %s'): string
     {
         return sprintf($format, $this->name, $this->lastName);
