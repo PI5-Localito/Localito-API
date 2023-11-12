@@ -1,0 +1,15 @@
+{% form_theme form 'form/beer_theme.html.twig'  %}
+{{ form_start(form, { attr: { id: 'stand_form' }}) }}
+<div class="grid">
+  <div class="s4">
+    {{ form_row(form.standId) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.info) }}
+    {{ form_row(form.price) }}
+    <div class="row">
+      {{ form_widget(form.submit) }}
+      <a class="button app-back fill">{{ 'action.back'|trans }}</a>
+    </div>
+  </div>
+</div>
+{{ form_end(form) }}

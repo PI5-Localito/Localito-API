@@ -12,14 +12,19 @@ city.create: "Create city"
 city.edit: "Create city"
 stand.create: "Create stand"
 stand.edit: "Edit \"%username%\""
+product.create: "Create product"
+product.edit: "Edit \"%username%\""
 
 delete.warning: "Do you want to delete \"%username%\" user?"
 delete.city.warning: "Do you want to delete \"%username%\" city?"
 delete.stand.warning: "Do you want to delete \"%username%\" stand?"
+delete.product.warning: "Do you want to delete \"%username%\" product?"
+seller.warning: "Do you want to made \"%username%\" seller?"
 delete.note: "This action cannot be undone"
 
 action.new: 'Add'
 action.delete: "Delete"
 action.back: "Back"
+action.makeSeller: "Make seller"
 
 table.empty: 'Nothing here..'

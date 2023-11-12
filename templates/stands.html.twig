@@ -24,8 +24,18 @@
       <tr class="flex">
         <td>{{ s.standName }}</td>
         <td>{{ s.tag }}</td>
-        <td>{{ s.sellerId }}</td>
-        <td>{{ s.city }}</td>
+        <td>
+          {% for sl in sellers %}
+            {% for u in users %}
+              {{ s.sellerId == sl.id ? sl.userId == u.id ? u.getFullName() }}
+            {% endfor %}    
+          {% endfor %}
+        </td>
+        <td>
+          {% for c in cities %}
+            {{s.city == c.id ? c.getName()}}
+          {% endfor %}
+        </td>
         <td>
           <a href="/stand/{{ s.id }}" class="button transparent circle medium"><i>visibility</i></a>
           <a href="/stand/{{ s.id }}/edit" class="button transparent circle medium"><i>edit</i></a>
