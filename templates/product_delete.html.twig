@@ -1,0 +1,20 @@
+
+{% extends 'base.html.twig'  %}
+
+{% block body %}
+<main class="responsive">
+  <h1>{{ 'delete.product.warning'|trans({ '%username%': product.name }) }}</h1>
+  <p class="large-text">{{ 'delete.note'|trans }}</p>
+  
+  <nav class="my-mid">
+    <a class="button fill" href="/stand/{{stand.id}}">{{ 'action.back'|trans }}</a>
+    <a class="button" href="?confirmation=1">{{ 'action.delete'|trans }}</a>
+  </nav>
+</main>
+{% endblock %}
+
+{% block style %}
+<style>
+  .
+</style>
+{% endblock %}

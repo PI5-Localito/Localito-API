@@ -7,21 +7,18 @@ use Lib\Storage\AbstractModel;
 
 class SellerRepo extends AbstractModel
 {
-    public function getByUser(int $id): false|Seller
-    {
-        $entity = new Seller();
-        $entity->userId = $id;
 
-        $result = $this->executeWrapper(
+    public function getByUser(int $uid): ?Seller
+    {
+        $entity = new $this->entity();
+        $entity->userId = $uid;
+
+        $data = $this->executeWrapper(
             "SELECT * FROM {$this->getTable()} WHERE user_id = :userId",
             $entity,
-            $entity->includeMapping(['user_id']),
+            $entity->includeMapping(['userId']),
         );
 
-        if ($result === false) {
-            return false;
-        }
-
-        return $result[0] ?? null;
+        return $data[0] ?? null;
     }
 }

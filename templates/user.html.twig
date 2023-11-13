@@ -30,6 +30,10 @@
           <i>phone</i>
         </div>
       </div>
+      <a class="button app-back fill">{{ 'action.back'|trans }}</a>
+      {% if seller is null %}
+        <a class="button green9" href="/user/{{user.id}}/makeseller">{{ 'action.makeSeller'|trans }}</a>
+      {% endif %}
     </div>
   </main>
 {% endblock %}
