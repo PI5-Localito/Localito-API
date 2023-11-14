@@ -1,53 +1,58 @@
 {% extends 'base.html.twig' %}
+
 {% block body %}
-<main class="responsive mb-small">
-  <h1>{{ 'users'|trans }}</h1>
-  <div class="my-mid">
-    <a class="button" href="/user/new">
-      <i>add</i>
-      <span>{{ 'action.new'|trans }}</span>
-    </a>
-  </div>
-  {% if users %}
-  <table class="border large-space">
-    <thead>
-      <tr>
-        <th>{{ 'input.name'|trans([], 'form') }}</th>
-        <th>{{ 'input.email'|trans([], 'form') }}</th>
-        <th>{{ 'input.phone'|trans([], 'form') }}</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for u in users %}
-      <tr class="flex">
-        <td>{{ u.getFullName() }}</td>
-        <td>{{ u.email }}</td>
-        <td>{{ u.phone }}</td>
-        <td>
-          <a href="/user/{{ u.id }}" class="button transparent circle medium"><i>visibility</i></a>
-          <a href="/user/{{ u.id }}/edit" class="button transparent circle medium"><i>edit</i></a>
-          <a href="/user/{{ u.id }}/delete" class="button transparent circle medium"><i>delete</i></a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <article class="border medium no-padding middle-align center-align">
-    <div class="padding">
-      <h5>{{ 'table.empty'|trans }}<h5>
-    </div>
-  </article>
-  {% endif %}
-  <nav>
-    {% if page > 1 %}
-    <a href="?page={{ page - 1}}" class="button transparent circle"><i>chevron_left</i></a>
+  <main class="responsive mb-small">
+    <h1 class="center-align">{{ 'users'|trans }}</h1>
+    {% if users %}
+      <table class="border striped responsive">
+        <thead>
+          <tr>
+            <th class="bold">{{ 'input.name'|trans([], 'form') }}</th>
+            <th class="bold">{{ 'input.email'|trans([], 'form') }}</th>
+            <th class="bold">{{ 'input.phone'|trans([], 'form') }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+            {% set rowClass = loop.index is even ? 'even' : 'odd' %}
+            <tr class="flex {{ rowClass }}">
+              <td>{{ u.getFullName() }}</td>
+              <td>{{ u.email }}</td>
+              <td>{{ u.phone }}</td>
+              <td>
+                <div class="button-group">
+                  <a href="/user/{{ u.id }}" class="button info circle"><i>visibility</i></a>
+                  <a href="/user/{{ u.id }}/edit" class="button warning circle"><i>edit</i></a>
+                  <a href="/user/{{ u.id }}/delete" class="button danger circle"><i>delete</i></a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     {% else %}
-    <a disabled class="button transparent circle"><i>chevron_left</i></a>
+      <article class="border medium no-padding middle-align center-align">
+        <div class="padding">
+          <h5>{{ 'table.empty'|trans }}<h5>
+        </div>
+      </article>
     {% endif %}
-    {{ page }}
-    <a href="?page={{ page + 1 }}" class="button transparent circle"><i>chevron_right</i></a>
-  </nav>
-</main>
+
+    <nav class="pagination">
+      {% if page > 1 %}
+        <a href="?page={{ page - 1}}" class="button transparent circle"><i>chevron_left</i></a>
+      {% else %}
+        <a disabled class="button transparent circle"><i>chevron_left</i></a>
+      {% endif %}
+      {{ page }}
+      <a href="?page={{ page + 1 }}" class="button transparent circle"><i>chevron_right</i></a>
+      <div class="my-mid">
+        <a class="button success" href="/user/new">
+          <i>add</i>
+          <span>{{ 'action.new'|trans }}</span>
+        </a>
+      </div>
+    </nav>
+  </main>
 {% endblock %}

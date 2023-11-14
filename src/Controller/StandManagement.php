@@ -138,8 +138,12 @@ class StandManagement extends AbstractController
         if(!$request->getSession()->has('login')){
             return $this->redirectToRoute('login');
         }
+
         $product = new Product();
-        $form = $this->createForm(ProductForm::class, $product);
+        $entity = $this->ifEntity($id);
+        $seller = $this->sellerModel->get($entity->sellerId);
+        $sid = $seller->getId();
+        $form = $this->createForm(ProductForm::class, $product, ['sid' => $sid]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->productModel->save($product);

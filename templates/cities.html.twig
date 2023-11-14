@@ -1,55 +1,60 @@
 {% extends 'base.html.twig' %}
+
 {% block body %}
-<main class="responsive mb-small">
-  <h1>{{ 'Cities'|trans }}</h1>
-  <div class="my-mid">
-    <a class="button" href="/city/new">
-      <i>add</i>
-      <span>{{ 'action.new'|trans }}</span>
-    </a>
-  </div>
-  {% if cities %}
-  <table class="border large-space">
-    <thead>
-      <tr>
-        <th>{{ 'input.country_code'|trans([], 'form') }}</th>
-        <th>{{ 'input.name'|trans([], 'form') }}</th>
-        <th>{{ 'input.longitude'|trans([], 'form') }}</th>
-        <th>{{ 'input.latitude'|trans([], 'form') }}</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for c in cities %}
-      <tr class="flex">
-        <td>{{ c.countryCode }}</td>
-        <td>{{ c.cityName }}</td>
-        <td>{{ c.longitude }}</td>
-        <td>{{ c.latitude }}</td>
-        <td>
-          <a href="/city/{{ c.id }}" class="button transparent circle medium"><i>visibility</i></a>
-          <a href="/city/{{ c.id }}/edit" class="button transparent circle medium"><i>edit</i></a>
-          <a href="/city/{{ c.id }}/delete" class="button transparent circle medium"><i>delete</i></a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <article class="border medium no-padding middle-align center-align">
-    <div class="padding">
-      <h5>{{ 'table.empty'|trans }}<h5>
-    </div>
-  </article>
-  {% endif %}
-  <nav>
-    {% if page > 1 %}
-    <a href="?page={{ page - 1}}" class="button transparent circle"><i>chevron_left</i></a>
+  <main class="responsive mb-small">
+    <h1 class="center-align">{{ 'Cities'|trans }}</h1>
+    {% if cities %}
+      <table class="border striped responsive">
+        <thead>
+          <tr>
+            <th class="bold">{{ 'input.country_code'|trans([], 'form') }}</th>
+            <th class="bold">{{ 'input.name'|trans([], 'form') }}</th>
+            <th class="bold">{{ 'input.longitude'|trans([], 'form') }}</th>
+            <th class="bold">{{ 'input.latitude'|trans([], 'form') }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in cities %}
+            {% set rowClass = loop.index is even ? 'even' : 'odd' %}
+            <tr class="flex {{ rowClass }}">
+              <td>{{ c.countryCode }}</td>
+              <td>{{ c.cityName }}</td>
+              <td>{{ c.longitude }}</td>
+              <td>{{ c.latitude }}</td>
+              <td>
+                <div class="button-group">
+                  <a href="/city/{{ c.id }}" class="button info circle medium"><i>visibility</i></a>
+                  <a href="/city/{{ c.id }}/edit" class="button warning circle medium"><i>edit</i></a>
+                  <a href="/city/{{ c.id }}/delete" class="button danger circle medium"><i>delete</i></a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     {% else %}
-    <a disabled class="button transparent circle"><i>chevron_left</i></a>
+      <article class="border medium no-padding middle-align center-align">
+        <div class="padding">
+          <h5>{{ 'table.empty'|trans }}<h5>
+        </div>
+      </article>
     {% endif %}
-    {{ page }}
-    <a href="?page={{ page + 1 }}" class="button transparent circle"><i>chevron_right</i></a>
-  </nav>
-</main>
+
+    <nav class="pagination">
+      {% if page > 1 %}
+        <a href="?page={{ page - 1}}" class="button transparent circle"><i>chevron_left</i></a>
+      {% else %}
+        <a disabled class="button transparent circle"><i>chevron_left</i></a>
+      {% endif %}
+      {{ page }}
+      <a href="?page={{ page + 1 }}" class="button transparent circle"><i>chevron_right</i></a>
+      <div class="my-mid">
+        <a class="button success" href="/city/new">
+          <i>add</i>
+          <span>{{ 'action.new'|trans }}</span>
+        </a>
+      </div>
+    </nav>
+  </main>
 {% endblock %}

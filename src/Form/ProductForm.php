@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProductForm extends AbstractType
 {
@@ -26,8 +27,22 @@ class ProductForm extends AbstractType
         $this->standModel = $storage->getModel(Stand::class);
     }
 
+    public function configureOptions(OptionsResolver $options) {
+        $options->setRequired('sid');
+        $options->setAllowedTypes('sid', ['int']);
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $stands = [];
+        {
+            /** @var array<Stand> */
+            $tmp = $this->StandModel->getBySeller($options['sid']);
+            foreach ($tmp as $key => $value) {
+                $name = $value->standName;
+                $stands[$name] = $value->id;
+            }
+        }
 
         $builder
             ->add('standId', ChoiceType::class, [

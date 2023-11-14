@@ -1,65 +1,74 @@
 {% extends 'base.html.twig' %}
+
 {% block body %}
-<main class="responsive mb-small">
-  <h1>{{ 'stands'|trans }}</h1>
-  <div class="my-mid">
-    <a class="button" href="/stand/new">
-      <i>add</i>
-      <span>{{ 'action.new'|trans }}</span>
-    </a>
-  </div>
-  {% if stands %}
-  <table class="border large-space">
-    <thead>
-      <tr>
-        <th>{{ 'input.name'|trans([], 'form') }}</th>
-        <th>{{ 'input.tag'|trans([], 'form') }}</th>
-        <th>{{ 'input.seller'|trans([], 'form') }}</th>
-        <th>{{ 'input.city'|trans([], 'form') }}</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for s in stands %}
-      <tr class="flex">
-        <td>{{ s.name }}</td>
-        <td>{{ s.tag }}</td>
-        <td>
-          {% for sl in sellers %}
-            {% for u in users %}
-              {{ s.sellerId == sl.id ? sl.userId == u.id ? u.getFullName() }}
-            {% endfor %}    
+  <main class="responsive mb-small">
+    <h1 class="center-align">{{ 'stands'|trans }}</h1>
+    {% if stands %}
+      <table class="border striped responsive">
+        <thead>
+          <tr>
+            <th class="bold">{{ 'input.name'|trans([], 'form') }}</th>
+            <th class="bold">{{ 'input.tag'|trans([], 'form') }}</th>
+            <th class="bold">{{ 'input.seller'|trans([], 'form') }}</th>
+            <th class="bold">{{ 'input.city'|trans([], 'form') }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in stands %}
+            {% set rowClass = loop.index is even ? 'even' : 'odd' %}
+            <tr class="flex {{ rowClass }}">
+              <td>{{ s.standName }}</td>
+              <td>{{ s.tag }}</td>
+              <td>
+                {% for sl in sellers %}
+                  {% for u in users %}
+                    {% if s.sellerId == sl.id and sl.userId == u.id %}
+                      {{ u.getFullName() }}
+                    {% endif %}
+                  {% endfor %}
+                {% endfor %}
+              </td>
+              <td>
+                {% for c in cities %}
+                  {% if s.city == c.id %}
+                    {{ c.getName() }}
+                  {% endif %}
+                {% endfor %}
+              </td>
+              <td>
+                <div class="button-group">
+                  <a href="/stand/{{ s.id }}" class="button info circle"><i>visibility</i></a>
+                  <a href="/stand/{{ s.id }}/edit" class="button warning circle"><i>edit</i></a>
+                  <a href="/stand/{{ s.id }}/delete" class="button danger circle"><i>delete</i></a>
+                </div>
+              </td>
+            </tr>
           {% endfor %}
-        </td>
-        <td>
-          {% for c in cities %}
-            {{s.city == c.id ? c.getName()}}
-          {% endfor %}
-        </td>
-        <td>
-          <a href="/stand/{{ s.id }}" class="button transparent circle medium"><i>visibility</i></a>
-          <a href="/stand/{{ s.id }}/edit" class="button transparent circle medium"><i>edit</i></a>
-          <a href="/stand/{{ s.id }}/delete" class="button transparent circle medium"><i>delete</i></a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <article class="border medium no-padding middle-align center-align">
-    <div class="padding">
-      <h5>{{ 'table.empty'|trans }}<h5>
-    </div>
-  </article>
-  {% endif %}
-  <nav>
-    {% if page > 1 %}
-    <a href="?page={{ page - 1}}" class="button transparent circle"><i>chevron_left</i></a>
+        </tbody>
+      </table>
     {% else %}
-    <a disabled class="button transparent circle"><i>chevron_left</i></a>
+      <article class="border medium no-padding middle-align center-align">
+        <div class="padding">
+          <h5>{{ 'table.empty'|trans }}<h5>
+        </div>
+      </article>
     {% endif %}
-    {{ page }}
-    <a href="?page={{ page + 1 }}" class="button transparent circle"><i>chevron_right</i></a>
-  </nav>
-</main>
+
+    <nav class="pagination">
+      {% if page > 1 %}
+        <a href="?page={{ page - 1}}" class="button transparent circle"><i>chevron_left</i></a>
+      {% else %}
+        <a disabled class="button transparent circle"><i>chevron_left</i></a>
+      {% endif %}
+      {{ page }}
+      <a href="?page={{ page + 1 }}" class="button transparent circle"><i>chevron_right</i></a>
+      <div class="my-mid">
+        <a class="button success" href="/stand/new">
+          <i>add</i>
+          <span>{{ 'action.new'|trans }}</span>
+        </a>
+      </div>
+    </nav>
+  </main>
 {% endblock %}

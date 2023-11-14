@@ -1,7 +1,7 @@
 {% form_theme form 'form/beer_theme.html.twig'  %}
 {{ form_start(form, { attr: { id: 'user_form' }}) }}
 {% set avatar = form.vars.value.avatar is empty? 'user-default.svg' : form.vars.value.avatar.getPathname() %} 
-<div class="grid">
+<div class="grid" style="display: flex; align-items: center; justify-content: center;"> {# Use Flexbox to center content #}
   <div class="s3">
     <a class="button transparent circle big">
       <img class="big small-elevate responsive" id="avatar_preview" src="/{{ avatar }}">

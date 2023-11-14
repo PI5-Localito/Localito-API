@@ -2,7 +2,7 @@
 
 {% block body %}
 <main class="responsive">
-  <h1>{{ product.id is null? 'product.create'|trans : 'product.edit'|trans({'%username%': product.getName()}) }}</h1>
+  <h1 class="center-align">{{ product.id is null? 'product.create'|trans : 'product.edit'|trans({'%username%': product.getName()}) }}</h1>
   {% include 'form/product.html.twig' %}
 </main>
 {% endblock %}
