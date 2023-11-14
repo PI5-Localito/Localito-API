@@ -17,7 +17,7 @@ class City extends AbstractEntity
     use ColumnHydrate;
 
     #[Column('country_code')]
-    #[Assert\Length(exactly: 3, exactMessage:"")]
+    #[Assert\Length(exactly: 3, exactMessage: 'string.length')]
     public string $countryCode;
 
     #[Column('city_name')]
@@ -28,6 +28,17 @@ class City extends AbstractEntity
 
     #[Column('latitude')]
     public float $latitude;
+
+    public function setId(int $id): static
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 
     public function setCountry(string $countryCode): static
     {
@@ -48,7 +59,7 @@ class City extends AbstractEntity
 
     public function getName(): string
     {
-        return $this->city_name;
+        return $this->cityName;
     }
 
     public function setLong(float $longitude): static

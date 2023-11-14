@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Seller;
 use App\Entity\User;
 use App\Form\UserForm;
+use App\Model\SellerRepo;
 use App\Model\UserRepo;
 use App\Service\MysqlStorage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,10 +17,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserManagement extends AbstractController
 {
     protected UserRepo $model;
+    protected SellerRepo $sellerModel;
 
     public function __construct(MysqlStorage $storage)
     {
         $this->model = $storage->getModel(User::class);
+        $this->sellerModel = $storage->getModel(Seller::class);
     }
 
     protected function ifEntity(int $id): User
@@ -33,6 +37,9 @@ class UserManagement extends AbstractController
     #[Route(name: 'users', path: '/users', methods: 'GET')]
     public function list(Request $request): Response
     {
+        if(!$request->getSession()->has('login')){
+            return $this->redirectToRoute('login');
+        }
         $page = $request->query->get('page', 1);
 
         $entities = $this->model->all(limit: 10, page: $page - 1);
@@ -45,6 +52,9 @@ class UserManagement extends AbstractController
     #[Route('/user/new', methods: [ 'GET', 'POST' ])]
     public function create(Request $request): Response
     {
+        if(!$request->getSession()->has('login')){
+            return $this->redirectToRoute('login');
+        }
         $user = new User();
         $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
@@ -58,12 +68,15 @@ class UserManagement extends AbstractController
             return $this->redirectToRoute('users');
         }
 
-        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form ]);
+        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form, 'new' => true ]);
     }
 
     #[Route('/user/{id}/edit', methods: [ 'GET', 'POST' ])]
     public function edit(Request $request, int $id): Response
     {
+        if(!$request->getSession()->has('login')){
+            return $this->redirectToRoute('login');
+        }
         $user = $this->ifEntity($id);
         $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
@@ -78,12 +91,15 @@ class UserManagement extends AbstractController
             return $this->redirectToRoute('users');
         }
 
-        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form ]);
+        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form, 'new' => false  ]);
     }
 
     #[Route('/user/{id}/delete', methods: 'GET')]
     public function delete(Request $request, int $id): Response
     {
+        if(!$request->getSession()->has('login')){
+            return $this->redirectToRoute('login');
+        }
         $user = $this->ifEntity($id);
         if ($request->query->has('confirmation')) {
             $this->model->delete($user);
@@ -93,9 +109,30 @@ class UserManagement extends AbstractController
     }
 
     #[Route('/user/{id}', methods: 'GET')]
-    public function details(int $id): Response
+    public function details(Request $request, int $id): Response
     {
+        if(!$request->getSession()->has('login')){
+            return $this->redirectToRoute('login');
+        }
+        $seller = $this->sellerModel->getByUser($id);
         $entity = $this->ifEntity($id);
-        return $this->render('user.html.twig', ['user' => $entity]);
+        return $this->render('user.html.twig', ['user' => $entity, 'seller' => $seller]);
+    }
+
+    #[Route('/user/{id}/makeseller', methods: 'GET')]
+    public function makeSeller(Request $request, int $id): Response
+    {
+        if(!$request->getSession()->has('login')){
+            return $this->redirectToRoute('login');
+        }
+        $user = $this->ifEntity($id);
+        if ($request->query->has('confirmation')) {
+            $seller = new Seller();
+            $seller->userId = $id;
+            $this->sellerModel->save($seller);
+            //dd($this->sellerModel->getErrors());
+            return $this->redirectToRoute('users');
+        }
+        return $this->render('seller_create.html.twig', ['user' => $user]);
     }
 }

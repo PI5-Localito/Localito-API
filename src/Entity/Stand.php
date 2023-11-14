@@ -17,19 +17,19 @@ class Stand extends AbstractEntity
     use AnnotationMappings;
 
     #[Column('seller_id')]
-    protected int $idSeller;
+    public int $sellerId;
 
     #[Column('tag')]
-    protected string $tag;
+    public string $tag;
 
     #[Column('stand_name')]
-    protected string $standName;
+    public string $standName;
 
     #[Column('info')]
-    protected ?string $info;
+    public ?string $info;
 
     #[Column('city')]
-    protected int $city;
+    public int $city;
 
     public function setId(int $id): static
     {
@@ -44,13 +44,13 @@ class Stand extends AbstractEntity
 
     public function setSeller(int $sid): static
     {
-        $this->idSeller = $sid;
+        $this->sellerId = $sid;
         return $this;
     }
 
     public function getSeller(): int
     {
-        return $this->idSeller;
+        return $this->sellerId;
     }
 
     public function setTag(string $tag): static
