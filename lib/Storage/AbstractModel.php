@@ -63,12 +63,13 @@ abstract class AbstractModel
         }
         return true;
     }
+
     /**
      * Wrapper around the execute pdo statement
      *
      * @param array<string,Column> $mappings
      */
-    protected function executeWrapper(string $query, ?AbstractEntity $entity = null, ?array $mappings = null): bool|array
+    protected function queryBind(string $query, ?AbstractEntity $entity = null, ?array $mappings = null): bool|array
     {
         $stmt = $this->db->prepare($query);
         if($stmt === false) {
@@ -102,7 +103,6 @@ abstract class AbstractModel
         return $entities;
     }
 
-
     /**
      * Get an entity with the corresponding ID
      * @param int $id
@@ -114,7 +114,7 @@ abstract class AbstractModel
         $entity = new $this->entity();
         $entity->id = $id;
 
-        $data = $this->executeWrapper(
+        $data = $this->queryBind(
             "SELECT * FROM {$this->getTable()} WHERE id = :id",
             $entity,
             $entity->includeMapping(['id']),
@@ -139,7 +139,7 @@ abstract class AbstractModel
         $values = array_map(fn ($n) => ":$n", array_keys($mappings));
         $query .= 'VALUES (' . implode(',', $values) . ')';
 
-        if ($this->executeWrapper($query, $entity, $mappings) !== false) {
+        if ($this->queryBind($query, $entity, $mappings) !== false) {
             $entity->id = $this->db->lastInsertId();
             return true;
         }
@@ -164,7 +164,7 @@ abstract class AbstractModel
         $query .= ' WHERE `id` = :id';
         $mappings = $entity->getMappings();
 
-        return $this->executeWrapper($query, $entity, $mappings) !== false;
+        return $this->queryBind($query, $entity, $mappings) !== false;
     }
 
     /**
@@ -185,7 +185,7 @@ abstract class AbstractModel
         $query .= ' WHERE `id` = :id';
 
         $mappings = $entity->getMappings($fields);
-        return $this->executeWrapper($query, $entity, $mappings) !== false;
+        return $this->queryBind($query, $entity, $mappings) !== false;
     }
 
     /**
@@ -195,7 +195,7 @@ abstract class AbstractModel
      */
     public function delete(AbstractEntity $entity): bool
     {
-        return $this->executeWrapper(
+        return $this->queryBind(
             "DELETE FROM {$this->getTable()} WHERE `id` = :id",
             $entity,
             $entity->includeMapping(['id']),
@@ -217,6 +217,6 @@ abstract class AbstractModel
             $offset += $page * $limit;
             $query .= "LIMIT $limit OFFSET $offset";
         }
-        return $this->executeWrapper($query);
+        return $this->queryBind($query);
     }
 }
