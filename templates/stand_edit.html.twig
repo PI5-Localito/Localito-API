@@ -2,7 +2,7 @@
 
 {% block body %}
 <main class="responsive">
-  <h1>{{ stand.id is null? 'stand.create'|trans : 'stand.edit'|trans({'%username%': stand.getName()}) }}</h1>
+  <h1 class="center-align">{{ stand.id is null? 'stand.create'|trans : 'stand.edit'|trans({'%username%': stand.getName()}) }}</h1>
   {% include 'form/stand.html.twig' %}
 </main>
 {% endblock %}

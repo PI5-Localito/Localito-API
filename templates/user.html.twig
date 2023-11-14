@@ -2,7 +2,7 @@
 {% set avatar = user.getAvatarUri() is empty ? 'user-default.svg' : user.getAvatarUri() %}
 {% block body %}
   <main class="responsive">
-    <div class="grid justify-center align-center">
+    <div class="grid justify-center align-center text-center">
       <div class="s12 flex justify-center align-center">
         <img class="big circle center" src="/{{ avatar }}" />
       </div>
@@ -30,10 +30,12 @@
           <i>phone</i>
         </div>
       </div>
-      <a class="button app-back fill">{{ 'action.back'|trans }}</a>
-      {% if seller is null %}
-        <a class="button green9" href="/user/{{user.id}}/makeseller">{{ 'action.makeSeller'|trans }}</a>
-      {% endif %}
+      <div class="s12 my-mid2">
+        <a class="button app-back fill">{{ 'action.back'|trans }}</a>
+        {% if seller is null %}
+          <a class="button green9" href="/user/{{user.id}}/makeseller">{{ 'action.makeSeller'|trans }}</a>
+        {% endif %}
+      </div>
     </div>
   </main>
 {% endblock %}
