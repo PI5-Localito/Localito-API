@@ -27,7 +27,8 @@ class ProductForm extends AbstractType
         $this->standModel = $storage->getModel(Stand::class);
     }
 
-    public function configureOptions(OptionsResolver $options) {
+    public function configureOptions(OptionsResolver $options)
+    {
         $options->setRequired('sid');
         $options->setAllowedTypes('sid', ['int']);
     }
@@ -37,9 +38,9 @@ class ProductForm extends AbstractType
         $stands = [];
         {
             /** @var array<Stand> */
-            $tmp = $this->StandModel->getBySeller($options['sid']);
+            $tmp = $this->standModel->getBySeller($options['sid']);
             foreach ($tmp as $key => $value) {
-                $name = $value->standName;
+                $name = $value->name;
                 $stands[$name] = $value->id;
             }
         }
@@ -47,10 +48,7 @@ class ProductForm extends AbstractType
         $builder
             ->add('standId', ChoiceType::class, [
                 'label' => 'Stand',
-                'choices' => $this->choices(
-                    $this->standModel,
-                    fn (Stand $s) => $s->getName(),
-                ),
+                'choices' => $stands,
             ])
             ->add('name', TextType::class, [
                 'label' => 'input.name'

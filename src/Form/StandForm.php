@@ -36,9 +36,9 @@ class StandForm extends AbstractType
         $sellers = [];
         {
             /** @var array<Seller> */
-            $tmp = $this->SellerModel->all();
+            $tmp = $this->sellerModel->all();
             foreach ($tmp as $key => $value) {
-                $name = $this->UserModel->get($value->userId)->getFullName();
+                $name = $this->userModel->get($value->userId)->getFullName();
                 $sellers[$name] = $value->id;
             }
         }
@@ -46,7 +46,7 @@ class StandForm extends AbstractType
         $cities = [];
         {
             /** @var array<City> */
-            $tmp = $this->CityModel->all();
+            $tmp = $this->cityModel->all();
             foreach ($tmp as $key => $value) {
                 $name = $value->cityName;
                 $cities[$name] = $value->id;
@@ -56,7 +56,7 @@ class StandForm extends AbstractType
         $builder
             ->add('sellerId', ChoiceType::class, [
                 'label' => 'Seller',
-                'choices' => [],
+                'choices' => $sellers,
             ])
             ->add('tag', TextType::class, [
                 'label' => 'input.tag'
