@@ -31,7 +31,7 @@ class User extends AbstractEntity
     #[Column('phone')]
     #[Assert\Length(exactly: 10, exactMessage: 'string.length')]
     #[Assert\Type(type: 'digit', message: 'type.digit')]
-    public ?string $phone;
+    public ?string $phone = null;
 
     #[Column('email')]
     #[Assert\NotBlank(message: 'not.blank')]

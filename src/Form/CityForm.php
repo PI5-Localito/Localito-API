@@ -12,22 +12,23 @@ class CityForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('countryCode', TextType::class, [
-            'required' => 'true',
-            'label' => 'input.country_code'
-        ])
-        ->add('cityName', TextType::class, [
-            'required' => 'true',
-            'label' => 'input.name'
-        ])
-        ->add('longitude', NumberType::class, [
-            'required' => 'true',
-            'label' => 'input.longitude'
-        ])
-        ->add('latitude', NumberType::class, [
-            'required' => 'true',
-            'label' => 'input.latitude'
-        ])
-        ->add('submit', SubmitType::class);
+        $builder
+            ->add('countryCode', TextType::class, [
+                'required' => 'true',
+                'label' => 'input.country_code'
+            ])
+            ->add('cityName', TextType::class, [
+                'required' => 'true',
+                'label' => 'input.name'
+            ])
+            ->add('longitude', NumberType::class, [
+                'required' => 'true',
+                'label' => 'input.longitude'
+            ])
+            ->add('latitude', NumberType::class, [
+                'required' => 'true',
+                'label' => 'input.latitude'
+            ])
+            ->add('submit', SubmitType::class);
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\ApiControllerBase;
 use Exception;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class FileAPI extends ApiControllerBase
+class FileAPI extends AbstractController
 {
     public function __construct(
         protected Filesystem $filesystem,

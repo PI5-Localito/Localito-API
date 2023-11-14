@@ -12,7 +12,7 @@ class AdminRepo extends AbstractModel
         $entity = new $this->entity();
         $entity->email = $email;
 
-        $data = $this->executeWrapper(
+        $data = $this->queryBind(
             "SELECT * FROM {$this->getTable()} WHERE email = :email",
             $entity,
             $entity->includeMapping(['email']),
@@ -20,5 +20,5 @@ class AdminRepo extends AbstractModel
 
         return $data[0] ?? null;
     }
-    
+
 }

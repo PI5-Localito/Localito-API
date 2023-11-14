@@ -23,7 +23,7 @@ class Stand extends AbstractEntity
     public string $tag;
 
     #[Column('stand_name')]
-    public string $standName;
+    public string $name;
 
     #[Column('info')]
     public ?string $info;
@@ -64,15 +64,15 @@ class Stand extends AbstractEntity
         return $this->tag;
     }
 
-    public function setName(string $standName): static
+    public function setName(string $name): static
     {
-        $this->standName = mb_strcut($standName, 0, 127);
+        $this->name = mb_strcut($name, 0, 127);
         return $this;
     }
 
     public function getName(): string
     {
-        return $this->standName;
+        return $this->name;
     }
 
     public function setInfo(string $info): static
