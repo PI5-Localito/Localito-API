@@ -130,7 +130,7 @@ class UserAPI extends AbstractController
         return new JsonResponse([ 'entity' => $user, 'role' => $role ]);
     }
 
-    public function createBuyer(Request $request): Response
+    public function createSeller(Request $request): Response
     {
         $data = $request->getPayload();
 
