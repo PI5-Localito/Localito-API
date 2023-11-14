@@ -72,7 +72,7 @@ abstract class AbstractModel
     {
         $stmt = $this->db->prepare($query);
         if($stmt === false) {
-            $this->errors[$stmt->errorCode()] = $stmt->errorInfo();
+            $this->errors[$this->db->errorCode()] = $this->db->errorInfo();
             return false;
         }
 

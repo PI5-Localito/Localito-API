@@ -14,7 +14,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -35,22 +34,6 @@ class UserAPI extends AbstractController
         $this->sellerModel = $storage->getModel(Seller::class);
     }
 
-    protected function processErrors(ConstraintViolationListInterface $list): false|Response
-    {
-        if ($list->count() == 0) {
-            return false;
-        }
-
-        $violations = [];
-        foreach($list as $violation) {
-            $violations[] = [
-                'message' => $violation->getMessage(),
-                'cause' => $violation->getPropertyPath(),
-            ];
-        }
-
-        return new JsonResponse($violations, status: 400);
-    }
 
     #[Route(path: '/api/user/create', methods: ['POST'])]
     public function register(Request $request): Response

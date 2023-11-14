@@ -24,4 +24,6 @@ class BuyerRepo extends AbstractModel
 
         return $result[0] ?? null;
     }
+
+    // public function
 }

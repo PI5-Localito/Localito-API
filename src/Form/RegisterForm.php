@@ -22,48 +22,48 @@ class RegisterForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('name', TextType::class, [
-            'constraints' => [
-                new NotBlank(),
-                new NotNull(),
-            ]
-        ])
-        ->add('last_name', TextType::class, [
-            'constraints' => [
-                new NotBlank(),
-                new NotNull(),
-            ]
-        ])
-        ->add('phone', TelType::class, [
-            'required' => false,
-            'constraints' => [
-                new Length(exactly: 10),
-                new Type(type: 'digit', message: 'type.digit'),
-            ]
-        ])
-        ->add('password', PasswordType::class, [
-            'constraints' => [
-                new NotBlank(),
-                new NotNull(),
-                new NotCompromisedPassword(),
-                new PasswordStrength(minScore: PasswordStrength::STRENGTH_MEDIUM)
-            ]
-        ])
-        ->add('email', EmailType::class, [
-            'constraints' => [
-                new NotNull(),
-                new NotBlank(),
-            ]
-        ])
-        ->add('avatar', TextType::class, [
-            'required' => false,
-        ])
-        ->add('type', EnumType::class, [
-            'class' => UserTypes::class,
-            'constraints' => [
-                new NotBlank(),
-                new NotNull(),
-            ]
-        ]);
+            ->add('name', TextType::class, [
+                'constraints' => [
+                    new NotBlank(),
+                    new NotNull(),
+                ]
+            ])
+            ->add('last_name', TextType::class, [
+                'constraints' => [
+                    new NotBlank(),
+                    new NotNull(),
+                ]
+            ])
+            ->add('phone', TelType::class, [
+                'required' => false,
+                'constraints' => [
+                    new Length(exactly: 10),
+                    new Type(type: 'digit', message: 'type.digit'),
+                ]
+            ])
+            ->add('password', PasswordType::class, [
+                'constraints' => [
+                    new NotBlank(),
+                    new NotNull(),
+                    new NotCompromisedPassword(),
+                    new PasswordStrength(minScore: PasswordStrength::STRENGTH_MEDIUM)
+                ]
+            ])
+            ->add('email', EmailType::class, [
+                'constraints' => [
+                    new NotNull(),
+                    new NotBlank(),
+                ]
+            ])
+            ->add('avatar', TextType::class, [
+                'required' => false,
+            ])
+            ->add('type', EnumType::class, [
+                'class' => UserTypes::class,
+                'constraints' => [
+                    new NotBlank(),
+                    new NotNull(),
+                ]
+            ]);
     }
 }
