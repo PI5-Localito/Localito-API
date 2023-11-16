@@ -90,11 +90,12 @@ class UserManagement extends AbstractController
             }else{
                 $entity->setAvatarFromUri($currentPath);
             }
+            $entity->setPasswordHash($entity->password);
             $this->model->update($entity);
             return $this->redirectToRoute('users');
         }
 
-        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form, 'new' => false  ]);
+        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form]);
     }
 
     #[Route('/user/{id}/delete', methods: 'GET')]
