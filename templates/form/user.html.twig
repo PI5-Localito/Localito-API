@@ -13,10 +13,8 @@
     {{ form_row(form.lastName) }}
     {{ form_row(form.phone) }}
     {{ form_row(form.email) }}
-    {% if(new) %}
-      <div class="medium-divider"></div>
-      {{ form_row(form.password) }}
-    {% endif %}
+    <div class="medium-divider"></div>
+    {{ form_row(form.password) }}
     <div class="row">
       {{ form_widget(form.submit) }}
       <a class="button app-back fill">{{ 'action.back'|trans }}</a>
