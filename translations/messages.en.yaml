@@ -5,6 +5,7 @@ stands: "Stands"
 stand: "Stand"
 cities: "Cities"
 city: "City"
+logout: "Logout"
 
 user.create: "Create user"
 user.edit: "Edit \"%username%\""

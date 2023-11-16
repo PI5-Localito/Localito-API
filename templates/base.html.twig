@@ -12,6 +12,7 @@
     {% block js %}{% endblock %}
   </head>
   <body class="light">
+  {% if login is not defined %}
     <header class="responsive fixed">
       <nav>
         <button class="circle transparent" data-ui="#menu-dialog">
@@ -21,7 +22,6 @@
       <a href="/logout" class="button transparent circle"><i>power_settings_new</i></a>
       </nav>
     </header>
-    {% block body %}{% endblock %}
     <dialog class="left" id="menu-dialog">
       <header class="fixed">
         <nav>
@@ -37,5 +37,7 @@
       {{ nav_item('cities', 'cities'|trans, 'explore')|raw }}
       {{ nav_item('logout', 'logout'|trans, 'power_settings_new')|raw }}
     </dialog>
+  {% endif %}
+    {% block body %}{% endblock %}
   </body>
 </html>

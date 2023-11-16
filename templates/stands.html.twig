@@ -18,7 +18,7 @@
           {% for s in stands %}
             {% set rowClass = loop.index is even ? 'even' : 'odd' %}
             <tr class="flex {{ rowClass }}">
-              <td>{{ s.standName }}</td>
+              <td>{{ s.name }}</td>
               <td>{{ s.tag }}</td>
               <td>
                 {% for sl in sellers %}

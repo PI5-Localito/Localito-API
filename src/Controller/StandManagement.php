@@ -50,7 +50,7 @@ class StandManagement extends AbstractController
     #[Route(name: 'stands', path: '/stands', methods: 'GET')]
     public function list(Request $request): Response
     {
-        if(!$request->getSession()->has('login')){
+        if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
         $page = $request->query->get('page', 1);
@@ -71,7 +71,7 @@ class StandManagement extends AbstractController
     #[Route('/stand/new', methods: [ 'GET', 'POST' ])]
     public function create(Request $request): Response
     {
-        if(!$request->getSession()->has('login')){
+        if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
         $stand = new Stand();
@@ -88,7 +88,7 @@ class StandManagement extends AbstractController
     #[Route('/stand/{id}/edit', methods: [ 'GET', 'POST' ])]
     public function edit(Request $request, int $id): Response
     {
-        if(!$request->getSession()->has('login')){
+        if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
         $stand = $this->ifEntity($id);
@@ -107,7 +107,7 @@ class StandManagement extends AbstractController
     #[Route('/stand/{id}/delete', methods: 'GET')]
     public function delete(Request $request, int $id): Response
     {
-        if(!$request->getSession()->has('login')){
+        if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
         $stand = $this->ifEntity($id);
@@ -118,10 +118,10 @@ class StandManagement extends AbstractController
         return $this->render('stand_delete.html.twig', ['stand' => $stand]);
     }
 
-    #[Route('/stand/{id}', methods: 'GET')]
+    #[Route(name: 'stand', path: '/stand/{id}', methods: 'GET')]
     public function details(Request $request, int $id): Response
     {
-        if(!$request->getSession()->has('login')){
+        if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
         $entity = $this->ifEntity($id);
@@ -135,15 +135,18 @@ class StandManagement extends AbstractController
     #[Route('/stand/{id}/newproduct', methods: [ 'GET', 'POST' ])]
     public function newProduct(Request $request, int $id): Response
     {
-        if(!$request->getSession()->has('login')){
+        if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
+
         $product = new Product();
-        $form = $this->createForm(ProductForm::class, $product);
+        $entity = $this->ifEntity($id);
+        $seller = $this->sellerModel->get($entity->sellerId);
+        $form = $this->createForm(ProductForm::class, $product, ['sid' => $seller->id]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->productModel->save($product);
-            return $this->redirect('/stand/'.$id);
+            return $this->redirectToRoute('stand', ['id' => $id]);
         }
 
         return $this->render('product_edit.html.twig', [ 'product' => $product, 'form' => $form ]);
@@ -152,7 +155,7 @@ class StandManagement extends AbstractController
     #[Route('/stand/{id}/product/{pid}', methods: 'GET')]
     public function product(Request $request, int $id, int $pid): Response
     {
-        if(!$request->getSession()->has('login')){
+        if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
         $product = $this->productModel->get($pid);
@@ -161,20 +164,21 @@ class StandManagement extends AbstractController
     }
 
     #[Route('/stand/{id}/product/{pid}/edit', methods: [ 'GET', 'POST' ])]
-    public function editProduct(Request $request, int $id, int $pid): Response
+    public function editPredirectToRoute(Request $request, int $id, int $pid): Response
     {
-        if(!$request->getSession()->has('login')){
+        if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
         $product = $this->productModel->get($pid);
         $stand = $this->ifEntity($id);
-        $form = $this->createForm(ProductForm::class, $product);
+        $seller = $this->sellerModel->get($stand->sellerId);
+        $form = $this->createForm(ProductForm::class, $product, ['sid' => $seller->id]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Product */
             $product = $form->getData();
             $this->productModel->update($product);
-            return $this->redirect('/stand/'.$id);
+            return $this->redirectToRoute('stand', ['id' => $id]);
         }
 
         return $this->render('product_edit.html.twig', [ 'product' => $product, 'form' => $form ]);
@@ -183,7 +187,7 @@ class StandManagement extends AbstractController
     #[Route(name: 'deleteproduct', path: '/stand/{id}/product/{pid}/delete', methods: 'GET')]
     public function deleteProduct(Request $request, int $id, int $pid): Response
     {
-        if(!$request->getSession()->has('login')){
+        if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
         $product = $this->productModel->get($pid);
