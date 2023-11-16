@@ -27,7 +27,7 @@ class ProductForm extends AbstractType
         $this->standModel = $storage->getModel(Stand::class);
     }
 
-    public function configureOptions(OptionsResolver $options)
+    public function configureOptions(OptionsResolver $options): void
     {
         $options->setRequired('sid');
         $options->setAllowedTypes('sid', ['int']);
