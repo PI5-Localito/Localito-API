@@ -78,20 +78,24 @@ class UserManagement extends AbstractController
             return $this->redirectToRoute('login');
         }
         $user = $this->ifEntity($id);
+        $currentPath = $user->getAvatarUri();
         $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var User */
             $entity = $form->getData();
-            if (!empty($entity->file)) {
-                $new_file = $entity->file->move('avatars', uniqid() . " . {$entity->file->guessExtension()}");
+            if (!empty($entity->avatar)) {
+                $new_file = $entity->avatar->move('avatars', uniqid() . " . {$entity->avatar->guessExtension()}");
                 $entity->avatar = $new_file;
+            }else{
+                $entity->setAvatarFromUri($currentPath);
             }
+            $entity->setPasswordHash($entity->password);
             $this->model->update($entity);
             return $this->redirectToRoute('users');
         }
 
-        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form, 'new' => false  ]);
+        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form]);
     }
 
     #[Route('/user/{id}/delete', methods: 'GET')]
