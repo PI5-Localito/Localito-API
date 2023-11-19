@@ -44,7 +44,7 @@ class User extends AbstractEntity
     #[Column('password')]
     #[Assert\NotBlank(message: 'not.blank')]
     #[Assert\NotNull]
-    #[Assert\NotCompromisedPassword(message: 'password.compromised')]
+    # #[Assert\NotCompromisedPassword(message: 'password.compromised')]
     #[Assert\PasswordStrength([ 'minScore' => PasswordStrength::STRENGTH_MEDIUM ], message: 'password.weak')]
     public string $password;
 

@@ -9,7 +9,6 @@ use App\Model\CityRepo;
 use App\Model\SellerRepo;
 use App\Model\UserRepo;
 use App\Service\MysqlStorage;
-use App\Trait\EntityChoices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -19,7 +18,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class StandForm extends AbstractType
 {
-    use EntityChoices;
     protected SellerRepo $sellerModel;
     protected UserRepo $userModel;
     protected CityRepo $cityModel;
