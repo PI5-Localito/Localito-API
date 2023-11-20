@@ -60,7 +60,7 @@ class StandForm extends AbstractType
                 'label' => 'input.tag'
             ])
             ->add('name', TextType::class, [
-                'label' => 'input.stand_name'
+                'label' => 'input.StandName'
             ])
             ->add('info', TextareaType::class, [
                 'label' => 'input.info'

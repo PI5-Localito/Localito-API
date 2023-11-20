@@ -57,7 +57,8 @@ class Index extends AbstractController
             }
         }
         return $this->render('login.html.twig', [
-            'form' => $form
+            'form' => $form,
+            'login' => true
         ]);
     }
 
