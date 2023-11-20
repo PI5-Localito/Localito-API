@@ -8,6 +8,8 @@ use App\Entity\User;
 use App\Model\BuyerRepo;
 use App\Model\SellerRepo;
 use App\Model\UserRepo;
+use App\Service\Authorization;
+use App\Service\JWT;
 use App\Service\MysqlStorage;
 use App\Trait\EntityViolations;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +17,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -121,7 +124,18 @@ class UserAPI extends AbstractController
     }
 
     #[Route(path: '/api/make-seller', methods: 'PUT')]
-    public function createSeller(Request $request, int $id): Response
+    public function createSeller(Authorization $authorization, JWT $jwt): Response
     {
+        $data = $authorization->getSession();
+        $user = $this->userModel->get($data['id']);
+        $seller = new Seller();
+        $seller->userId = $user->id;
+        $this->sellerModel->save($seller);
+        if (!$user) {
+            return new JsonResponse([
+                ['message' => 'Entity not found', 'cause' => 'id']
+            ], status: 404);
+        }
+        return new JsonResponse([ 'user' => $user, 'seller' => $seller]);
     }
 }

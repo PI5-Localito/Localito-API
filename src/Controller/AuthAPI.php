@@ -41,6 +41,10 @@ class AuthAPI extends AbstractController
 
         $jwt = $this->tokenizer->encode($user);
 
-        return new JsonResponse([]);
+        return new Response(
+            content: $jwt,
+            status: 200,
+            headers: ['Content-Type' => 'text']
+        );
     }
 }
