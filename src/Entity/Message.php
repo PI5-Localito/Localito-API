@@ -66,7 +66,7 @@ class Message extends AbstractEntity
 
     public function setBody(string $body): static
     {
-        $this->body = $body;
+        $this->body = mb_strcut($body, 0, 255);
         return $this;
     }
 

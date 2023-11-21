@@ -44,7 +44,7 @@ class Product extends AbstractEntity
 
     public function setName(string $name): static
     {
-        $this->name = $name;
+        $this->name = mb_strcut($name, 0, 127);
         return $this;
     }
 
@@ -55,7 +55,7 @@ class Product extends AbstractEntity
 
     public function setInfo(string $info): static
     {
-        $this->info = $info;
+        $this->info = mb_strcut($info, 0, 255);
         return $this;
     }
 
