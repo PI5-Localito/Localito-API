@@ -1,25 +1,26 @@
-{% extends 'base.html.twig'  %}
+{% extends 'base.html.twig' %}
+
 {% block body %}
-<main class="responsive">
-  <div class="grid">
-    <div class="s5">
-      <h2 class="my-mid">{{ product.name }}</h2>
-      <div class="row">
-        <b>{{'input.info'|trans([], 'form')}}:</b>
-        <div class="max">{{product.info}}</div>
+  <main class="responsive full-height">
+    <div class="center-container">
+      <div class="s5 text-center">
+        <h2 class="my-mid2">{{ product.name }}</h2>
+        <div class="row">
+          <b>{{ 'input.info'|trans([], 'form') }}:</b>
+          <div class="max">{{ product.info }}</div>
+        </div>
+        <div class="medium-divider"></div>
+        <div class="row">
+          <b>{{ 'input.StandName'|trans([], 'form') }}:</b>
+          <div class="max">{{ stand.name }}</div>
+        </div>
+        <div class="medium-divider"></div>
+        <div class="row">
+          <b>{{ 'input.price'|trans([], 'form') }}:</b>
+          <div class="max">${{ product.price }}</div>
+        </div>
+        <a class="button app-back fill" style="margin-top: 2em;">{{ 'action.back'|trans }}</a>
       </div>
-      <div class="medium-divider"></div>
-      <div class="row">
-        <b>{{'input.StandName'|trans([], 'form')}}:</b>
-        <div class="max">{{stand.name}}</div>
-      </div>
-      <div class="medium-divider"></div>
-      <div class="row">
-        <b>{{'input.price'|trans([], 'form')}}:</b>
-        <div class="max">${{product.price}}</div>
-      </div>
-      <a class="button app-back fill">{{ 'action.back'|trans }}</a>
     </div>
-  </div>
-</main>
+  </main>
 {% endblock %}

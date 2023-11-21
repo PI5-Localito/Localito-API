@@ -4,11 +4,11 @@
   <div class="s4">
     {{ form_row(form.standId) }}
     {{ form_row(form.name) }}
-    {{ form_row(form.info) }}
     {{ form_row(form.price) }}
-    <div class="row" style="justify-content: center;">
+    {{ form_row(form.info, { 'attr': {'style': 'width: 20em; height: 10em;'} }) }}
+    <div class="row" style="justify-content: center; margin-top: 10em;">
       {{ form_widget(form.submit) }}
-      <a class="button app-back fill" style="margin-left: 10px;">{{ 'action.back'|trans }}</a>
+      <a class="button app-back fill" style="margin-left: 2em;">{{ 'action.back'|trans }}</a>
     </div>
   </div>
 </div>
