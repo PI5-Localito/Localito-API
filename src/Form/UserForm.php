@@ -16,6 +16,12 @@ use Symfony\Component\Validator\Constraints\File;
 
 class UserForm extends AbstractType
 {
+    public function configureOptions(OptionsResolver $options): void
+    {
+        $options->setRequired('new');
+        $options->setAllowedTypes('new', ['bool']);
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -33,7 +39,7 @@ class UserForm extends AbstractType
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'password.not_match',
-                'required' => true,
+                'required' => $options['new'],
                 'first_options'  => ['label' => 'input.password'],
                 'second_options' => ['label' => 'input.repeated_password'],
 

@@ -42,11 +42,9 @@ class User extends AbstractEntity
     public ?File $avatar = null;
 
     #[Column('password')]
-    #[Assert\NotBlank(message: 'not.blank')]
-    #[Assert\NotNull]
     #[Assert\NotCompromisedPassword(message: 'password.compromised')]
     #[Assert\PasswordStrength([ 'minScore' => PasswordStrength::STRENGTH_MEDIUM ], message: 'password.weak')]
-    public string $password;
+    public ?string $password;
 
     public function setId(int $id): static
     {
@@ -73,6 +71,12 @@ class User extends AbstractEntity
     public function setPasswordHash(string $password): static
     {
         $this->password = password_hash($this->password, PASSWORD_DEFAULT);
+        return $this;
+    }
+
+    public function setPassword(?string $password): static
+    {
+        $this->password = $password;
         return $this;
     }
 

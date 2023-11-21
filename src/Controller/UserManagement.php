@@ -56,7 +56,7 @@ class UserManagement extends AbstractController
             return $this->redirectToRoute('login');
         }
         $user = new User();
-        $form = $this->createForm(UserForm::class, $user);
+        $form = $this->createForm(UserForm::class, $user, ['new' => true]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if (!empty($user->avatar)) {
@@ -78,24 +78,29 @@ class UserManagement extends AbstractController
             return $this->redirectToRoute('login');
         }
         $user = $this->ifEntity($id);
+        $prevPass = $user->password;
         $currentPath = $user->getAvatarUri();
-        $form = $this->createForm(UserForm::class, $user);
+        $form = $this->createForm(UserForm::class, $user, ['new' => false]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var User */
             $entity = $form->getData();
+                //dd($entity);
             if (!empty($entity->avatar)) {
                 $new_file = $entity->avatar->move('avatars', uniqid() . " . {$entity->avatar->guessExtension()}");
                 $entity->avatar = $new_file;
             }else{
                 $entity->setAvatarFromUri($currentPath);
             }
+            if(empty($entity->password)){
+                $entity->setPassword($prevPass);
+            }
             $entity->setPasswordHash($entity->password);
             $this->model->update($entity);
             return $this->redirectToRoute('users');
         }
 
-        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form]);
+        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form, 'new' => false  ]);
     }
 
     #[Route('/user/{id}/delete', methods: 'GET')]
