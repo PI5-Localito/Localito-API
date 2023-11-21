@@ -8,18 +8,22 @@ use App\Entity\User;
 use App\Model\BuyerRepo;
 use App\Model\SellerRepo;
 use App\Model\UserRepo;
+use App\Service\Authorization;
+use App\Service\JWT;
 use App\Service\MysqlStorage;
+use App\Trait\EntityViolations;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserAPI extends AbstractController
 {
+    use EntityViolations;
     protected UserRepo $userModel;
     protected BuyerRepo $buyerModel;
     protected SellerRepo $sellerModel;
@@ -34,7 +38,6 @@ class UserAPI extends AbstractController
         $this->sellerModel = $storage->getModel(Seller::class);
     }
 
-
     #[Route(path: '/api/user/create', methods: ['POST'])]
     public function register(Request $request): Response
     {
@@ -42,13 +45,14 @@ class UserAPI extends AbstractController
         $user = new User();
         $user->hydrate($data->all());
         $violations = $this->validator->validate($user);
+        $violations = $this->processErrors($violations);
         $type = $data->getInt('type', 0);
 
-        if ($badreq = $this->processErrors($violations)) {
-            return $badreq;
+        if (!empty($violations)) {
+            return new JsonResponse($violations, status: 400);
         }
 
-        $user->setPassword($user->password);
+        $user->setPasswordHash($user->password);
         if ($user->avatar && !$user->avatar->isFile()) {
             return new JsonResponse([
                 ['message' => 'File not found', 'cause' => 'avatar']
@@ -56,6 +60,12 @@ class UserAPI extends AbstractController
         }
 
         if (!$this->userModel->save($user)) {
+            $errors = $this->userModel->getErrors();
+            if ($errors[23000]) {
+                return new JsonResponse([
+                    ['message' => 'Duplicated entry', 'cause' => 'user']
+                ], status: 500);
+            }
             return new JsonResponse([
                 ['message' => 'Oops! something failed', 'cause' => 'user']
             ], status: 500);
@@ -113,9 +123,19 @@ class UserAPI extends AbstractController
         return new JsonResponse([ 'entity' => $user, 'role' => $role ]);
     }
 
-    public function createSeller(Request $request): Response
+    #[Route(path: '/api/make-seller', methods: 'PUT')]
+    public function createSeller(Authorization $authorization, JWT $jwt): Response
     {
-        $data = $request->getPayload();
-
+        $data = $authorization->getSession();
+        $user = $this->userModel->get($data['id']);
+        $seller = new Seller();
+        $seller->userId = $user->id;
+        $this->sellerModel->save($seller);
+        if (!$user) {
+            return new JsonResponse([
+                ['message' => 'Entity not found', 'cause' => 'id']
+            ], status: 404);
+        }
+        return new JsonResponse([ 'user' => $user, 'seller' => $seller]);
     }
 }

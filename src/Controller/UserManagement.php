@@ -37,7 +37,7 @@ class UserManagement extends AbstractController
     #[Route(name: 'users', path: '/users', methods: 'GET')]
     public function list(Request $request): Response
     {
-        if(!$request->getSession()->has('login')){
+        if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
         $page = $request->query->get('page', 1);
@@ -52,7 +52,7 @@ class UserManagement extends AbstractController
     #[Route('/user/new', methods: [ 'GET', 'POST' ])]
     public function create(Request $request): Response
     {
-        if(!$request->getSession()->has('login')){
+        if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
         $user = new User();
@@ -74,7 +74,7 @@ class UserManagement extends AbstractController
     #[Route('/user/{id}/edit', methods: [ 'GET', 'POST' ])]
     public function edit(Request $request, int $id): Response
     {
-        if(!$request->getSession()->has('login')){
+        if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
         $user = $this->ifEntity($id);
@@ -106,7 +106,7 @@ class UserManagement extends AbstractController
     #[Route('/user/{id}/delete', methods: 'GET')]
     public function delete(Request $request, int $id): Response
     {
-        if(!$request->getSession()->has('login')){
+        if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
         $user = $this->ifEntity($id);
@@ -120,7 +120,7 @@ class UserManagement extends AbstractController
     #[Route('/user/{id}', methods: 'GET')]
     public function details(Request $request, int $id): Response
     {
-        if(!$request->getSession()->has('login')){
+        if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
         $seller = $this->sellerModel->getByUser($id);
@@ -131,7 +131,7 @@ class UserManagement extends AbstractController
     #[Route('/user/{id}/makeseller', methods: 'GET')]
     public function makeSeller(Request $request, int $id): Response
     {
-        if(!$request->getSession()->has('login')){
+        if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
         $user = $this->ifEntity($id);

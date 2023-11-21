@@ -5,7 +5,6 @@ namespace App\Form;
 use App\Entity\Stand;
 use App\Model\StandRepo;
 use App\Service\MysqlStorage;
-use App\Trait\EntityChoices;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -18,8 +17,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProductForm extends AbstractType
 {
-    use EntityChoices;
-
     protected StandRepo $standModel;
 
     public function __construct(MysqlStorage $storage)
