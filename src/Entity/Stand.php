@@ -17,18 +17,26 @@ class Stand extends AbstractEntity
     use AnnotationMappings;
 
     #[Column('seller_id')]
+    #[Assert\NotBlank(message: 'not.blank')]
+    #[Assert\NotNull(message: 'not.null')]
     public int $sellerId;
 
     #[Column('tag')]
+    #[Assert\NotBlank(message: 'not.blank')]
+    #[Assert\NotNull(message: 'not.null')]
     public string $tag;
 
     #[Column('stand_name')]
+    #[Assert\NotBlank(message: 'not.blank')]
+    #[Assert\NotNull(message: 'not.null')]
     public string $name;
 
     #[Column('info')]
     public ?string $info;
 
     #[Column('city')]
+    #[Assert\NotBlank(message: 'not.blank')]
+    #[Assert\NotNull(message: 'not.null')]
     public int $city;
 
     public function setId(int $id): static

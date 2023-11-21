@@ -29,7 +29,7 @@ class Authorization
         return $token;
     }
 
-    public function getSession(): array
+    public function getSession(): User
     {
         $token = $this->getToken();
         $access = $this->tokenizer->decode($token);

@@ -2,6 +2,7 @@
 
 namespace App\Trait;
 
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 trait EntityViolations
@@ -26,7 +27,7 @@ trait EntityViolations
             ];
         }
 
-        return $violations;
+        throw new BadRequestException(json_encode($violations));
     }
 
 }

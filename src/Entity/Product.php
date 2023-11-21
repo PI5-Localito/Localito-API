@@ -17,18 +17,26 @@ class Product extends AbstractEntity
     use ColumnHydrate;
 
     #[Column('stand_id')]
+    #[Assert\NotBlank(message: 'not.blank')]
+    #[Assert\NotNull(message: 'not.null')]
     public int $standId;
 
     #[Column('name')]
+    #[Assert\NotBlank(message: 'not.blank')]
+    #[Assert\NotNull(message: 'not.null')]
     public string $name;
 
     #[Column('info')]
     public string $info;
 
     #[Column('image')]
+    #[Assert\NotBlank(message: 'not.blank')]
+    #[Assert\NotNull(message: 'not.null')]
     public string $image;
 
     #[Column('price')]
+    #[Assert\NotBlank(message: 'not.blank')]
+    #[Assert\NotNull(message: 'not.null')]
     public float $price;
 
     public function setStand(int $sid): static
