@@ -45,13 +45,9 @@ class UserAPI extends AbstractController
         $user = new User();
         $user->hydrate($data->all());
         $violations = $this->validator->validate($user);
-        $violations = $this->processErrors($violations);
+        $this->processErrors($violations);
+
         $type = $data->getInt('type', 0);
-
-        if (!empty($violations)) {
-            return new JsonResponse($violations, status: 400);
-        }
-
         $user->setPasswordHash($user->password);
         if ($user->avatar && !$user->avatar->isFile()) {
             return new JsonResponse([

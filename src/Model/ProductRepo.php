@@ -6,16 +6,18 @@ use Lib\Storage\AbstractModel;
 
 class ProductRepo extends AbstractModel
 {
-    public function getByStand(int $sid): ?array
+    public function allByStand(int $sid, int $limit = 0, int $offset = 0, int $page = 0): ?array
     {
         $entity = new $this->entity();
         $entity->standId = $sid;
 
-        $data = $this->queryBind(
-            "SELECT * FROM {$this->getTable()} WHERE stand_id = :standId",
-            $entity,
-            $entity->includeMapping(['standId'])
-        );
+        $query = "SELECT * FROM {$this->getTable()} WHERE stand_id = :standId ";
+        if ($limit !== 0) {
+            $offset += $page * $limit;
+            $query .= "LIMIT $limit OFFSET $offset";
+        }
+
+        $data = $this->queryBind($query, $entity, $entity->includeMapping(['standId']));
 
         return $data ?? null;
     }

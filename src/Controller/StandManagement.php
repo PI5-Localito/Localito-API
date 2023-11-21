@@ -128,7 +128,7 @@ class StandManagement extends AbstractController
         $seller = $this->sellerModel->get($entity->sellerId);
         $sellerName = $this->userModel->get($seller->userId)->getFullName();
         $city = $this->cityModel->get($entity->city);
-        $products = $this->productModel->getByStand($id);
+        $products = $this->productModel->allByStand($id);
         return $this->render('stand.html.twig', ['stand' => $entity, 'products' => $products, 'seller' => $sellerName, 'city' => $city]);
     }
 
