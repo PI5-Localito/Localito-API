@@ -32,20 +32,9 @@ class ProductForm extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $stands = [];
-        {
-            /** @var array<Stand> */
-            $tmp = $this->standModel->getBySeller($options['sid']);
-            foreach ($tmp as $key => $value) {
-                $name = $value->name;
-                $stands[$name] = $value->id;
-            }
-        }
-
         $builder
-            ->add('standId', ChoiceType::class, [
-                'label' => 'Stand',
-                'choices' => $stands,
+            ->add('standId', HiddenType::class, [
+                'data' => $options['sid'],
             ])
             ->add('name', TextType::class, [
                 'label' => 'input.name'

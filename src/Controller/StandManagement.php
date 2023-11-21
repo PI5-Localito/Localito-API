@@ -141,8 +141,7 @@ class StandManagement extends AbstractController
 
         $product = new Product();
         $entity = $this->ifEntity($id);
-        $seller = $this->sellerModel->get($entity->sellerId);
-        $form = $this->createForm(ProductForm::class, $product, ['sid' => $seller->id]);
+        $form = $this->createForm(ProductForm::class, $product, ['sid' => $id]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->productModel->save($product);
