@@ -144,6 +144,10 @@ class StandManagement extends AbstractController
         $form = $this->createForm(ProductForm::class, $product, ['sid' => $id]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!empty($product->image)) {
+                $new_file = $product->image->move('products', uniqid() . ".{$product->image->guessExtension()}");
+                $product->image = $new_file;
+            }
             $this->productModel->save($product);
             return $this->redirectToRoute('stand', ['id' => $id]);
         }

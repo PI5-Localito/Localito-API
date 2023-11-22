@@ -8,6 +8,7 @@ use Lib\Storage\Annotations\Column;
 use Lib\Storage\Annotations\Table;
 use Lib\Storage\Traits\AnnotationMappings;
 use Lib\Storage\Traits\ColumnHydrate;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Table('products', ProductRepo::class)]
@@ -29,10 +30,8 @@ class Product extends AbstractEntity
     #[Column('info')]
     public string $info;
 
-    #[Column('image')]
-    #[Assert\NotBlank(message: 'not.blank')]
-    #[Assert\NotNull(message: 'not.null')]
-    public string $image;
+    #[Column('image', 'getImageUri', 'setImageFromUri')]
+    public ?File $image = null;
 
     #[Column('price')]
     #[Assert\NotBlank(message: 'not.blank')]
@@ -72,15 +71,17 @@ class Product extends AbstractEntity
         return $this->info;
     }
 
-    public function setImage(string $image): static
+    public function getImageUri(): ?string
     {
-        $this->image = $image;
-        return $this;
+        return $this->image?->getPathname();
     }
 
-    public function getImage(): string
+    public function setImageFromUri(?string $path): static
     {
-        return $this->image;
+        if (!empty($path)) {
+            $this->image = new File($path, false);
+        }
+        return $this;
     }
 
     public function setPrice(float $price): static

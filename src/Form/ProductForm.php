@@ -6,13 +6,14 @@ use App\Entity\Stand;
 use App\Model\StandRepo;
 use App\Service\MysqlStorage;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProductForm extends AbstractType
@@ -42,8 +43,14 @@ class ProductForm extends AbstractType
             ->add('info', TextareaType::class, [
                 'label' => 'input.info'
             ])
-            ->add('image', HiddenType::class, [
-                'data' => 'placeholder'
+            ->add('image', FileType::class, [
+                'required' => false,
+                'constraints' => [
+                    new File(
+                        maxSize: '2M',
+                        extensions: ['jpg', 'jpeg', 'png', 'gif'],
+                    ),
+                ],
             ])
             ->add('price', NumberType::class, [
                 'label' => 'input.price',
