@@ -3,13 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\City;
+use App\Entity\Order;
 use App\Entity\Product;
+use App\Entity\ProductInOrder;
 use App\Entity\Seller;
 use App\Entity\Stand;
 use App\Entity\User;
 use App\Form\ProductForm;
 use App\Form\StandForm;
 use App\Model\CityRepo;
+use App\Model\OrderRepo;
+use App\Model\ProductInOrderRepo;
 use App\Model\ProductRepo;
 use App\Model\SellerRepo;
 use App\Model\StandRepo;
@@ -28,6 +32,8 @@ class StandManagement extends AbstractController
     protected SellerRepo $sellerModel;
     protected UserRepo $userModel;
     protected CityRepo $cityModel;
+    protected OrderRepo $orderModel;
+    protected ProductInOrderRepo $pioModel;
 
     public function __construct(MysqlStorage $storage)
     {
@@ -36,6 +42,8 @@ class StandManagement extends AbstractController
         $this->sellerModel = $storage->getModel(Seller::class);
         $this->userModel = $storage->getModel(User::class);
         $this->cityModel = $storage->getModel(City::class);
+        $this->orderModel = $storage->getModel(Order::class);
+        $this->pioModel = $storage->getModel(ProductInOrder::class);
     }
 
     protected function ifEntity(int $id): Stand
@@ -128,8 +136,10 @@ class StandManagement extends AbstractController
         $seller = $this->sellerModel->get($entity->sellerId);
         $sellerName = $this->userModel->get($seller->userId)->getFullName();
         $city = $this->cityModel->get($entity->city);
+        $users = $this->userModel->all();
+        $orders = $this->orderModel->getByStand($id);
         $products = $this->productModel->allByStand($id);
-        return $this->render('stand.html.twig', ['stand' => $entity, 'products' => $products, 'seller' => $sellerName, 'city' => $city]);
+        return $this->render('stand.html.twig', ['stand' => $entity, 'products' => $products, 'seller' => $sellerName, 'city' => $city, 'orders' => $orders, 'users' => $users]);
     }
 
     #[Route('/stand/{id}/newproduct', methods: [ 'GET', 'POST' ])]
@@ -200,5 +210,19 @@ class StandManagement extends AbstractController
             return $this->redirect('/stand/'.$id);
         }
         return $this->render('product_delete.html.twig', ['stand' => $stand, 'product' => $product]);
+    }
+
+    #[Route('/stand/{id}/order/{oid}', methods: 'GET')]
+    public function viewOrder(Request $request, int $id, int $oid): Response
+    {
+        if(!$request->getSession()->has('login')) {
+            return $this->redirectToRoute('login');
+        }
+        $order = $this->orderModel->get($oid);
+        $user = $this->userModel->get($order->buyerId)->getFullName();
+        $products = $this->productModel->allByStand($id);
+        $productsInOrder = $this->pioModel->getByOrder($oid);
+
+        return $this->render('order.html.twig', ['order' => $order, 'user' => $user, 'products' => $products, 'productsInOrder' => $productsInOrder]);
     }
 }

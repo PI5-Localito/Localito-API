@@ -17,13 +17,13 @@ class ProductInOrder extends AbstractEntity
     use ColumnHydrate;
 
     #[Column('order_id')]
-    protected int $orderId;
+    public int $orderId;
 
     #[Column('product_id')]
-    protected int $productId;
+    public int $productId;
 
     #[Column('product_quantity')]
-    protected int $productQuantity;
+    public int $productQuantity;
 
     public function setOrder(int $oid): static
     {
