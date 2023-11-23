@@ -1,5 +1,13 @@
 {% form_theme form 'form/beer_theme.html.twig' %}
 {{ form_start(form, { attr: { id: 'stand_form' } }) }}
+{% set image = form.vars.value.image is empty? 'restaurant.svg' : form.vars.value.image.getPathname() %} 
+<div class="grid" style="display: flex; justify-content: center; align-items: center;">
+  <div class="s3">
+    <a class="button transparent circle big">
+      <img class="big small-elevate responsive" id="avatar_preview" src="/{{ image }}">
+      {{ form_widget(form.image, { attr: { accept: 'image/png,image/jpeg,image/gif' } }) }}
+    </a>
+  </div>
 <div class="grid" style="display: flex; justify-content: center; align-items: center;">
   <div class="s4">
     {{ form_row(form.sellerId) }}
@@ -15,3 +23,12 @@
   </div>
 </div>
 {{ form_end(form) }}
+<script defer type="module">
+  import { setup_preview } from '/assets/image_preview.js';
+  const IMAGE_ELEMENT = document.getElementById('avatar_preview');
+  const INPUT_ELEMENT = document.getElementById('stand_form_image');
+  const FORM_ELEMENT = document.getElementById('stand_form');
+
+  setup_preview(INPUT_ELEMENT, IMAGE_ELEMENT);
+  setup_passwcheck(FORM_ELEMENT);
+</script>
