@@ -35,7 +35,7 @@ class StandRepo extends AbstractModel
     {
         $stand = new Stand();
         $stand->category = $category;
-        $query = "SELECT seller_id, tag, stand_name FROM `{$this->getTable()}` WHERE category = :category";
+        $query = "SELECT id, seller_id, tag, stand_name, SUBSTRING(info, 1, 100) as info FROM `{$this->getTable()}` WHERE category = :category";
         if ($limit !== 0) {
             $offset += $page * $limit;
             $query .= " LIMIT $limit OFFSET $offset";
