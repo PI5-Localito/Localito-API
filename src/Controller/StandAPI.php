@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,7 +38,7 @@ class StandAPI extends AbstractController
     }
 
     #[Route(path: '/api/stand/create', methods: ['PUT'])]
-    public function createStand(Request $request, Authorization $authorization)
+    public function createStand(Request $request, Authorization $authorization): Response
     {
         $data = $request->getPayload()->all();
         $user = $authorization->getSession();
@@ -54,7 +55,7 @@ class StandAPI extends AbstractController
     }
 
     #[Route(path: '/api/stands', methods: ['GET'])]
-    public function getStands(Request $request, Authorization $authorization)
+    public function getStands(Request $request, Authorization $authorization): Response
     {
         $authorization->getSession();
         $page = $request->query->get('page', 1);
@@ -63,7 +64,7 @@ class StandAPI extends AbstractController
     }
 
     #[Route(path: '/api/stand/{id}', methods: ['GET'], requirements: ['id' => '\d+'])]
-    public function getStand(Authorization $authorization, int $id)
+    public function getStand(Authorization $authorization, int $id): Response
     {
         $authorization->getSession();
         $stand = $this->standRepo->get($id);
@@ -74,7 +75,7 @@ class StandAPI extends AbstractController
     }
 
     #[Route(path: '/api/stand/{id}', methods: ['PATCH'], requirements: ['id' => '\d+'])]
-    public function updateStand(Request $request, Authorization $authorization, int $id)
+    public function updateStand(Request $request, Authorization $authorization, int $id): Response
     {
         $data = $request->getPayload()->all();
         $user = $authorization->getSession();
@@ -104,7 +105,7 @@ class StandAPI extends AbstractController
     }
 
     #[Route(path: '/api/stand/{id}', methods: ['DELETE'], requirements: ['id' => '\d+'])]
-    public function deleteStand(Authorization $authorization, int $id)
+    public function deleteStand(Authorization $authorization, int $id): Response
     {
         $user = $authorization->getSession();
         $seller = $this->sellerRepo->getByUser($user->id);
@@ -126,7 +127,7 @@ class StandAPI extends AbstractController
     }
 
     #[Route(path: '/api/stand/{sid}/products', methods: ['PUT'], requirements: ['sid' => '\d+'])]
-    public function addProduct(Request $request, Authorization $authorization, int $sid)
+    public function addProduct(Request $request, Authorization $authorization, int $sid): Response
     {
         $authorization->getSession();
         $data = $request->getPayload()->all();
@@ -148,7 +149,7 @@ class StandAPI extends AbstractController
     }
 
     #[Route(path: '/api/stand/{sid}/products', methods: ['GET'], requirements: ['sid' => '\d+'])]
-    public function getProducts(Request $request, Authorization $authorization, int $sid)
+    public function getProducts(Request $request, Authorization $authorization, int $sid): Response
     {
         $authorization->getSession();
         $page = $request->query->get('page', 1);
@@ -157,7 +158,7 @@ class StandAPI extends AbstractController
     }
 
     #[Route(path: '/api/stand/{sid}/product/{pid}', methods: ['PATCH'], requirements: ['sid' => '\d+', 'pid' => '\d+'])]
-    public function changeProduct(Request $request, Authorization $authorization, int $sid, int $pid)
+    public function changeProduct(Request $request, Authorization $authorization, int $sid, int $pid): Response
     {
         $data = $request->getPayload()->all();
         $user = $authorization->getSession();
@@ -172,5 +173,14 @@ class StandAPI extends AbstractController
             throw new BadRequestException('Request error');
         };
         return new JsonResponse($stand);
+    }
+
+    #[Route(path: '/api/stands/category/{category}', methods: ['GET'])]
+    public function getByCategory(Request $request, Authorization $authorization): Response
+    {
+        $authorization->getSession();
+        $page = $request->query->get('page', 1);
+        $entities = $this->standRepo->allTeaser(limit: 10, page: $page - 1);
+        return new JsonResponse($entities);
     }
 }
