@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\City;
+use App\Entity\Message;
 use App\Entity\Order;
 use App\Entity\Product;
 use App\Entity\ProductInOrder;
@@ -12,6 +13,7 @@ use App\Entity\User;
 use App\Form\ProductForm;
 use App\Form\StandForm;
 use App\Model\CityRepo;
+use App\Model\MessageRepo;
 use App\Model\OrderRepo;
 use App\Model\ProductInOrderRepo;
 use App\Model\ProductRepo;
@@ -34,6 +36,7 @@ class StandManagement extends AbstractController
     protected CityRepo $cityModel;
     protected OrderRepo $orderModel;
     protected ProductInOrderRepo $pioModel;
+    protected MessageRepo $messageModel;
 
     public function __construct(MysqlStorage $storage)
     {
@@ -44,6 +47,7 @@ class StandManagement extends AbstractController
         $this->cityModel = $storage->getModel(City::class);
         $this->orderModel = $storage->getModel(Order::class);
         $this->pioModel = $storage->getModel(ProductInOrder::class);
+        $this->messageModel = $storage->getModel(Message::class);
     }
 
     protected function ifEntity(int $id): Stand
@@ -219,10 +223,23 @@ class StandManagement extends AbstractController
             return $this->redirectToRoute('login');
         }
         $order = $this->orderModel->get($oid);
-        $user = $this->userModel->get($order->buyerId)->getFullName();
+        $buyer = $this->userModel->get($order->buyerId)->getFullName();
         $products = $this->productModel->allByStand($id);
         $productsInOrder = $this->pioModel->getByOrder($oid);
 
-        return $this->render('order.html.twig', ['order' => $order, 'user' => $user, 'products' => $products, 'productsInOrder' => $productsInOrder]);
+        return $this->render('order.html.twig', ['order' => $order, 'buyer' => $buyer, 'products' => $products, 'productsInOrder' => $productsInOrder]);
+    }
+
+    #[Route('/stand/{id}/order/{oid}/messages')]
+    public function messages(Request $request, int $id, int $oid): Response
+    {
+        if(!$request->getSession()->has('login')) {
+            return $this->redirectToRoute('login');
+        }
+        $order = $this->orderModel->get($oid);
+        $buyer = $this->userModel->get($order->buyerId);
+        $messages = $this->messageModel->getByOrder($oid);
+
+        return $this->render('messages.html.twig', ['order' => $order, 'buyer' => $buyer, 'messages' => $messages]);
     }
 }

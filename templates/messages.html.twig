@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+  <main class="responsive">
+    <div class="grid justify-center align-center">
+      <h2 class="s12">Order #{{order.id}} chat - Buyer: {{buyer.getFullName()}} </h2>
+      <a class="button app-back fill">{{ 'action.back'|trans }}</a>
+      <div class="grid border s12">
+        {% for m in messages %}
+          {% if m.userFrom == buyer.id %}
+          <article class="s4">
+            <h5>{{m.body}}</h5>
+            <p>{{m.messageTimestamp}}</p>
+          </article>
+          <div class="s8"></div>
+          {% else %}
+          <div class="s8"></div>
+            <article class="green3 s4">
+            <h5>{{m.body}}</h5>
+            <p>{{m.messageTimestamp}}</p>
+          </article>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </main>
+{% endblock %}

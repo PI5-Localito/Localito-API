@@ -6,7 +6,7 @@
         <h2>Order #{{ order.id }}</h2>
         <div class="row">
           <b>{{ 'input.buyer'|trans([], 'form') }}:</b>
-          <div class="max">{{ user }}</div>
+          <div class="max">{{ buyer }}</div>
         </div>
         <div class="medium-divider"></div>
         <div class="row">
@@ -20,7 +20,7 @@
         </div>
         <div class="medium-divider"></div>
         <a class="button app-back fill">{{ 'action.back'|trans }}</a>
-        <a class="button green" href="">Messages</a>
+        <a class="button green" href="/stand/{{order.standId}}/order/{{order.id}}/messages">Messages</a>
       </div>
     </div>
 
