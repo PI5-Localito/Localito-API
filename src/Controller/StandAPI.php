@@ -176,25 +176,13 @@ class StandAPI extends AbstractController
         return new JsonResponse($stand);
     }
 
-    #[Route(path: '/api/stands/category/{category}', methods: ['GET'], requirements: ['sid' => '\d+', 'pid' => '\d+'])]
-    public function getByCategory(Request $request, Authorization $authorization, int $category): Response
+    #[Route(path: '/api/stands/category/{category}', methods: ['GET'])]
+    public function getByCategory(Request $request, Authorization $authorization, string $category): Response
     {
         $authorization->getSession();
         $page = $request->query->get('page', 1);
-        $category = match($category) {
-            0 => StandCategory::COMIDA,
-            1 => StandCategory::HERRAMIENTA,
-            3 => StandCategory::SERVICIOS,
-            4 => StandCategory::MODA,
-            5 => StandCategory::MASCOTAS,
-            default => NULL
-        };
-        if (!($category instanceof StandCategory)) {
-            throw new NotFoundHttpException('Category not found');
-        }
 
-
-        $entities = $this->standRepo->getByCategory($category->value, limit: 10, page: $page - 1);
+        $entities = $this->standRepo->getByCategory($category, limit: 10, page: $page - 1);
         return new JsonResponse($entities);
     }
 }
