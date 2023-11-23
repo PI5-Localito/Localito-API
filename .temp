@@ -1,0 +1,9 @@
+proxy:
+    domains:
+        - localito.xyz
+
+http:
+    document_root: public/
+    allow_http: true
+    no_tls: false
+    daemon: false

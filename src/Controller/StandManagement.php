@@ -89,7 +89,11 @@ class StandManagement extends AbstractController
         $stand = new Stand();
         $form = $this->createForm(StandForm::class, $stand);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) { 
+            if (!empty($stand->image)) {
+                $new_file = $stand->image->move('stands', uniqid() . ".{$stand->image->guessExtension()}");
+                $stand->image = $new_file;
+            }
             $this->model->save($stand);
             return $this->redirectToRoute('stands');
         }

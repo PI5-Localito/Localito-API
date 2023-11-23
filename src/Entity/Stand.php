@@ -8,6 +8,7 @@ use Lib\Storage\Annotations\Column;
 use Lib\Storage\Annotations\Table;
 use Lib\Storage\Traits\AnnotationMappings;
 use Lib\Storage\Traits\ColumnHydrate;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Table('stands', StandRepo::class)]
@@ -41,6 +42,9 @@ class Stand extends AbstractEntity
 
     #[Column('category')]
     public string $category;
+
+    #[Column('image', 'getImageUri', 'setImageFromUri')]
+    public ?File $image = null;
 
     public function setId(int $id): static
     {
@@ -117,5 +121,18 @@ class Stand extends AbstractEntity
     public function getCategory(): ?string
     {
         return $this->category;
+    }
+
+    public function getImageUri(): ?string
+    {
+        return $this->image?->getPathname();
+    }
+
+    public function setImageFromUri(?string $path): static
+    {
+        if (!empty($path)) {
+            $this->image = new File($path, false);
+        }
+        return $this;
     }
 }
