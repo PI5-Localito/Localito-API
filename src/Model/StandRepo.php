@@ -31,14 +31,14 @@ class StandRepo extends AbstractModel
         return $this->queryBind($query);
     }
 
-    public function getByCategory(string $category, int $limit = 0, int $offset = 0, int $page = 0): array
+    public function getByCategory(string $category, int $limit = 0, int $offset = 0, int $page = 0): ?array
     {
         $stand = new Stand();
         $stand->category = $category;
         $query = "SELECT seller_id, tag, stand_name FROM `{$this->getTable()}` WHERE category = :category";
         if ($limit !== 0) {
             $offset += $page * $limit;
-            $query .= "LIMIT $limit OFFSET $offset";
+            $query .= " LIMIT $limit OFFSET $offset";
         }
         $data = $this->queryBind($query, $stand, $stand->includeMapping(['category']));
 
