@@ -39,6 +39,9 @@ class Stand extends AbstractEntity
     #[Assert\NotNull(message: 'not.null')]
     public int $city;
 
+    #[Column('category')]
+    public string $category;
+
     public function setId(int $id): static
     {
         $this->id = $id;
@@ -103,5 +106,16 @@ class Stand extends AbstractEntity
     public function getCity(): int
     {
         return $this->city;
+    }
+
+    public function setCategory(string $category): static
+    {
+        $this->category = $category;
+        return $this;
+    }
+
+    public function getCategory(): ?string
+    {
+        return $this->category;
     }
 }

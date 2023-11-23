@@ -69,6 +69,16 @@ class StandForm extends AbstractType
                 'label' => 'input.city',
                 'choices' => $cities
             ])
+            ->add('category', ChoiceType::class, [
+                'label' => 'Category',
+                'choices' => [
+                    'Comida' => 'Comida',
+                    'Herramientas' => 'Herramientas',
+                    'Moda' => 'Moda',
+                    'Servicios' => 'Servicios',
+                    'Mascotas' => 'Mascotas'
+                ]
+            ])
             ->add('submit', SubmitType::class);
     }
 }
