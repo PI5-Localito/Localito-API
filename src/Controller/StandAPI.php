@@ -182,11 +182,11 @@ class StandAPI extends AbstractController
         $authorization->getSession();
         $page = $request->query->get('page', 1);
         $category = match($category) {
-            0 => StandCategory::COMIDA,
-            1 => StandCategory::HERRAMIENTA,
-            3 => StandCategory::SERVICIOS,
-            4 => StandCategory::MODA,
-            5 => StandCategory::MASCOTAS,
+            StandCategory::COMIDA,
+            StandCategory::HERRAMIENTA,
+            StandCategory::SERVICIOS,
+            StandCategory::MODA,
+            StandCategory::MASCOTAS,
             default => NULL
         };
         if (!($category instanceof StandCategory)) {
