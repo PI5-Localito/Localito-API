@@ -23,7 +23,7 @@ class StandRepo extends AbstractModel
 
     public function allTeaser(int $limit = 0, int $offset = 0, int $page = 0): array
     {
-        $query = "SELECT seller_id, tag, stand_name, SUBSTRING(info, 0, 100) as info FROM `{$this->getTable()}`";
+        $query = "SELECT seller_id, tag, stand_name, SUBSTRING(info, 1, 100) as info FROM `{$this->getTable()}`";
         if ($limit !== 0) {
             $offset += $page * $limit;
             $query .= "LIMIT $limit OFFSET $offset";
