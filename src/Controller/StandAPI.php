@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Order;
 use App\Entity\Product;
 use App\Entity\Seller;
 use App\Entity\Stand;
 use App\Enum\StandCategory;
+use App\Model\OrderRepo;
 use App\Model\ProductRepo;
 use App\Model\SellerRepo;
 use App\Model\StandRepo;
@@ -28,6 +30,7 @@ class StandAPI extends AbstractController
     protected StandRepo $standRepo;
     protected ProductRepo $productRepo;
     protected SellerRepo $sellerRepo;
+    protected OrderRepo $orderRepo;
 
     public function __construct(
         protected MysqlStorage $storage,
@@ -36,6 +39,7 @@ class StandAPI extends AbstractController
         $this->standRepo = $storage->getModel(Stand::class);
         $this->productRepo = $storage->getModel(Product::class);
         $this->sellerRepo = $storage->getModel(Seller::class);
+        $this->orderRepo = $storage->getModel(Order::class);
     }
 
     #[Route(path: '/api/stand/create', methods: ['PUT'])]
@@ -174,6 +178,17 @@ class StandAPI extends AbstractController
             throw new BadRequestException('Request error');
         };
         return new JsonResponse($stand);
+    }
+
+    #[Route(path: '/api/stand/{sid}/orders', methods: ['GET'])]
+    public function getOrders(Request $request, Authorization $authorization, int $sid): Response
+    {
+        $authorization->getSession();
+        $page = $request->query->get('page', 1);
+
+        $stand = $this->standRepo->get($sid);
+        $entities = $this->orderRepo->getByStand($stand->id);
+        return new JsonResponse($entities);
     }
 
     #[Route(path: '/api/stands/category/{category}', methods: ['GET'])]
