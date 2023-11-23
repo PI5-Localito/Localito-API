@@ -40,6 +40,8 @@ class StandRepo extends AbstractModel
             $offset += $page * $limit;
             $query .= "LIMIT $limit OFFSET $offset";
         }
-        return $this->queryBind($query, $stand, $stand->includeMapping(['category']));
+        $data = $this->queryBind($query, $stand, $stand->includeMapping(['category']));
+
+        return $data ?? null;
     }
 }
