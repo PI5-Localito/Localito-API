@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+  <main class="responsive">
+    <div class="grid justify-center align-center">
+      <div class="s12 flex justify-center align-center text-center my-mid2">
+        <h2>Order #{{ order.id }}</h2>
+        <div class="row">
+          <b>{{ 'input.buyer'|trans([], 'form') }}:</b>
+          <div class="max">{{ user }}</div>
+        </div>
+        <div class="medium-divider"></div>
+        <div class="row">
+          <b>{{ 'input.date'|trans([], 'form') }}:</b>
+          <div class="max">{{ order.date }}</div>
+        </div>
+        <div class="medium-divider"></div>
+        <div class="row">
+          <b>{{ 'input.state'|trans([], 'form') }}:</b>
+          <div class="max">{{ order.state }}</div>
+        </div>
+        <div class="medium-divider"></div>
+        <a class="button app-back fill">{{ 'action.back'|trans }}</a>
+        <a class="button green" href="">Messages</a>
+      </div>
+    </div>
+
+    <h4 class="my-mid">Products in order</h4>
+    {% if productsInOrder %}
+    <table class="border" style="margin-top: 10px;">
+      <thead>
+        <tr>
+          <th>{{ 'input.image'|trans([], 'form') }}</th>
+          <th>{{ 'input.name'|trans([], 'form') }}</th>
+          <th>{{ 'input.price'|trans([], 'form') }}</th>
+          <th>{{ 'input.quantity'|trans([], 'form') }}</th>
+          <th>{{ 'input.total'|trans([], 'form') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% set avatar ='restaurant.svg' %}
+      {% set name = null %}
+      {% set price = null %}
+      {% set total = 0 %}
+        {% for pio in productsInOrder %}
+          {% for p in products %}
+            {% if p.id == pio.productId %}
+              {% set avatar = p.image == null ? 'restaurant.svg' : p.image.getPathname() %}
+              {% set name = p.name == null ? null : p.name %}
+              {% set price = p.price == null ? null : p.price %}
+            {% endif %}
+          {% endfor %}
+        {% set rowClass = loop.index is even ? 'even' : 'odd' %}
+        <tr class="{{ rowClass }}">
+          <td><img class="circle large" src="/{{ avatar }}"></td>
+          <td>{{ name }}</td>
+          <td>${{ price }}</td>
+          <td>{{ pio.productQuantity }}</td>
+          <td>${{ pio.productQuantity * price }}</td>
+          {% set total = total + (pio.productQuantity * price) %}
+        </tr>
+        {% endfor %}
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>${{ total }}</td>
+        </tr>
+      </tbody>
+    </table>
+    {% else %}
+    <article class="border medium no-padding middle-align center-align" style="margin-top: 10px;">
+      <div class="padding">
+        <h5>{{ 'table.empty'|trans }}<h5>
+      </div>
+    </article>
+    {% endif %}
+  </main>
+{% endblock %}

@@ -1,8 +1,11 @@
 {% extends 'base.html.twig' %}
-
+{% set avatar = product.getImageUri() is empty ? 'restaurant.svg' : product.getImageUri() %}
 {% block body %}
   <main class="responsive full-height">
     <div class="center-container">
+    <div class="s12 flex justify-center align-center">
+      <img class="big circle center" src="/{{ avatar }}" />
+    </div>
       <div class="s5 text-center">
         <h2 class="my-mid2">{{ product.name }}</h2>
         <div class="row">

@@ -43,10 +43,10 @@
         </thead>
         <tbody>
           {% for p in products %}
-          {% set avatar = p.image == 'placeholder' ? 'restaurant.svg' : p.image.getPathname() %}
+          {% set avatar = p.image == null ? 'restaurant.svg' : p.image.getPathname() %}
           {% set rowClass = loop.index is even ? 'even' : 'odd' %}
           <tr class="{{ rowClass }}">
-            <td><img class="big small-elevate responsive" src="/{{ avatar }}"></td>
+            <td><img class="circle large" src="/{{ avatar }}"></td>
             <td>{{ p.name }}</td>
             <td>${{ p.price }}</td>
             <td>
@@ -73,14 +73,13 @@
 
     <div class="s4">
       <h4 class="my-mid">{{ stand.getName() }} orders</h4>
-      {% if orders is defined %}
+      {% if orders %}
       <table class="border" style="margin-top: 10px;">
         <thead>
           <tr>
             <th>{{ 'input.buyer'|trans([], 'form') }}</th>
             <th>{{ 'input.date'|trans([], 'form') }}</th>
             <th>{{ 'input.state'|trans([], 'form') }}</th>
-            <th>{{ 'input.total'|trans([], 'form') }}</th>
             <th></th>
           </tr>
         </thead>
@@ -88,15 +87,18 @@
           {% for o in orders %}
           {% set rowClass = loop.index is even ? 'even' : 'odd' %}
           <tr class="{{ rowClass }}">
-            <td>{{ o.buyerId }}</td>
+            <td>
+            {% for u in users %}
+              {% if o.buyerId == u.id %}
+                {{ u.getFullName() }}
+              {% endif %}
+            {% endfor %}
+            </td>
             <td>{{ o.date }}</td>
             <td>{{ o.state }}</td>
-            <td>{{ o.total }}</td>
             <td>
               <nav class="right-align">
-                <a href="/stand/{{ stand.id }}/product/{{ p.id }}" class="button info circle medium"><i>{{ 'visibility' }}</i></a>
-                <a href="/stand/{{ stand.id }}/product/{{ p.id }}/edit" class="button warning circle medium"><i>{{ 'edit' }}</i></a>
-                <a href="/stand/{{ stand.id }}/product/{{ p.id }}/delete" class="button danger circle medium"><i>{{ 'delete' }}</i></a>
+                <a href="/stand/{{ stand.id }}/order/{{ o.id }}" class="button info circle medium"><i>{{ 'visibility' }}</i></a>
               </nav>
             </td>
           </tr>
