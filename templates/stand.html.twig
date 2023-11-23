@@ -1,7 +1,11 @@
 {% extends 'base.html.twig' %}
+{% set avatar = stand.getImageUri() is empty ? 'restaurant.svg' : stand.getImageUri() %}
 {% block body %}
 <main class="responsive">
   <div class="grid">
+  <div class="s12 flex justify-center align-center">
+    <img class="big circle center" src="/{{ avatar }}" />
+  </div>
     <div class="s8">
       <h2 class="my-mid">{{ stand.getName() }}</h2>
       <div class="row">
