@@ -37,7 +37,7 @@ class CitiesManagment extends AbstractController
             return $this->redirectToRoute('logout');
         }
         if(!$request->getSession()->has('login')){
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $page = $request->query->get('page', 1);
 
@@ -56,7 +56,7 @@ class CitiesManagment extends AbstractController
             return $this->redirectToRoute('logout');
         }
         if(!$request->getSession()->has('login')){
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $city = new City();
         $form = $this->createForm(CityForm::class, $city);
@@ -76,7 +76,7 @@ class CitiesManagment extends AbstractController
             return $this->redirectToRoute('logout');
         }
         if(!$request->getSession()->has('login')){
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $city = $this->ifEntity($id);
         $form = $this->createForm(CityForm::class, $city);
@@ -98,7 +98,7 @@ class CitiesManagment extends AbstractController
             return $this->redirectToRoute('logout');
         }
         if(!$request->getSession()->has('login')){
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $city = $this->ifEntity($id);
         if ($request->query->has('confirmation')) {
@@ -115,7 +115,7 @@ class CitiesManagment extends AbstractController
             return $this->redirectToRoute('logout');
         }
         if(!$request->getSession()->has('login')){
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $entity = $this->ifEntity($id);
         return $this->render('city.html.twig', ['city' => $entity, 'rol' => $request->getSession()->get('rol')]);

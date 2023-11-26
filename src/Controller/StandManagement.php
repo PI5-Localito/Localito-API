@@ -63,7 +63,7 @@ class StandManagement extends AbstractController
     public function list(Request $request): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $page = $request->query->get('page', 1);
 
@@ -89,7 +89,7 @@ class StandManagement extends AbstractController
     public function create(Request $request): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $rol = $request->getSession()->get('rol');
         $sessionId = $request->getSession()->get('login');
@@ -115,7 +115,7 @@ class StandManagement extends AbstractController
     public function edit(Request $request, int $id): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $rol = $request->getSession()->get('rol');
         $sessionId = $request->getSession()->get('login');
@@ -146,7 +146,7 @@ class StandManagement extends AbstractController
     public function delete(Request $request, int $id): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $stand = $this->ifEntity($id);
         if ($request->query->has('confirmation')) {
@@ -162,7 +162,7 @@ class StandManagement extends AbstractController
     public function details(Request $request, int $id): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $entity = $this->ifEntity($id);
         $seller = $this->sellerModel->get($entity->sellerId);
@@ -178,7 +178,7 @@ class StandManagement extends AbstractController
     public function newProduct(Request $request, int $id): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
 
         $product = new Product();
@@ -201,7 +201,7 @@ class StandManagement extends AbstractController
     public function product(Request $request, int $id, int $pid): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $product = $this->productModel->get($pid);
         $stand = $this->ifEntity($id);
@@ -212,7 +212,7 @@ class StandManagement extends AbstractController
     public function editPredirectToRoute(Request $request, int $id, int $pid): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $product = $this->productModel->get($pid);
         $stand = $this->ifEntity($id);
@@ -233,7 +233,7 @@ class StandManagement extends AbstractController
     public function deleteProduct(Request $request, int $id, int $pid): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $product = $this->productModel->get($pid);
         $stand = $this->ifEntity($id);
@@ -248,7 +248,7 @@ class StandManagement extends AbstractController
     public function viewOrder(Request $request, int $id, int $oid): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $order = $this->orderModel->get($oid);
         $buyer = $this->userModel->get($order->buyerId)->getFullName();
@@ -262,7 +262,7 @@ class StandManagement extends AbstractController
     public function messages(Request $request, int $id, int $oid): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $order = $this->orderModel->get($oid);
         $buyer = $this->userModel->get($order->buyerId);

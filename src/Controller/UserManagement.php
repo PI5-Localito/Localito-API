@@ -38,7 +38,7 @@ class UserManagement extends AbstractController
     public function list(Request $request): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $page = $request->query->get('page', 1);
 
@@ -54,7 +54,7 @@ class UserManagement extends AbstractController
     public function create(Request $request): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $user = new User();
         $form = $this->createForm(UserForm::class, $user, ['new' => true]);
@@ -77,7 +77,7 @@ class UserManagement extends AbstractController
     public function edit(Request $request, int $id): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $user = $this->ifEntity($id);
         $prevPass = $user->password;
@@ -109,7 +109,7 @@ class UserManagement extends AbstractController
     public function delete(Request $request, int $id): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $user = $this->ifEntity($id);
         if ($request->query->has('confirmation')) {
@@ -123,7 +123,7 @@ class UserManagement extends AbstractController
     public function details(Request $request, int $id): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $seller = $this->sellerModel->getByUser($id);
         $entity = $this->ifEntity($id);
@@ -134,7 +134,7 @@ class UserManagement extends AbstractController
     public function makeSeller(Request $request, int $id): Response
     {
         if(!$request->getSession()->has('login')) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('select');
         }
         $user = $this->ifEntity($id);
         if ($request->query->has('confirmation')) {
