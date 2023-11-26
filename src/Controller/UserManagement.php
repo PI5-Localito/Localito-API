@@ -65,6 +65,7 @@ class UserManagement extends AbstractController
             }
             $user->setPasswordHash($user->password);
             $this->model->save($user);
+            $this->model->sendMail($user->email);
             return $this->redirectToRoute('users');
         }
 
