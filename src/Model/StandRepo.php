@@ -7,16 +7,16 @@ use Lib\Storage\AbstractModel;
 
 class StandRepo extends AbstractModel
 {
-    public function getBySeller(int $sid): ?array
+    public function getBySeller(int $sid, int $limit = 0, int $offset = 0, int $page = 0): ?array
     {
-        $entity = new $this->entity();
-        $entity->sellerId = $sid;
-
-        $data = $this->queryBind(
-            "SELECT * FROM {$this->getTable()} WHERE seller_id = :sellerId",
-            $entity,
-            $entity->includeMapping(['sellerId'])
-        );
+        $stand = new Stand();
+        $stand->sellerId = $sid;
+        $query = "SELECT * FROM `{$this->getTable()}` WHERE seller_id = :sellerId";
+        if ($limit !== 0) {
+            $offset += $page * $limit;
+            $query .= " LIMIT $limit OFFSET $offset";
+        }
+        $data = $this->queryBind($query, $stand, $stand->includeMapping(['sellerId']));
 
         return $data ?? null;
     }

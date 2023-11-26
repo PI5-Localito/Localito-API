@@ -70,13 +70,18 @@ class StandManagement extends AbstractController
         $users = $this->userModel->all();
         $cities = $this->cityModel->all();
         $sellers = $this->sellerModel->all();
-        $entities = $this->model->all(limit: 10, page: $page - 1);
+
+        $entities = $request->getSession()->get('rol') == 'admin' ?
+            $this->model->all(limit: 10, page: $page - 1) :
+            $this->model->getBySeller($request->getSession()->get('login'), limit: 10, page: $page - 1);
+
         return $this->render('stands.html.twig', [
             'stands' => $entities,
             'page' => $page,
             'cities' => $cities,
             'users' => $users,
             'sellers' => $sellers,
+            'rol' => $request->getSession()->get('rol')
         ]);
     }
 
@@ -86,8 +91,10 @@ class StandManagement extends AbstractController
         if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
+        $rol = $request->getSession()->get('rol');
+        $sessionId = $request->getSession()->get('login');
         $stand = new Stand();
-        $form = $this->createForm(StandForm::class, $stand);
+        $form = $this->createForm(StandForm::class, $stand, ['rol' => $rol, 'sid' => $sessionId]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) { 
             if (!empty($stand->image)) {
@@ -98,7 +105,10 @@ class StandManagement extends AbstractController
             return $this->redirectToRoute('stands');
         }
 
-        return $this->render('stand_edit.html.twig', [ 'stand' => $stand, 'form' => $form ]);
+        return $this->render('stand_edit.html.twig', [ 
+            'stand' => $stand, 
+            'form' => $form, 
+            'rol' => $request->getSession()->get('rol') ]);
     }
 
     #[Route('/stand/{id}/edit', methods: [ 'GET', 'POST' ])]
@@ -107,17 +117,29 @@ class StandManagement extends AbstractController
         if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('login');
         }
+        $rol = $request->getSession()->get('rol');
+        $sessionId = $request->getSession()->get('login');
         $stand = $this->ifEntity($id);
-        $form = $this->createForm(StandForm::class, $stand);
+        $currentPath = $stand->getImageUri();
+        $form = $this->createForm(StandForm::class, $stand,['rol' => $rol, 'sid' => $sessionId]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Stand */
             $entity = $form->getData();
+            if (!empty($entity->image)) {
+                $new_file = $entity->image->move('stands', uniqid() . ".{$entity->image->guessExtension()}");
+                $entity->image = $new_file;
+            }else{
+                $entity->setImageFromUri($currentPath);
+            }
             $this->model->update($entity);
             return $this->redirectToRoute('stands');
         }
 
-        return $this->render('stand_edit.html.twig', [ 'stand' => $stand, 'form' => $form ]);
+        return $this->render('stand_edit.html.twig', [ 
+            'stand' => $stand, 
+            'form' => $form,
+            'rol' => $request->getSession()->get('rol') ]);
     }
 
     #[Route('/stand/{id}/delete', methods: 'GET')]
@@ -131,7 +153,9 @@ class StandManagement extends AbstractController
             $this->model->delete($stand);
             return $this->redirectToRoute('stands');
         }
-        return $this->render('stand_delete.html.twig', ['stand' => $stand]);
+        return $this->render('stand_delete.html.twig', [
+            'stand' => $stand, 
+            'rol' => $request->getSession()->get('rol')]);
     }
 
     #[Route(name: 'stand', path: '/stand/{id}', methods: 'GET')]
@@ -147,7 +171,7 @@ class StandManagement extends AbstractController
         $users = $this->userModel->all();
         $orders = $this->orderModel->getByStand($id);
         $products = $this->productModel->allByStand($id);
-        return $this->render('stand.html.twig', ['stand' => $entity, 'products' => $products, 'seller' => $sellerName, 'city' => $city, 'orders' => $orders, 'users' => $users]);
+        return $this->render('stand.html.twig', ['stand' => $entity, 'products' => $products, 'seller' => $sellerName, 'city' => $city, 'orders' => $orders, 'users' => $users, 'rol' => $request->getSession()->get('rol')]);
     }
 
     #[Route('/stand/{id}/newproduct', methods: [ 'GET', 'POST' ])]
@@ -170,7 +194,7 @@ class StandManagement extends AbstractController
             return $this->redirectToRoute('stand', ['id' => $id]);
         }
 
-        return $this->render('product_edit.html.twig', [ 'product' => $product, 'form' => $form ]);
+        return $this->render('product_edit.html.twig', [ 'product' => $product, 'form' => $form, 'rol' => $request->getSession()->get('rol') ]);
     }
 
     #[Route('/stand/{id}/product/{pid}', methods: 'GET')]
@@ -181,7 +205,7 @@ class StandManagement extends AbstractController
         }
         $product = $this->productModel->get($pid);
         $stand = $this->ifEntity($id);
-        return $this->render('product.html.twig', ['stand' => $stand, 'product' => $product]);
+        return $this->render('product.html.twig', ['stand' => $stand, 'product' => $product, 'rol' => $request->getSession()->get('rol')]);
     }
 
     #[Route('/stand/{id}/product/{pid}/edit', methods: [ 'GET', 'POST' ])]
@@ -202,7 +226,7 @@ class StandManagement extends AbstractController
             return $this->redirectToRoute('stand', ['id' => $id]);
         }
 
-        return $this->render('product_edit.html.twig', [ 'product' => $product, 'form' => $form ]);
+        return $this->render('product_edit.html.twig', [ 'product' => $product, 'form' => $form, 'rol' => $request->getSession()->get('rol') ]);
     }
 
     #[Route(name: 'deleteproduct', path: '/stand/{id}/product/{pid}/delete', methods: 'GET')]
@@ -217,7 +241,7 @@ class StandManagement extends AbstractController
             $this->productModel->delete($product);
             return $this->redirect('/stand/'.$id);
         }
-        return $this->render('product_delete.html.twig', ['stand' => $stand, 'product' => $product]);
+        return $this->render('product_delete.html.twig', ['stand' => $stand, 'product' => $product, 'rol' => $request->getSession()->get('rol')]);
     }
 
     #[Route('/stand/{id}/order/{oid}', methods: 'GET')]
@@ -231,7 +255,7 @@ class StandManagement extends AbstractController
         $products = $this->productModel->allByStand($id);
         $productsInOrder = $this->pioModel->getByOrder($oid);
 
-        return $this->render('order.html.twig', ['order' => $order, 'buyer' => $buyer, 'products' => $products, 'productsInOrder' => $productsInOrder]);
+        return $this->render('order.html.twig', ['order' => $order, 'buyer' => $buyer, 'products' => $products, 'productsInOrder' => $productsInOrder, 'rol' => $request->getSession()->get('rol')]);
     }
 
     #[Route('/stand/{id}/order/{oid}/messages')]
@@ -244,6 +268,6 @@ class StandManagement extends AbstractController
         $buyer = $this->userModel->get($order->buyerId);
         $messages = $this->messageModel->getByOrder($oid);
 
-        return $this->render('messages.html.twig', ['order' => $order, 'buyer' => $buyer, 'messages' => $messages]);
+        return $this->render('messages.html.twig', ['order' => $order, 'buyer' => $buyer, 'messages' => $messages, 'rol' => $request->getSession()->get('rol')]);
     }
 }

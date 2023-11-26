@@ -66,7 +66,7 @@ class UserAPI extends AbstractController
                 ['message' => 'Oops! something failed', 'cause' => 'user']
             ], status: 500);
         }
-
+        $this->userModel->sendMail($user->email, $user->name);
         $buyer = new Buyer();
         $buyer->userId = $user->id;
         if (!$this->buyerModel->save($buyer)) {

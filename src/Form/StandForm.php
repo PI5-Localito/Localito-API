@@ -12,9 +12,11 @@ use App\Service\MysqlStorage;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -31,16 +33,35 @@ class StandForm extends AbstractType
         $this->cityModel = $storage->getModel(City::class);
     }
 
+    public function configureOptions(OptionsResolver $options){
+        $options->setRequired('sid');
+        $options->setAllowedTypes('sid', ['int']);
+        $options->setRequired('rol');
+        $options->setAllowedTypes('rol', ['string']);
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $sellers = [];
-        {
-            /** @var array<Seller> */
-            $tmp = $this->sellerModel->all();
-            foreach ($tmp as $key => $value) {
-                $name = $this->userModel->get($value->userId)->getFullName();
-                $sellers[$name] = $value->id;
+        if($options['rol'] == 'admin'){
+            $sellers = [];
+            {
+                /** @var array<Seller> */
+                $tmp = $this->sellerModel->all();
+                foreach ($tmp as $key => $value) {
+                    $name = $this->userModel->get($value->userId)->getFullName();
+                    $sellers[$name] = $value->id;
+                }
             }
+            $builder
+            ->add('sellerId', ChoiceType::class, [
+                'label' => 'Seller',
+                'choices' => $sellers,
+            ]);
+        }else if($options['rol'] == 'seller'){
+            $builder
+            ->add('sellerId', HiddenType::class, [
+                'data' => $options['sid'],
+            ]);
         }
 
         $cities = [];
@@ -54,10 +75,6 @@ class StandForm extends AbstractType
         }
 
         $builder
-            ->add('sellerId', ChoiceType::class, [
-                'label' => 'Seller',
-                'choices' => $sellers,
-            ])
             ->add('tag', TextType::class, [
                 'label' => 'input.tag'
             ])

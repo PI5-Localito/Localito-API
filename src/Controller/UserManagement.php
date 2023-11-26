@@ -46,6 +46,7 @@ class UserManagement extends AbstractController
         return $this->render('users.html.twig', [
             'users' => $entities,
             'page' => $page,
+            'rol' => $request->getSession()->get('rol')
         ]);
     }
 
@@ -65,11 +66,11 @@ class UserManagement extends AbstractController
             }
             $user->setPasswordHash($user->password);
             $this->model->save($user);
-            $this->model->sendMail($user->email);
+            $this->model->sendMail($user->email, $user->name);
             return $this->redirectToRoute('users');
         }
 
-        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form, 'new' => true ]);
+        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form, 'new' => true, 'rol' => $request->getSession()->get('rol') ]);
     }
 
     #[Route('/user/{id}/edit', methods: [ 'GET', 'POST' ])]
@@ -88,7 +89,7 @@ class UserManagement extends AbstractController
             $entity = $form->getData();
                 //dd($entity);
             if (!empty($entity->avatar)) {
-                $new_file = $entity->avatar->move('avatars', uniqid() . " . {$entity->avatar->guessExtension()}");
+                $new_file = $entity->avatar->move('avatars', uniqid() . ".{$entity->avatar->guessExtension()}");
                 $entity->avatar = $new_file;
             }else{
                 $entity->setAvatarFromUri($currentPath);
@@ -101,7 +102,7 @@ class UserManagement extends AbstractController
             return $this->redirectToRoute('users');
         }
 
-        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form, 'new' => false  ]);
+        return $this->render('user_edit.html.twig', [ 'user' => $user, 'form' => $form, 'new' => false, 'rol' => $request->getSession()->get('rol')]);
     }
 
     #[Route('/user/{id}/delete', methods: 'GET')]
@@ -115,7 +116,7 @@ class UserManagement extends AbstractController
             $this->model->delete($user);
             return $this->redirectToRoute('users');
         }
-        return $this->render('user_delete.html.twig', ['user' => $user]);
+        return $this->render('user_delete.html.twig', ['user' => $user, 'rol' => $request->getSession()->get('rol')]);
     }
 
     #[Route('/user/{id}', methods: 'GET')]
@@ -126,7 +127,7 @@ class UserManagement extends AbstractController
         }
         $seller = $this->sellerModel->getByUser($id);
         $entity = $this->ifEntity($id);
-        return $this->render('user.html.twig', ['user' => $entity, 'seller' => $seller]);
+        return $this->render('user.html.twig', ['user' => $entity, 'seller' => $seller, 'rol' => $request->getSession()->get('rol')]);
     }
 
     #[Route('/user/{id}/makeseller', methods: 'GET')]
@@ -143,6 +144,6 @@ class UserManagement extends AbstractController
             //dd($this->sellerModel->getErrors());
             return $this->redirectToRoute('users');
         }
-        return $this->render('seller_create.html.twig', ['user' => $user]);
+        return $this->render('seller_create.html.twig', ['user' => $user, 'rol' => $request->getSession()->get('rol')]);
     }
 }

@@ -33,6 +33,9 @@ class CitiesManagment extends AbstractController
     #[Route(name: 'cities', path: '/cities', methods: 'GET')]
     public function list(Request $request): Response
     {
+        if($request->getSession()->get('rol') != 'admin'){
+            return $this->redirectToRoute('logout');
+        }
         if(!$request->getSession()->has('login')){
             return $this->redirectToRoute('login');
         }
@@ -42,12 +45,16 @@ class CitiesManagment extends AbstractController
         return $this->render('cities.html.twig', [
             'cities' => $entities,
             'page' => $page,
+            'rol' => $request->getSession()->get('rol')
         ]);
     }
 
     #[Route('/city/new', methods: [ 'GET', 'POST' ])]
     public function create(Request $request): Response
     {
+        if($request->getSession()->get('rol') != 'admin'){
+            return $this->redirectToRoute('logout');
+        }
         if(!$request->getSession()->has('login')){
             return $this->redirectToRoute('login');
         }
@@ -59,12 +66,15 @@ class CitiesManagment extends AbstractController
             return $this->redirectToRoute('cities');
         }
 
-        return $this->render('city_edit.html.twig', [ 'city' => $city, 'form' => $form ]);
+        return $this->render('city_edit.html.twig', [ 'city' => $city, 'form' => $form,'rol' => $request->getSession()->get('rol') ]);
     }
 
     #[Route('/city/{id}/edit', methods: [ 'GET', 'POST' ])]
     public function edit(Request $request, int $id): Response
     {
+        if($request->getSession()->get('rol') != 'admin'){
+            return $this->redirectToRoute('logout');
+        }
         if(!$request->getSession()->has('login')){
             return $this->redirectToRoute('login');
         }
@@ -78,12 +88,15 @@ class CitiesManagment extends AbstractController
             return $this->redirectToRoute('cities');
         }
 
-        return $this->render('city_edit.html.twig', [ 'city' => $city, 'form' => $form ]);
+        return $this->render('city_edit.html.twig', [ 'city' => $city, 'form' => $form,'rol' => $request->getSession()->get('rol') ]);
     }
 
     #[Route('/city/{id}/delete', methods: 'GET')]
     public function delete(Request $request, int $id): Response
     {
+        if($request->getSession()->get('rol') != 'admin'){
+            return $this->redirectToRoute('logout');
+        }
         if(!$request->getSession()->has('login')){
             return $this->redirectToRoute('login');
         }
@@ -92,16 +105,19 @@ class CitiesManagment extends AbstractController
             $this->model->delete($city);
             return $this->redirectToRoute('cities');
         }
-        return $this->render('city_delete.html.twig', ['city' => $city]);
+        return $this->render('city_delete.html.twig', ['city' => $city, 'rol' => $request->getSession()->get('rol')]);
     }
 
     #[Route('/city/{id}', methods: 'GET')]
     public function details(Request $request, int $id): Response
     {
+        if($request->getSession()->get('rol') != 'admin'){
+            return $this->redirectToRoute('logout');
+        }
         if(!$request->getSession()->has('login')){
             return $this->redirectToRoute('login');
         }
         $entity = $this->ifEntity($id);
-        return $this->render('city.html.twig', ['city' => $entity]);
+        return $this->render('city.html.twig', ['city' => $entity, 'rol' => $request->getSession()->get('rol')]);
     }
 }
