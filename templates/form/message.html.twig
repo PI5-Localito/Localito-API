@@ -1,7 +1,7 @@
 {% form_theme form 'form/beer_theme.html.twig' %}
 {{ form_start(form, { attr: { id: 'message_form' } }) }}
 <div class="s4">
-  {{ form_row(form.body),{ 'attr': {'style': 'width: 20em; height: 10em;'} })  }}
+  {{ form_row(form.body),{ 'attr': {'style': 'width: 20em; height: 10em;'} }  }}
 </div>
 {{ form_widget(form.submit) }}
 {{ form_end(form) }}
