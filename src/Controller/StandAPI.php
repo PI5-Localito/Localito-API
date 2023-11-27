@@ -192,13 +192,15 @@ class StandAPI extends AbstractController
     }
 
     #[Route(path: '/api/stand/{sid}/orders/create', methods: ['GET', 'POST'])]
-    public function newOrder(Request $request, Authorization $authorization): Response
+    public function newOrder(Request $request, Authorization $authorization, int $sid): Response
     {
         $data = $request->getPayload();
         $order = new Order;
         $order->hydrate($data->all());
-        $userid = $authorization->getSession()->id;
-        $order->buyerId = $userid;
+        $sellerId = $this->standRepo->get($sid)->sellerId;
+        $buyerId = $authorization->getSession()->id;
+        $order->buyerId = $buyerId;
+        $order->sellerId = $sellerId
 
         $violations = $this->validator->validate($order);
         $this->processErrors($violations);
