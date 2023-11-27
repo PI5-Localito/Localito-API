@@ -204,7 +204,8 @@ class StandAPI extends AbstractController
 
         $this->orderRepo->save($order);
 
-        error_log($this->orderRepo->getErrors());
+        error_log(json_encode($this->orderRepo->getErrors()));
+
         return new JsonResponse([
             'message' => 'success'
         ]);
