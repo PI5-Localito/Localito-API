@@ -277,6 +277,7 @@ class StandManagement extends AbstractController
             $toId = $this->orderModel->get($oid)->buyerId;
             $message->userFrom = $request->getSession()->get('login');
             $message->userTo = $toId;
+            $message->orderId = $oid;
             $this->messageModel->save($message);
             return $this->redirect('/stand/'.$id.'/order/'.$oid.'/messages');
         }
