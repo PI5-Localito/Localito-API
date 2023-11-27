@@ -8,7 +8,7 @@ use Lib\Storage\Annotations\Column;
 use Lib\Storage\Annotations\Table;
 use Lib\Storage\Traits\AnnotationMappings;
 use Lib\Storage\Traits\ColumnHydrate;
-use Symfony\Component\Validator\Constraints\DateTime;
+use DateTime;
 
 #[Table('orders', OrderRepo::class)]
 class Order extends AbstractEntity
@@ -32,7 +32,7 @@ class Order extends AbstractEntity
     public string $state = 'PENDING';
 
     public function __construct(){
-        $this->date = (new DateTime('now'));
+        $this->date = (new DateTime('now'))->format(DateTime::ISO8601);
     }
     public function setId(int $id): static
     {
