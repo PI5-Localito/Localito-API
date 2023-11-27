@@ -31,6 +31,9 @@ class Message extends AbstractEntity
     #[Column('message_timestamp')]
     public string $messageTimestamp;
 
+    public function __construct(){
+        $this->messageTimestamp = (new DateTime('now'))->format('Y-m-d h:m:s');
+    }
     public function setFrom(int $uid): static
     {
         $this->userFrom = $uid;
