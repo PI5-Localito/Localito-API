@@ -4,10 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Order;
 use App\Entity\Product;
+use App\Entity\ProductInOrder;
 use App\Entity\Seller;
 use App\Entity\Stand;
 use App\Enum\StandCategory;
 use App\Model\OrderRepo;
+use App\Model\ProductInOrderRepo;
 use App\Model\ProductRepo;
 use App\Model\SellerRepo;
 use App\Model\StandRepo;
@@ -31,6 +33,7 @@ class StandAPI extends AbstractController
     protected ProductRepo $productRepo;
     protected SellerRepo $sellerRepo;
     protected OrderRepo $orderRepo;
+    protected ProductInOrderRepo $pioRepo;
 
     public function __construct(
         protected MysqlStorage $storage,
@@ -40,6 +43,7 @@ class StandAPI extends AbstractController
         $this->productRepo = $storage->getModel(Product::class);
         $this->sellerRepo = $storage->getModel(Seller::class);
         $this->orderRepo = $storage->getModel(Order::class);
+        $this->pioRepo = $storage->getModel(ProductInOrder::class);
     }
 
     #[Route(path: '/api/stand/create', methods: ['PUT'])]
@@ -196,7 +200,8 @@ class StandAPI extends AbstractController
     {
         $data = $request->getPayload();
         $order = new Order;
-        $order->hydrate($data->all());
+        $order->hydrate($data->get('order'));
+        $product = $data->get('productId');
         $sellerId = $this->standRepo->get($sid)->sellerId;
         $buyerId = $authorization->getSession()->id;
         $order->buyerId = $buyerId;
@@ -208,7 +213,14 @@ class StandAPI extends AbstractController
 
         $this->orderRepo->save($order);
 
-        error_log(json_encode($this->orderRepo->getErrors()));
+        $orderId = $order->id;
+
+        $pio = new ProductInOrder;
+        $pio->orderId = $orderId;
+        $pio->productId = $product;
+        $pio->productQuantity = 1;
+
+        $this->ProductInOrderRepo->save($pio);
 
         return new JsonResponse($order);
     }
