@@ -14,7 +14,7 @@ class MessageForm extends AbstractType
         $builder
             ->add('body', TextType::class, [
                 'required' => 'true',
-                'placeholder' => 'Message'
+                'label' => 'Message'
             ])
             ->add('submit', SubmitType::class);
     }
