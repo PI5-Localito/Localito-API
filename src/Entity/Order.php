@@ -28,7 +28,7 @@ class Order extends AbstractEntity
     public string $date;
 
     #[Column('state')]
-    public string $state;
+    public string $state = 'PENDING';
 
     public function setId(int $id): static
     {
