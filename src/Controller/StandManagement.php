@@ -280,8 +280,6 @@ class StandManagement extends AbstractController
 
         $this->orderModel->updateState($oid, $state);
 
-        dd($this->orderModel->getErrors());
-
         return $this->redirect('/stand/'.$id.'/order/'.$oid);
     }
 }
