@@ -258,4 +258,21 @@ class StandAPI extends AbstractController
 
         return new JsonResponse($messages);
     }
+
+    #[Route(path: '/api/order/{oid}/newmessage', methods: ['GET', 'POST'])]
+    public function newMessage(Request $request, Authorization $authorization, int $oid): Response
+    {
+        $userFrom = $authorization->getSession()->id;
+        $data = $request->getPayload();
+        $userTo = $this->orderRepo->get($oid)->sellerId;
+        $message = new Message();
+        $message->body = $data->get('body');
+        $message->userFrom = $userFrom;
+        $message->orderId = $oid;
+        $message->userTo = $userTo;
+
+        $this->messageRepo->save($message);
+
+        return new JsonResponse($message);
+    }
 }
