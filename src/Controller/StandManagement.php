@@ -272,7 +272,7 @@ class StandManagement extends AbstractController
         $form = $this->createForm(MessageForm::class, $message);
         $form->handleRequest($request);
 
-        return $this->render('messages.html.twig', ['order' => $order, 'buyer' => $buyer, 'messages' => $messages, 'rol' => $request->getSession()->get('rol')]);
+        return $this->render('messages.html.twig', ['form' => $form, 'order' => $order, 'buyer' => $buyer, 'messages' => $messages, 'rol' => $request->getSession()->get('rol')]);
     }
 
     #[Route('/stand/{id}/order/{oid}/messages/send')]
