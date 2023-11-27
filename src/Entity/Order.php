@@ -32,7 +32,7 @@ class Order extends AbstractEntity
     public string $state = 'PENDING';
 
     public function __construct(){
-        $this->date = (new DateTime('now'))->format(DateTime::W3C);
+        $this->date = (new DateTime('now'))->format('Y-m-d');
     }
     public function setId(int $id): static
     {
