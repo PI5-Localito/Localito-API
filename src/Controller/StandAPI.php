@@ -202,10 +202,6 @@ class StandAPI extends AbstractController
         $order->buyerId = $buyerId;
         $order->sellerId = $sellerId
 
-        $violations = $this->validator->validate($order);
-        $this->processErrors($violations);
-        $type = $data->getInt('type', 0);
-
         $this->orderRepo->save($order);
 
         error_log(json_encode($this->orderRepo->getErrors()));
