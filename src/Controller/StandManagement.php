@@ -280,6 +280,7 @@ class StandManagement extends AbstractController
         }
         $message = new Message();
         $form = $this->createForm(MessageForm::class, $message);
+        $form->handleRequest($request);
         $toId = $this->orderModel->get($oid)->buyerId;
         $message->userFrom = $request->getSession()->get('login');
         $message->userTo = $toId;
