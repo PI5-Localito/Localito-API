@@ -268,6 +268,9 @@ class StandManagement extends AbstractController
         $order = $this->orderModel->get($oid);
         $buyer = $this->userModel->get($order->buyerId);
         $messages = $this->messageModel->getByOrder($oid);
+        $message = new Message();
+        $form = $this->createForm(MessageForm::class, $message);
+        $form->handleRequest($request);
 
         return $this->render('messages.html.twig', ['order' => $order, 'buyer' => $buyer, 'messages' => $messages, 'rol' => $request->getSession()->get('rol')]);
     }
@@ -278,9 +281,6 @@ class StandManagement extends AbstractController
         if(!$request->getSession()->has('login')) {
             return $this->redirectToRoute('select');
         }
-        $message = new Message();
-        $form = $this->createForm(MessageForm::class, $message);
-        $form->handleRequest($request);
         $toId = $this->orderModel->get($oid)->buyerId;
         $message->userFrom = $request->getSession()->get('login');
         $message->userTo = $toId;
