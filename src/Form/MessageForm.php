@@ -10,11 +10,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 class MessageForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
-
-    $builder
-        ->add('body', TextType::class,[
-            'placeholder' => 'Message'
-            'required' => 'true'
-        ])
-        ->add('submit', SubmitType::class);
+    {
+        $builder
+            ->add('body', TextType::class, [
+                'required' => 'true',
+                'placeholder' => 'Message'
+            ])
+            ->add('submit', SubmitType::class);
+    }
 }
