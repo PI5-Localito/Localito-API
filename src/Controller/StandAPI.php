@@ -201,8 +201,10 @@ class StandAPI extends AbstractController
         $violations = $this->validator->validate($order);
         $this->processErrors($violations);
         $type = $data->getInt('type', 0);
-        
-        dd($this->orderRepo->save($order));
+
+        $this->orderRepo->save($order);
+
+        error_log($this->orderRepo->getErrors());
         return new JsonResponse([
             'message' => 'success'
         ]);
