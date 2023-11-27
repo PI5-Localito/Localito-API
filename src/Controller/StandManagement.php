@@ -271,6 +271,11 @@ class StandManagement extends AbstractController
         $message = new Message();
         $form = $this->createForm(MessageForm::class, $message);
         $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Message */
+            $message = $form->getData();
+            dd($message);
+        }
 
         return $this->render('messages.html.twig', ['form' => $form, 'order' => $order, 'buyer' => $buyer, 'messages' => $messages, 'rol' => $request->getSession()->get('rol')]);
     }
