@@ -16,6 +16,9 @@ class Order extends AbstractEntity
     use AnnotationMappings;
     use ColumnHydrate;
 
+    #[Column('id')]
+    public ?int $id;
+
     #[Column('buyer_id')]
     public int $buyerId;
 

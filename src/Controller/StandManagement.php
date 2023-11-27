@@ -270,4 +270,18 @@ class StandManagement extends AbstractController
 
         return $this->render('messages.html.twig', ['order' => $order, 'buyer' => $buyer, 'messages' => $messages, 'rol' => $request->getSession()->get('rol')]);
     }
+
+    #[Route('/stand/{id}/order/{oid}/update/{state}')]
+    public function updateState(Request $request, int $id, int $oid, string $state): Response
+    {
+        if(!$request->getSession()->has('login')) {
+            return $this->redirectToRoute('select');
+        }
+
+        $this->orderModel->updateState($oid, $state);
+
+        dd($this->orderModel->getErrors());
+
+        return $this->redirect('/stand/'.$id.'/order/'.$oid);
+    }
 }

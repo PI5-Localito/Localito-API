@@ -20,7 +20,11 @@
         </div>
         <div class="medium-divider"></div>
         <a class="button app-back fill">{{ 'action.back'|trans }}</a>
-        <a class="button green" href="/stand/{{order.standId}}/order/{{order.id}}/messages">Messages</a>
+        <a class="button green" href="/stand/{{order.standId}}/order/{{order.id}}/messages">Messages</a><br><br>
+        {% if(order.state == 'PENDING') %}
+        <a class="button blue" href="/stand/{{order.standId}}/order/{{order.id}}/update/{{'ACCEPTED'}}">Accept</a>
+        <a class="button red" href="/stand/{{order.standId}}/order/{{order.id}}/update/{{'REJECTED'}}">Reject</a>
+        {% endif %}
       </div>
     </div>
 

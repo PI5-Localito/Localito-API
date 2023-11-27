@@ -33,4 +33,18 @@ class OrderRepo extends AbstractModel
 
         return $data ?? null;
     }
+
+    public function updateState(int $id, string $state): bool
+    {
+        $entity = new $this->entity();
+        $entity->id = $id;
+
+        $data = $this->queryBind(
+            "UPDATE {$this->getTable()} SET `state` = '{$state}' WHERE id = :id",
+            $entity,
+            $entity->includeMapping(['id'])
+        );
+
+        return true;
+    }
 }
