@@ -200,7 +200,7 @@ class StandAPI extends AbstractController
     {
         $data = $request->getPayload();
         $order = new Order;
-        $order->hydrate($data->get('order'));
+        $order->hydrate(json_decode($data->get('order')));
         $product = $data->get('productId');
         $sellerId = $this->standRepo->get($sid)->sellerId;
         $buyerId = $authorization->getSession()->id;
