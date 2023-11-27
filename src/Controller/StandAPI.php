@@ -220,7 +220,7 @@ class StandAPI extends AbstractController
         $pio->productId = $product;
         $pio->productQuantity = 1;
 
-        $this->ProductInOrderRepo->save($pio);
+        $this->pioRepo->save($pio);
 
         return new JsonResponse($order);
     }
