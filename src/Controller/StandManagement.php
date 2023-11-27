@@ -10,6 +10,7 @@ use App\Entity\ProductInOrder;
 use App\Entity\Seller;
 use App\Entity\Stand;
 use App\Entity\User;
+use App\Form\MessageForm;
 use App\Form\ProductForm;
 use App\Form\StandForm;
 use App\Model\CityRepo;
@@ -278,6 +279,7 @@ class StandManagement extends AbstractController
             return $this->redirectToRoute('select');
         }
         $message = new Message();
+        $form = $this->createForm(MessageForm::class, $message);
         $toId = $this->orderModel->get($oid)->buyerId;
         $message->userFrom = $request->getSession()->get('login');
         $message->userTo = $toId;
