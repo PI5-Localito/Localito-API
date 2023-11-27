@@ -204,9 +204,7 @@ class StandAPI extends AbstractController
 
         $this->orderRepo->save($order);
 
-        return new JsonResponse([
-            'message' => 'success'
-        ]);
+        return new JsonResponse($order);
     }
 
     #[Route(path: '/api/stands/category/{category}', methods: ['GET'])]
