@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Message;
 use App\Entity\Order;
 use App\Entity\Product;
 use App\Entity\ProductInOrder;
 use App\Entity\Seller;
 use App\Entity\Stand;
 use App\Enum\StandCategory;
+use App\Model\MessageRepo;
 use App\Model\OrderRepo;
 use App\Model\ProductInOrderRepo;
 use App\Model\ProductRepo;
@@ -34,6 +36,7 @@ class StandAPI extends AbstractController
     protected SellerRepo $sellerRepo;
     protected OrderRepo $orderRepo;
     protected ProductInOrderRepo $pioRepo;
+    protected MessageRepo $messageRepo;
 
     public function __construct(
         protected MysqlStorage $storage,
@@ -44,6 +47,7 @@ class StandAPI extends AbstractController
         $this->sellerRepo = $storage->getModel(Seller::class);
         $this->orderRepo = $storage->getModel(Order::class);
         $this->pioRepo = $storage->getModel(ProductInOrder::class);
+        $this->messageRepo = $storage->getModel(Message::class);
     }
 
     #[Route(path: '/api/stand/create', methods: ['PUT'])]
@@ -244,5 +248,14 @@ class StandAPI extends AbstractController
 
         $entities = $this->standRepo->getByCategory($category, limit: 10, page: $page - 1);
         return new JsonResponse($entities);
+    }
+
+    #[Route(path: '/api/order/{oid}/chat', methods: ['GET'])]
+    public function getMessages(Request $request, Authorization $authorization, int $oid): Response
+    {
+        $authorization->getSession();
+        $messages = $this->messageRepo->getByOrder($oid);
+
+        return new JsonResponse($messages);
     }
 }
