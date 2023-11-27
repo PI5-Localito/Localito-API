@@ -197,6 +197,8 @@ class StandAPI extends AbstractController
         $data = $request->getPayload();
         $order = new Order;
         $order->hydrate($data->all());
+        $userid = $authorization->getSession()->id;
+        $order->buyerId = $userid;
 
         $violations = $this->validator->validate($order);
         $this->processErrors($violations);
