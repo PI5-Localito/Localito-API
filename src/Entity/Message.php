@@ -9,6 +9,7 @@ use Lib\Storage\Annotations\Table;
 use Lib\Storage\Traits\AnnotationMappings;
 use Lib\Storage\Traits\ColumnHydrate;
 use Symfony\Component\Validator\Constraints as Assert;
+use DateTime;
 
 #[Table('messages', MessageRepo::class)]
 class Message extends AbstractEntity
