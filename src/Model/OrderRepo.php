@@ -23,7 +23,7 @@ class OrderRepo extends AbstractModel
     public function getByBuyer(int $bid): ?array
     {
         $entity = new $this->entity();
-        $entity->standId = $bid;
+        $entity->buyerId = $bid;
 
         $data = $this->queryBind(
             "SELECT * FROM {$this->getTable()} WHERE buyer_id = :buyerId",
