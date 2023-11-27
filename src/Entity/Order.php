@@ -25,7 +25,7 @@ class Order extends AbstractEntity
     public int $standId;
 
     #[Column('date')]
-    public string $date = 'aaa';
+    public string $date;
 
     #[Column('state')]
     public string $state = 'PENDING';
@@ -76,7 +76,7 @@ class Order extends AbstractEntity
 
     public function setDate(string $date): static
     {
-        $this->date = $date;
+        $this->date = date();
         return $this;
     }
 
