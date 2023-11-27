@@ -277,7 +277,8 @@ class StandManagement extends AbstractController
             $toId = $this->orderModel->get($oid)->buyerId;
             $message->userFrom = $request->getSession()->get('login');
             $message->userTo = $toId;
-            dd($message);
+            $this->messageModel->save($message);
+            return $this->redirect('/stand/'.$id.'/order/'.$sid.'/messages')
         }
 
         return $this->render('messages.html.twig', ['form' => $form, 'order' => $order, 'buyer' => $buyer, 'messages' => $messages, 'rol' => $request->getSession()->get('rol')]);
