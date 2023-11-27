@@ -25,6 +25,9 @@
         <a class="button blue" href="/stand/{{order.standId}}/order/{{order.id}}/update/{{'ACCEPTED'}}">Accept</a>
         <a class="button red" href="/stand/{{order.standId}}/order/{{order.id}}/update/{{'REJECTED'}}">Reject</a>
         {% endif %}
+        {% if(order.state == 'ACCEPTED') %}
+          <a class="button orange" href="/stand/{{order.standId}}/order/{{order.id}}/update/{{'FINISHED'}}">Reject</a>
+        {% endif %}
       </div>
     </div>
 
