@@ -274,6 +274,9 @@ class StandManagement extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Message */
             $message = $form->getData();
+            $toId = $this->orderModel->get($oid)->buyerId;
+            $message->userFrom = $request->getSession()->get('login');
+            $message->userTo = $toId;
             dd($message);
         }
 
