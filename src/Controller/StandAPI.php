@@ -195,6 +195,17 @@ class StandAPI extends AbstractController
         return new JsonResponse($entities);
     }
 
+    #[Route(path: '/api/orders', methods: ['GET'])]
+    public function getOrders2(Request $request, Authorization $authorization): Response
+    {
+        $userId = $authorization->getSession()->id;
+
+        $page = $request->query->get('page', 1);
+
+        $entities = $this->orderRepo->getByBuyer($userId);
+        return new JsonResponse($entities);
+    }
+
     #[Route(path: '/api/stand/{sid}/orders/create', methods: ['GET', 'POST'])]
     public function newOrder(Request $request, Authorization $authorization, int $sid): Response
     {

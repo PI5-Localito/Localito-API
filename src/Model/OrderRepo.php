@@ -19,4 +19,18 @@ class OrderRepo extends AbstractModel
 
         return $data ?? null;
     }
+
+    public function getByBuyer(int $bid): ?array
+    {
+        $entity = new $this->entity();
+        $entity->standId = $bid;
+
+        $data = $this->queryBind(
+            "SELECT * FROM {$this->getTable()} WHERE buyer_id = :buyerId",
+            $entity,
+            $entity->includeMapping(['buyerId'])
+        );
+
+        return $data ?? null;
+    }
 }
