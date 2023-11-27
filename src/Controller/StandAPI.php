@@ -192,7 +192,7 @@ class StandAPI extends AbstractController
     }
 
     #[Route(path: '/api/stand/{sid}/orders/create', methods: ['GET', 'POST'])]
-    public function newOrder(Request $request, Authorization $authorization, int $buyerId, int $sellerId, $standId): Response
+    public function newOrder(Request $request, Authorization $authorization): Response
     {
         $data = $request->getPayload();
         $order = new Order;
